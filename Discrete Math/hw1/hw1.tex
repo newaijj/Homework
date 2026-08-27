@@ -1,0 +1,114 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\dis}[1]{#1}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\title{21-701: Discrete Mathematics \\ Homework 1}
+\author{Poon Tze-Yang}
+\date{Due September 9, 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Instructor: Wesley Pegden
+
+\begin{enumerate}
+\item In class we used the probabilistic method to prove that $m(k) \geq 2^{k-1}$, where $m(k)$ is the fewest number of edges in any $k$-uniform hypergraph that is not 2-colorable. Now define $m(k;n)$ to be the fewest number of edges in any $k$-uniform hypergraph on $n$ vertices that is not 2-colorable.
+\begin{enumerate}
+\item By tweaking the probabilistic proof we gave, prove that
+\[
+m(k;2n) \geq \frac{\binom{2n}{n}}{2\binom{2n-k}{n}}.
+\]
+\item Prove that for every $n \geq k \geq 1$, this bound is stronger than the $2^{k-1}$ bound on $m(k)$, but that for any fixed $k$ the limit of this bound as $n \to \infty$ is $2^{k-1}$.
+\item \textbf{Extra, not to be handed in:} Prove a similar bound on $m(k;2n+1)$ and use these bounds to upgrade our result $m(k) \geq 2^{k-1}$ from class to the bound $m(k) > 2^{k-1}$. In particular, we learn that graphs with only 2 edges are 2-colorable $\smile$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+\paragraph{(a)}
+
+\vspace{2in}
+
+\paragraph{(b)}
+
+\vspace{2in}
+
+\begin{enumerate}[resume]
+\item Recall that $m(k)$ is the least $m$ such that there is a $k$-uniform hypergraph on $m$ edges that is not 2-colorable. Prove that $m(k) = O(k^2 2^k)$.
+
+\emph{Hint:} Generate a $k$-uniform hypergraph by choosing $m$ edges randomly and independently.
+\end{enumerate}
+
+\solution
+
+\vspace{3in}
+
+\bibliographystyle{alpha}
+\bibliography{refs}
+
+\end{document}
