@@ -1,0 +1,253 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\dis}[1]{#1}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+\title{47-835: Network Optimization I \\ Homework 1}
+\author{Poon Tze-Yang}
+\date{July 2026}
+
+
+\begin{document}
+
+\maketitle
+
+Students in the OR and ACO programs should answer all questions. For the others, the questions marked * are optional. Those marked ** are optional for all.
+
+\begin{enumerate}
+\item A graph is \emph{self-complementary} if it is isomorphic to its complement. Show that every self-complementary graph has $4n$ or $4n+1$ vertices for some integer $n \geq 0$.
+\end{enumerate}
+
+\solution
+If a graph is self-complementary, its complement must have the same number of edges.
+Let $k$ be the number of vertices in this graph.
+Then the number of edges in the $k$-clique $K_k$ must be even, in order for the edges to be evenly split between the graph and its complement.
+We now show that when $k=4n+2$ or $4n+3$, the number of edges in $K_k$ is odd.
+\begin{align*}
+    \text{\#edges in }K_{4n+2} = \binom{4n+2}{2} = 8n^2+2n+1, \\
+    \text{\#edges in }K_{4n+3} = \binom{4n+3}{2} = 8n^2+10n+3. 
+\end{align*}
+Both of the above quantities are odd, which completes the proof.
+
+\begin{enumerate}[resume]
+\item Consider a bipartite graph $G = (V,E)$ with bipartition $(A,B)$: $V = A \cup B$. Assume that, for some vertex sets $A_1 \subseteq A$ and $B_1 \subseteq B$, there exists a matching $M_A$ covering all vertices in $A_1$ and a matching $M_B$ covering all vertices in $B_1$. Prove that there always exists a matching covering all vertices in $A_1 \cup B_1$.
+\end{enumerate}
+
+\solution
+Consider $M:=M_A\cup M_B$. 
+The degree of each vertex in $M$ is at most $2$: each vertex is incident to at most one edge in $M_A$ and one edge in $M_B$.
+Hence, $M$ decomposes into disconnected paths and cycles. 
+All vertices in each cycle can be covered by the matching that takes alternating edges of the cycle.
+For all paths of odd length, selecting alternating edges starting from an endpoint forms a matching that covers all vertices of that path.
+For paths of even length, there are more vertices on the path on one side of the partition than the other.
+WLOG let this side be $A$. 
+On the $A$ side, at least one of the vertices must not be in $A$ (otherwise there are not enough vertices in the other partition to match to).
+If one of the non-endpoint vertices not in $A$, the two incident edges must be from $M_B$, which is a contradiction.
+Therefore, one of the endpoints must not be in $A$, which means we can reduce to an odd-length path and cover all required vertices.
+
+
+
+\begin{enumerate}[resume]
+\item Deduce Hall's theorem from K\"onig's theorem.
+\end{enumerate}
+
+\solution
+K\"onig's theorem: in any bipartite graph, the maximum number of edges in a matching equals the minimum number of vertices in a vertex cover.
+
+Hall's theorem: a finite bipartite graph has a complete matching of one set of vertices if and only if every subset of that group connects to a neighborhood of at least equal size.
+
+The forward direction of Hall's theorem is straightforward.
+Let the two vertices of the bipartite graph be $A\cup B$, with $A$ having the complete matching.
+By considering the neighborhood using only edges of the matching, we can immediately see that for any $S\subseteq A$ the size of the neighborhood is at least $|S|$.
+
+It remains to show that if every subset $S\subseteq A$ connects to a neighborhood $N(S)$ such that $|N(S)|\geq |S|$, then there exists a complete matching of $A$.
+Using K\"onig's theorem, this is equivalent to showing that the minimum number of vertices in a vertex cover is $|A|$. 
+Suppose for contradiction that there was a vertex cover $C$ of size $<|A|$.
+Then $A\backslash C \neq \emptyset$, since no proper subset of $A$ is a vertex cover.
+Consider all edges incident to $A\backslash C$. 
+To cover them, $C\backslash A$ must contain all vertices in $N(A\backslash C)$.
+Therefore 
+\begin{align*}
+    |C| = |C\cap A| + |C\backslash A| \geq |C\cap A| + |N(A\backslash C)|\geq |C\cap A| + |A\backslash C| = |A|,
+\end{align*}
+where in the second inequality we used K\"onig's theorem. This is the desired contradiction.
+
+
+\begin{enumerate}[resume]
+\item Given a graph $G = (V,E)$, its edge coloring number is the smallest number of colors needed to color the edges in $E$ so that any two edges having a common endpoint have a different color.
+\begin{enumerate}
+\item Show that the edge coloring number of a bipartite graph $G$ is always equal to its maximum degree $\Delta$ (i.e. the maximum over all vertices $v$ of the number of edges incident to $v$). (Hint: You can prove and use the fact that the edges of any $k$-regular bipartite graph can be partitioned into $k$ matchings).
+\item Give an example of a non-bipartite graph for which the edge coloring number is (strictly) greater than $\Delta$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+\paragraph{(a)} The edge coloring number of every graph is at least the maximum degree, so showing that there always exists a $\Delta$-edge coloring suffices.
+
+First, we prove the hint by induction on $k$.
+Note that for a bipartite graph to be $k$-regular, both sides must have the same number of vertices.
+When $k=1$, our graph is a single matching.
+When the graph is $(k+1)$-regular, we show that we can find a perfect matching.
+This leaves us with a $k$-regular graph, which can be decomposed into $k$ matchings by the inductive hypothesis.
+Suppose for contradiction that there is no perfect matching, so by Hall's theorem, there exists a subset of vertices $S$ on one side such that $|N(S)|<|S|$.
+But then the total number of edges incident to $N(S)$ is at least $(k+1)|S|$, which contradicts $(k+1)$-regularity by a counting argument, completing the proof of the hint.
+ 
+Now, given an arbitrary bipartite graph of maximum degree $\Delta$, we show that by adding edges and vertices, we can extend it to a $\Delta$-regular supergraph. 
+The hint shows that this supergraph can be decomposed into $\Delta$ matchings, so assigning a different color to each matching suffices to $\Delta$-edge color the original graph.
+First, add isolated vertices to equalize the number of vertices on each side of the graph.
+Next, for each pair of vertices $u\in A,v\in B$ with degrees smaller than $\Delta$, we add a gadget that increases the degree of each of these vertices by 1.
+The gadget comprises a new $K_{\Delta,\Delta}$ graph with one of its edges $(x,y)$ removed, and two edges $(u,y)$ and $(x,v)$ added.
+This increases the degrees of $u$ and $v$, and the vertices we added are already $\Delta$-regular.
+Repeat this until the graph is $k$-regular, and we can apply the hint as described above. 
+
+(The gadget is used instead of an edge to avoid multi-edges.)
+
+\paragraph{(b)} The triangle graph has an edge coloring number of 3 but a $\Delta$ of 2.
+
+\begin{enumerate}[resume]
+\item For an undirected graph $G$, let $\alpha(G)$ denote the maximum cardinality of an independent set of nodes (pairwise non adjacent nodes), and $\alpha'(G)$ denote the maximum cardinality of an independent set of edges (pairwise disjoint edges or matching). Similarly, let $\beta(G)$ denote the minimum cardinality of a vertex cover of $G$ (set of vertices that are incident to all edges), and $\beta'(G)$ denote the minimum cardinality of an edge cover of $G$ (set of edges that are incident to all nodes).
+\begin{enumerate}
+\item Show that $\alpha(G) + \beta(G) = \alpha'(G) + \beta'(G) = n = |V(G)|$ for all graphs $G$.
+\item Show that for a bipartite graph, the size of a maximum independent set is equal to the size of a minimum edge cover.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+\paragraph{(a)}
+First, we show that $\alpha(G) + \beta(G) = n$. 
+Note that the complement of an independent set is a vertex cover, since for each independent set, each edge in the graph has at least one endpoint that is not in the independent set.
+Hence, the complement of the largest independent set must be the smallest vertex cover.
+
+Next, we show that $\alpha'(G) + \beta'(G) = n$. 
+Let $C\subset E$ be a minimum cardinality edge cover, and let $M\subseteq C$ be the largest matching in $C$. 
+Note that $C$ cannot contain a path of length $\geq 3$, since the middle edge does not cover any additional vertices and can be removed. 
+Hence, $C$ comprises disconnected edges and stars, and $M$ takes one edge in each connected component of $C$.
+We claim that $M$ is a maximum cardinality matching. 
+
+Suppose for contradiction that there exists a larger matching $M'$.
+The symmetric difference $M\Delta M'$ is a graph of degree at most two, so it comprises alternating paths and cycles.
+Since $|M'|>|M|$, there must be an alternating path ending in edges of $M'$ at both ends. 
+Furthermore, each of the end-vertices were not covered by an edge of $M$, hence they must have been leaves of stars in $C$.
+Then, exchanging the edges of $C$ along this alternating path would decrease the size of $C$ while maintaining coverage of all vertices, contradicting the minimality of $C$. 
+
+After removing the vertices covered by $M$, the remaining edges of $C\backslash M$ each cover only one vertex.
+Hence, 
+\begin{align*}
+    n = \text{\#vertices covered by }M + \text{\#remaining edges of }C\backslash M = 2|M| + (|C| - |M|) = |C| + |M|.
+\end{align*}
+
+\paragraph{(b)}
+By K\"onig's theorem, in bipartite graphs, $\alpha'(G) = \beta(G)$. Hence, by (a), $\alpha(G) = \beta'(G)$.
+
+
+\begin{enumerate}[resume]
+\item We showed that there always exists a solution $x$ to the linear programming formulation of the assignment problem (minimum-cost perfect matching in a bipartite graph) with all components integral.
+
+Reprove this result in the following way. Take a (possibly non-integral) optimum solution $x$. If there are many optimum solutions, take one with as few non-integral values $x_{ij}$ as possible. Show that, if $x$ is not integral, there exists a cycle $C$ with all edges $e = (i,j) \in C$ having a non-integral value $x_{ij}$. Now show how to derive another optimum solution with fewer non-integral values, leading to a contradiction.
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[resume]
+\item[7.*] Consider the following 2-person game on a (not necessarily bipartite) graph $G = (V,E)$. Players 1 and 2 alternate and each selects a (yet unchosen) edge $e$ of the graph so that $e$ together with the previously selected edges form a simple path. The first player unable to select such an edge loses. Show that if $G$ has a perfect matching then player 1 has a winning strategy.
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[resume]
+\item[8.*] Consider a bipartite graph $G = (V,E)$ with bipartition $(A,B)$. For $X \subseteq A$, define $\mathrm{def}(X) = |X| - |N(X)|$ where $N(X) = \{b \in B : \exists a \in X \text{ with } (a,b) \in E\}$. Let $\mathrm{defmax} = \max_{X \subseteq A} \mathrm{def}(X)$. Since $\mathrm{def}(\emptyset) = 0$, we have $\mathrm{defmax} \geq 0$.
+\begin{enumerate}
+\item Generalize Hall's theorem by showing that the maximum size of a matching in a bipartite graph $G$ equals $|A| - \mathrm{defmax}$.
+\item For any 2 subsets $X, Y \subseteq A$, show that
+\[
+\mathrm{def}(X \cup Y) + \mathrm{def}(X \cap Y) \geq \mathrm{def}(X) + \mathrm{def}(Y).
+\]
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[resume]
+\item[9.*]
+\begin{enumerate}
+\item Is the complement of a disconnected graph always connected? Give a proof or counterexample.
+\item Compare the number of unlabeled connected $n$-vertex graphs with the number of unlabeled disconnected $n$-vertex graphs, i.e. which one is larger?
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[resume]
+\item[10.**] Let $G$ be a bipartite graph with minimum degree $\delta$. Show that the edges of $G$ can be partitioned into $\delta$ edge covers.
+\end{enumerate}
+
+\solution
+
+\bibliographystyle{alpha}
+\bibliography{refs}
+
+\end{document}
