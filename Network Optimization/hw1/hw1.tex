@@ -212,11 +212,38 @@ Reprove this result in the following way. Take a (possibly non-integral) optimum
 
 \solution
 
+Given a non-integral optimum solution $x$, we first remove all edges $(i,j)$ where $x_{i,j}=0$. 
+Note that all vertices incident to edges $(i,j)$ with $x_{i,j}=1$ have degree one, so they are part of a matching, which we can remove from the graph.
+We are left with a bipartite graph where every vertex has degree at least two. 
+Such a graph must contain at least one cycle, since performing a depth-first walk from any vertex cannot end in a degree-one vertex we have not visited before.
+
+Since the graph is bipartite, the cycle $C$ must be even. 
+Partition the odd and even edges of $C=C_1\cup C_2$. 
+One of these partitions must have no larger weight than the other, so without loss of generality we have $w(C_1)\leq w(C_2)$.
+Let 
+\begin{align*}
+    \varepsilon := \min\{\min_{e\in C_1}x_e, \min_{e\in C_2}(1-x_e)\},
+\end{align*}
+such that decreasing all variables in $x$ corresponding to edges in $C_1$ and increasing all variables corresponding to edges in $C_2$ by $\varepsilon$ results a new solution $x'$.
+By definition of $\varepsilon$, all variables in $x'$ are in the range $[0,1]$ and at least one more variable is integral comparted to $x$.
+Furthermore, the sum of variables for edges incident to each vertex has not changed.
+Finally, $w(x')\leq w(x)$, so $x'$ corresponds to an optimal solution with one fewer fractional variable, which is a contradiction.
+
 \begin{enumerate}[resume]
 \item[7.*] Consider the following 2-person game on a (not necessarily bipartite) graph $G = (V,E)$. Players 1 and 2 alternate and each selects a (yet unchosen) edge $e$ of the graph so that $e$ together with the previously selected edges form a simple path. The first player unable to select such an edge loses. Show that if $G$ has a perfect matching then player 1 has a winning strategy.
 \end{enumerate}
 
 \solution
+Player 1 will play a strategy which always chooses edges of the perfect matching. 
+This can start from any edge. 
+Since matching edges are disconnected, player 2 always plays edges which are not in the matching.
+
+We show that player 1 always has a valid move, which suffices to prove the claim.
+Let the edge selected most recent by player 2 be $(u,v)$. 
+Let $u$ be the vertex incident to the previous edge, such that $v$ has not previously appeared in the path.
+Since $G$ has a perfect matching, $v$ must be incident to an edge $(v,w)$ in the matching.
+Furthermore, since players 1 and 2 alternate picking edges in the path, all previous vertices on the path must be incident to some edge picked by player 1.
+Therefore, $w$ must be a fresh vertex, and player 1 can pick the edge of the matching incident to $w$.
 
 \begin{enumerate}[resume]
 \item[8.*] Consider a bipartite graph $G = (V,E)$ with bipartition $(A,B)$. For $X \subseteq A$, define $\mathrm{def}(X) = |X| - |N(X)|$ where $N(X) = \{b \in B : \exists a \in X \text{ with } (a,b) \in E\}$. Let $\mathrm{defmax} = \max_{X \subseteq A} \mathrm{def}(X)$. Since $\mathrm{def}(\emptyset) = 0$, we have $\mathrm{defmax} \geq 0$.
@@ -230,6 +257,17 @@ Reprove this result in the following way. Take a (possibly non-integral) optimum
 \end{enumerate}
 
 \solution
+
+\paragraph{(a)}
+We show both directions for the inequality:
+
+\ul{maximum bipartite matching $\leq |A| - $ defmax:}
+Let $X\subseteq A$ be the set which maximizes defmax. 
+$X$ can be matched to at most $|N(X)| = |X| - $ defmax vertices. 
+$A\backslash X$ can be matched to at most $|A\backslash X|$ vertices. 
+Together, the maximum matching contains at most $|A| - $ defmax edges.
+
+\ul{maximum bipartite matching $\geq |A| - $ defmax:}
 
 \begin{enumerate}[resume]
 \item[9.*]

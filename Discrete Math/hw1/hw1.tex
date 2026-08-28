@@ -128,9 +128,10 @@ So
 \solution
 
 We construct a $k$-uniform hypergraph $\calH$ on $k^2$ vertices by (at most) $m$ edges independently at random.
-Let $\calA$ be the event that $\calH$ is not 2-colorable. 
+Concretely, for $i$ in $[m]$, we sample hyperedge $f_i$ uniformly at random among all $k$-hyperedges, and define $\calH := \bigcup_{i\in[m]}f_i$.
+Let $\calA$ be the event that $\calH$ is 2-colorable. 
 For a 2-coloring $C$ of $\calH$, let $\calB_C$ be the event that $C$ is proper.
-For a given hyperedge $f$, let $\calC_{C,f}$ be the event that the edge $f$ is not monochromatic in $C$.
+For a given hyperedge $f_i$, let $\calC_{C,f_i}$ be the event that the edge $f_i$ is not monochromatic in $C$.
 
 \begin{lemma}
     For all colorings $C$, 
@@ -139,34 +140,33 @@ For a given hyperedge $f$, let $\calC_{C,f}$ be the event that the edge $f$ is n
     \end{align*}
 \end{lemma}
 \begin{proof}
-    By the independence of selecting each edge, MAYBE CANT DENOTE $f\in \calH$ LIKE THIS. INDEX EDGES INSTEAD
+    By the independence of selecting each edge, 
     \begin{align*}
-        \Pr(\calB_C) = \Pr\left(\bigcap_{f\in \calH}\calC_{C,f}\right) = \prod_{f\in \calH}\Pr\left(\calC_{C,f}\right).
+        \Pr(\calB_C) = \Pr\left(\bigcap_{i\in [m]}\calC_{C,f_i}\right) = \prod_{i\in [m]}\Pr\left(\calC_{C,f_i}\right).
     \end{align*}
     Each coloring $C$ assigns at least $\frac{k^2}{2}$ vertices to one color $A$, so $|A|\geq \frac{k^2}{2}$. 
-    For each hyperedge $f$,
+    For each hyperedge $f_i$,
     \begin{align*}
-        \Pr(\calC_{C,f}) &= 1 - \Pr(f\text{ is monochromatic in }C) \\
-        & \leq 1 - \Pr(\text{all vertices of }f\text{ are in }A) \\
+        \Pr(\calC_{C,f_i}) &= 1 - \Pr(f_i\text{ is monochromatic in }C) \\
+        & \leq 1 - \Pr(\text{all vertices of }f_i\text{ are in }A) \\
         & = 1 - \frac{\# k\text{-hyperedges on vertices in }A}{\# k\text{-hyperedges on }k^2\text{ vertices}}\\
         & \leq 1-\frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}} = 1-\prod_{i=0}^{k-1}\frac{\frac{k^2}{2}-i}{k^2-i} \\
         & = 1-\prod_{i=0}^{k-1}\frac{1}{2}\cdot\frac{k^2-2i}{k^2-i}
     \end{align*}
-    INEQUALITY THE WRONG WAY ON THE LAST STEP?
-    $k^2$ (not $k$) is used around these steps to make sure that asymptotically it is $1/2$ per k.
+    This is equal to $1-\frac{1}{2^k}$ up to lower-order terms.
+    % $k^2$ (not $k$) is used around these steps to make sure that asymptotically it is $1/2$ per k.
 \end{proof}
 
-\begin{lemma}
-    -
-\end{lemma}
+By the union bound,
+\begin{align*}
+    \Pr(\calA) = \Pr\left(\bigcup_{C \text{ is a coloring}}\calB_C\right) = \sum_{C \text{ is a coloring}}\Pr\left(\calB_C\right)\leq 2^{k^2}\left(1-\frac{1}{2^k}\right)^m.
+\end{align*}
+Taking the logarithm,
+\begin{align*}
+    \ln(\Pr(\calA))\leq k^2\ln2 - \frac{m}{2^k},
+\end{align*}
+where we use the Taylor's series for $\ln(1-\frac{1}{x})\approx -\frac{1}{x}$. 
+This term is negative when $m = O(k^22^k)$, which implies $\Pr(\calA)< 1$, so there exists some $k$-uniform hypergraph on $m$ edges that is not $2$-colorable.
 
-\begin{enumerate}
-    \item $\Pr(\text{some coloring survives})\leq \sum_{\text{\#colorings}} \Pr (\text{a given coloring survives})$ (union bound)
-    \item $\Pr(\text{a given coloring survives}) = \Pr(\text{the given coloring survives a given edge})^m$ (independence)
-    \item $\Pr(\text{the given coloring survives a given edge})\leq (1-\frac{1}{2^k})$ (because there is always at least one color with at least half of the edges, and the hyperedge must at least avoid picking all its vertices from that half)
-\end{enumerate}
-
-\bibliographystyle{alpha}
-\bibliography{refs}
 
 \end{document}
