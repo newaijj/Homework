@@ -90,13 +90,34 @@ m(k;2n) \geq \frac{\binom{2n}{n}}{2\binom{2n-k}{n}}.
 \end{enumerate}
 
 \solution
-\paragraph{(a)}
-
-\vspace{2in}
+\paragraph{(a)} 
+Let $\ell = \frac{\binom{2n}{n}}{2\binom{2n-k}{n}}$ Let $\calH$ be a $k$-uniform hypergraph on $2n$ vertices with $<\ell$ edges. 
+There are $\binom{2n}{n}$ colorings which color $n$ vertices red and $n$ vertices blue.
+We select one of these colorings uniformly at random.
+For each edge $f$, of the above colorings, there are $2\binom{2n-k}{n}$ of them in which $f$ is monochromatic (there are two possible monochromtic colorings of $f$, and for each monochromatic coloring there are $\binom{2n-k}{n}$ ways to color the remaining vertices).
+Let $\varepsilon_f$ be the event that $f$ is monochromatic. We have
+\begin{align*}
+    \Pr(\varepsilon_f) = \frac{2\binom{2n-k}{n}}{\binom{2n}{n}}.
+\end{align*}
+By the union bound, the probability that any of the $\ell$ edges is monochromatic is
+\begin{align*}
+    \Pr\left(\bigcup_{f\in\calH}\varepsilon_f\right) \leq \sum_{f\in \calH} \Pr\left(\varepsilon_f\right) = \ell  \Pr(\varepsilon_f)<1.
+\end{align*} 
+Hence, there must exist a 2-coloring of $\calH$.
 
 \paragraph{(b)}
-
-\vspace{2in}
+The bound is tighter:
+\begin{align*}
+    \frac{\binom{2n}{n}}{2\binom{2n-k}{n}} = \frac{\prod_{i=2n-k+1}^{2n}i}{2\prod_{i=n-k+1}^{n}i} = \frac{1}{2}\prod_{i=1}^{k}\frac{2n-k+i}{n-k+i}<\frac{1}{2}\cdot 2^k = \frac{1}{2^{k-1}}.
+\end{align*}
+We have that 
+\begin{align*}
+    \lim_{n\to \infty}\frac{2n-k+i}{n-k+i} = 2 + \lim_{n\to\infty}\frac{k-i}{n-k+i} = 2.
+\end{align*}
+So 
+\begin{align*}
+    \lim_{n\to\infty}\frac{\binom{2n}{n}}{2\binom{2n-k}{n}} = \frac{1}{2}\lim_{n\to\infty} \prod_{i=1}^{k}\frac{2n-k+i}{n-k+i} = 2^{k-1}.
+\end{align*}
 
 \begin{enumerate}[resume]
 \item Recall that $m(k)$ is the least $m$ such that there is a $k$-uniform hypergraph on $m$ edges that is not 2-colorable. Prove that $m(k) = O(k^2 2^k)$.
@@ -106,7 +127,43 @@ m(k;2n) \geq \frac{\binom{2n}{n}}{2\binom{2n-k}{n}}.
 
 \solution
 
-\vspace{3in}
+We construct a $k$-uniform hypergraph $\calH$ on $k^2$ vertices by (at most) $m$ edges independently at random.
+Let $\calA$ be the event that $\calH$ is not 2-colorable. 
+For a 2-coloring $C$ of $\calH$, let $\calB_C$ be the event that $C$ is proper.
+For a given hyperedge $f$, let $\calC_{C,f}$ be the event that the edge $f$ is not monochromatic in $C$.
+
+\begin{lemma}
+    For all colorings $C$, 
+    \begin{align*}
+        \Pr(\calB_C)\leq \left(1-\frac{1}{2^k}\right)^m.
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    By the independence of selecting each edge, MAYBE CANT DENOTE $f\in \calH$ LIKE THIS. INDEX EDGES INSTEAD
+    \begin{align*}
+        \Pr(\calB_C) = \Pr\left(\bigcap_{f\in \calH}\calC_{C,f}\right) = \prod_{f\in \calH}\Pr\left(\calC_{C,f}\right).
+    \end{align*}
+    Each coloring $C$ assigns at least $\frac{k^2}{2}$ vertices to one color $A$, so $|A|\geq \frac{k^2}{2}$. 
+    For each hyperedge $f$,
+    \begin{align*}
+        \Pr(\calC_{C,f}) &= 1 - \Pr(f\text{ is monochromatic in }C) \\
+        & \leq 1 - \Pr(\text{all vertices of }f\text{ are in }A) \\
+        & = 1 - \frac{\# k\text{-hyperedges on vertices in }A}{\# k\text{-hyperedges on }k^2\text{ vertices}}\\
+        & \leq 1-\frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}} = 1-\prod_{i=0}^{k-1}\frac{\frac{k^2}{2}-i}{k^2-i} \\
+        & = 1-\prod_{i=0}^{k-1}\frac{1}{2}\cdot\frac{k^2-2i}{k^2-i}
+    \end{align*}
+    INEQUALITY THE WRONG WAY ON THE LAST STEP?
+\end{proof}
+
+\begin{lemma}
+    -
+\end{lemma}
+
+\begin{enumerate}
+    \item $\Pr(\text{some coloring survives})\leq \sum_{\text{\#colorings}} \Pr (\text{a given coloring survives})$ (union bound)
+    \item $\Pr(\text{a given coloring survives}) = \Pr(\text{the given coloring survives a given edge})^m$ (independence)
+    \item $\Pr(\text{the given coloring survives a given edge})\leq (1-\frac{1}{2^k})$ (because there is always at least one color with at least half of the edges, and the hyperedge must at least avoid picking all its vertices from that half)
+\end{enumerate}
 
 \bibliographystyle{alpha}
 \bibliography{refs}
