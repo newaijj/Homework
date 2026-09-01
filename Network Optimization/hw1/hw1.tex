@@ -148,14 +148,14 @@ where in the second inequality we used K\"onig's theorem. This is the desired co
 \solution
 \paragraph{(a)} The edge coloring number of every graph is at least the maximum degree, so showing that there always exists a $\Delta$-edge coloring suffices.
 
-First, we prove the hint by induction on $k$.
+First, we prove the hint\footnote{Note, that this is matroid union packing for matching matroid. The packing bound also gives this, with some argument on the min.} by induction on $k$.
 Note that for a bipartite graph to be $k$-regular, both sides must have the same number of vertices.
 When $k=1$, our graph is a single matching.
 When the graph is $(k+1)$-regular, we show that we can find a perfect matching.
 This leaves us with a $k$-regular graph, which can be decomposed into $k$ matchings by the inductive hypothesis.
 Suppose for contradiction that there is no perfect matching, so by Hall's theorem, there exists a subset of vertices $S$ on one side such that $|N(S)|<|S|$.
 But then the total number of edges incident to $N(S)$ is at least $(k+1)|S|$, which contradicts $(k+1)$-regularity by a counting argument, completing the proof of the hint.
- 
+
 Now, given an arbitrary bipartite graph of maximum degree $\Delta$, we show that by adding edges and vertices, we can extend it to a $\Delta$-regular supergraph. 
 The hint shows that this supergraph can be decomposed into $\Delta$ matchings, so assigning a different color to each matching suffices to $\Delta$-edge color the original graph.
 First, add isolated vertices to equalize the number of vertices on each side of the graph.
@@ -268,6 +268,49 @@ $A\backslash X$ can be matched to at most $|A\backslash X|$ vertices.
 Together, the maximum matching contains at most $|A| - $ defmax edges.
 
 \ul{maximum bipartite matching $\geq |A| - $ defmax:}
+We prove this statement by induction on defmax. When $\mathrm{defmax}=0$, we simply use Hall's theorem.
+
+Suppose that for graph $G$, $\mathrm{defmax} = k+1$. We show that $G$ has a matching of size $|A| -k-1$.
+Let $X\subseteq A$ be a subset with the largest $\mathrm{def}(X)$ and among those, one with minimum size.
+
+\begin{lemma}
+    $A\backslash X$ contains a perfect matching with $B\backslash N(X)$.
+\end{lemma}
+\begin{proof}
+    By Hall's theorem, it suffices to show that for each $T\subseteq A\backslash X$, $|N(T)\backslash N(X)|\geq |T|$.
+    Suppose for contradiction that there exists a $T\subseteq A\backslash X$ such that $|N(T)\backslash N(X)| < |T|$.
+    Then 
+    \begin{align*}
+        \mathrm{def}(T\cup X) &\geq |T\cup X| - |N(T\cup X)| \\
+        &=|T| + |X| - |N(T)\backslash N(X)| - |N(X)| \\
+        &> |X| - |N(X)|, 
+    \end{align*}
+    which contradicts the the definition of defmax of $G$.
+\end{proof}
+
+It remains to show that $X$ contains a matching of size $|X|-\mathrm{defmax}$ with $N(X)$. 
+Consider any edge $(a,b)$ where $a\in X$ and $b\in N(X)$. 
+Since $|X-a|<|X|$, we have that $\mathrm{def}(X-a)< \mathrm{defmax}$. 
+Hence, 
+\begin{align*}
+    & |X-a| - |N(X-a)|<|X| - |N(X)|\\
+    &\Rightarrow |N(X-a)|> |N(X)|-1.
+\end{align*}
+Combined with the fact that $N(X-a)\subseteq N(X)$, we get that $N(X-a) = N(X)$.
+But then the graph induced by $(X-a)\cup N(X)$ forms a bipartite graph with $\mathrm{defmax}= k$, so by the inductive hypothesis, there exists a matching of size $|X-a| - k = |X| - \mathrm{defmax}$ from $X-a$ to $N(X)$.
+This completes the proof.
+
+\paragraph{(b)}
+\begin{align*}
+    \mathrm{def}(X\cup Y) + \mathrm{def}(X\cap Y) & = |X\cup Y| - |N(X\cup Y)| + |X\cap Y| - |N(X\cap Y)| \\
+    & = (|X\cup Y| + |X\cap Y|) -  (|N(X\cup Y)| + |N(X\cap Y)|)\\
+    & = |X| + |Y| -  (|N(X\cup Y)| + |N(X\cap Y)|)\\
+    &\geq |X| + |Y| -  (|N(Y)| + |N(X\backslash Y)| + |N(X\cap Y)|)\\
+    &\geq |X| + |Y| -  (|N(Y)| + |N(X)|)\\
+    & = |X| - |N(X)| + |Y| - |N(Y)| \\
+    & = \mathrm{def}(X) + \mathrm{def}(Y),
+\end{align*}
+where in the first inequality we use that $|N(X\cup Y)|\leq |N(Y)| + |N(X\backslash Y)|$ and in the second inequality we use that $|N(X)|\leq |N(X\backslash Y)| + |N(X\cup Y)|$.
 
 \begin{enumerate}[resume]
 \item[9.*]
@@ -278,12 +321,61 @@ Together, the maximum matching contains at most $|A| - $ defmax edges.
 \end{enumerate}
 
 \solution
+\paragraph{(a)}
+True: The complement of every disconnected graph is connected.
+
+Given an arbitrary disconnected graph $G$ and its complement $\bar{G}$, denote connectivity of $u$ and $v$ in $G$ by $u\leftrightarrow_G v$.
+For any two vertices $u,v\in G$, if $(u,v)\notin G$, then $(u,v)\in \bar{G}$ so $u\leftrightarrow_{\bar{G}}v$. 
+Otherwise, $(u,v)\in G$, so $u\leftrightarrow_G v$. 
+Since $G$ is disconnected, there exists vertex $w$ such that $(u,w),(v,w)\notin G$.
+Thus, $(u,w),(v,w)\in \bar{G}$, so $u\leftrightarrow_{\bar{G}}v$.
+
+\paragraph{(b)}
+The number of unlabeled connected $n$-vertex graphs is larger. 
+From (a), there is an injective mapping from disconnected to connected graphs. 
+Furthermore, there exists connected graphs whose complements are also connected graphs (e.g. the $n$-cycle for $n>3$).
+Hence the number of unlabeled connected $n$-vertex graphs is larger.
 
 \begin{enumerate}[resume]
 \item[10.**] Let $G$ be a bipartite graph with minimum degree $\delta$. Show that the edges of $G$ can be partitioned into $\delta$ edge covers.
 \end{enumerate}
 
 \solution
+We are given a bipartite graph $G= (L\cup R,E)$.
+We construct $\delta$ edge covers and remove their edges from the graph one cover at a time, indexing them $C_0, .., C_{\delta-1}$.
+We maintain the invariant that after the edges of the first $i$ covers have been removed, the graph has minimum degree $(\delta-i)$.
+This leaves us with some number of leftover edges, which can be arbitrarily added to the existing covers to give a partition of the edges.
+
+Suppose our graph currently has minimum degree $k+1$. 
+Each vertex in $L$ will be incident to exactly on edge in the next cover $C$, so the invariant is trivially maintained for these vertices.
+For each vertex $v\in R$ with degree $\deg(v)\geq k+1$, it can be incident to at most $\deg(v)-k$ edges in the next cover $C$ for the invariant to be maintainted.
+
+\paragraph{Constructing an edge cover that maintain the invariant.}
+
+We first construct an augmented graph $G'$ by duplicating some vertices of $L$ and $R$. 
+Concretely, for each $v\in R$ (resp. $L$), create $\deg(v)-k-1$ copies of it and connect them to vertices of $L$ (resp. $R$) that $v$ is connected to. 
+Call the set of vertices we add to the right (resp. left) side $R'$ (resp. $L'$).
+\ul{We will show that there is a matching $M$ that covers all vertices of $L\cup R$ in $G'$. }
+From such a matching, we can reconstruct an edge cover by merging all copies of each edge in $R$.
+By construction, the remaining degrees of each vertex is at least $k$, which preserves the invariant, and this finishes the proof.
+
+In order to construct the desired matching $M$, we first construct a matching $M_1$ from $L$ to $R\cup R'$ that is complete on $L$. 
+\begin{lemma}
+    A complete matching $M_1$ from $L$ to $R\cup R'$ exists.
+\end{lemma}
+\begin{proof}
+    Suppose such a matching does not exist, then by Hall's theorem there exists some $S\subseteq L$ such that $|S|>|N'(S)|$. (Use $N'$ for $G'$ and $N$ for $G$.)
+    Let the number of edges from $S$ to $N(S)$ in $G$ be $\ell$. 
+    Then $\ell\geq (k+1)|S|$.
+    Let the total number of copies of vertices in $N(S)$ be $c$.
+    Then
+    \begin{align*}
+        c  &= \sum_{v\in N(S)} (\deg(v) - k - 1) \\
+        &\geq \ell - (k+1)|N(S)| \\
+        &\geq (k+1)(|S|-|N(S)|).
+    \end{align*}
+\end{proof}
+
 
 \bibliographystyle{alpha}
 \bibliography{refs}
