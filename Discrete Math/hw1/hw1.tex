@@ -54,12 +54,15 @@
 \newcommand{\OPT}{\mathrm{OPT}}
 \newcommand{\Flow}{\textsc{Flow}}
 \newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+
 \newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
 \newcommand{\off}{\mathrm{off}}
 \newcommand{\on}{\mathrm{on}}
 \newcommand{\org}{\mathrm{org}}
 \newcommand{\rel}{\mathrm{rel}}
-\newcommand{\dis}[1]{#1}
 \newcommand{\new}{\mathrm{new}}
 
 \newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
@@ -167,6 +170,68 @@ Taking the logarithm,
 \end{align*}
 where we use the Taylor's series for $\ln(1-\frac{1}{x})\approx -\frac{1}{x}$. 
 This term is negative when $m = O(k^22^k)$, which implies $\Pr(\calA)< 1$, so there exists some $k$-uniform hypergraph on $m$ edges that is not $2$-colorable.
+
+
+
+\begin{enumerate}[resume]
+\item Say a \emph{leveled hypergraph} is a collection of leveled edges $f\subseteq V$ partitioned into pairs $(f^+,f^-)$, $f = f^+\mathbin{\dot{\cup}}f^-$ consisting of the \emph{top} ($f^+$) and the \emph{bottom} ($f^-$). (Because of the next definition we are only interested in the case where $f^+$ and $f^-$ are both nonempty for every edge.)
+
+We say a leveled hypergraph is \emph{upside-down} if for all distinct leveled edges $f,g\in\calH$, the top of $f$ intersects the bottom of $g$ (and vice versa).
+
+Give a probabilistic proof that for an upside-down leveled hypergraph, we have
+\[
+\sum_{f\in\calH}\frac{1}{\binom{|f|}{|f^+|}} \leq 1.
+\]
+
+\emph{Hint:} Start by defining a leveled hypergraph $\calF$ with as many leveled edges as you can muster that has the property that any upside-down hypergraph shares at most one leveled edge with $\calF$.
+\end{enumerate}
+
+\solution
+
+Let $\calF$ be the leveled hypergraph consisting of just one edge $f$.
+
+NEED AT LEAST $\binom{n}{|f|}$ elements of $F$.
+
+Let $\pi$ by a uniformly random permutation of the vertices.
+For $h\in \calH$, let $\xi_{h}$ be the indicator event that $h=\pi f$.
+By linearity of expectation on the expected number of intersections ......., 
+\begin{align*}
+    \sum_{h\in \calH}\EE[\xi_h]= \EE\left[\sum_{h\in \calH}\xi_h\right] \leq 1
+\end{align*}
+
+For each individual $h\in \calH$, we have 
+\begin{align*}
+    \EE[\xi_h] &= \sum_{f\in \calF}\Pr(h = \pi f) \\
+    &= \sum_{f\in \calF} \frac{1}{\binom{n}{|f|}}\cdot \frac{1}{\binom{|f|}{|f^+|}}
+\end{align*}
+
+\begin{enumerate}[resume]
+\item A \emph{dominating set} of a graph $G$ is a set $U\subseteq V(G)$ with the property that every vertex of $G$ either lies in $U$ or is adjacent to a vertex of $U$. Prove that every graph $G$ on $n$ vertices with minimum degree $\delta\geq 1$ has a dominating set of size at most
+\[
+n\cdot\frac{1+\ln(\delta+1)}{\delta+1}.
+\]
+
+\emph{Hint:} alterations
+\end{enumerate}
+
+\solution
+
+\noindent In class we briefly discussed an explicit construction that gives triangle-free graphs of arbitrarily large chromatic number. Here is another one:
+
+\begin{enumerate}[resume]
+\item Define the operation $M(G)$ on a graph $G$ via the following procedure:
+\begin{enumerate}[label=(\roman*)]
+\item For each $v\in G$, add a paired vertex $\bar{v}$.
+\item Create a single new vertex $x_0$.
+\item The edges of $M(G)$ are all the edges of $G$, together with all edges of the form $\{v,\bar{u}\}$ where $v$ is adjacent to $u$, and all edges of the form $\{\bar{v},x_0\}$, for all $v\in G$.
+\end{enumerate}
+
+% The original handout includes a figure here: an example of M(G) when G is a 5-cycle.
+
+Note that if $G$ is triangle-free then so is $M(G)$. Prove that if $G$ has chromatic number $k$ then $M(G)$ has chromatic number $k+1$, and moreover if $G$ is $k$-critical ($G$ has chromatic number $k$ but every proper subgraph is $(k-1)$-colorable) then $M(G)$ is $(k+1)$-critical.
+\end{enumerate}
+
+\solution
 
 
 \end{document}

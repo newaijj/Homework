@@ -367,15 +367,44 @@ In order to construct the desired matching $M$, we first construct a matching $M
     Suppose such a matching does not exist, then by Hall's theorem there exists some $S\subseteq L$ such that $|S|>|N'(S)|$. (Use $N'$ for $G'$ and $N$ for $G$.)
     Let the number of edges from $S$ to $N(S)$ in $G$ be $\ell$. 
     Then $\ell\geq (k+1)|S|$.
-    Let the total number of copies of vertices in $N(S)$ be $c$.
+    Let the total number of (additional) copies of vertices in $N(S)$ be $c$.
     Then
     \begin{align*}
         c  &= \sum_{v\in N(S)} (\deg(v) - k - 1) \\
         &\geq \ell - (k+1)|N(S)| \\
         &\geq (k+1)(|S|-|N(S)|).
     \end{align*}
+    Hence, 
+    \begin{align*}
+        |N'(S)| &= |N(S)| + c \\
+        &\geq (k+1)|S| - k|N(S)| \\
+        &> |S|,
+    \end{align*}
+    which is a contradiction.
 \end{proof}
+Without loss of generality, we can assume that $M_1$ is the complete matching of $L$ which covers the largest number of vertices in $R$.
+Let $R_1\subseteq R$ be the vertices of $R$ which are not incident to $M_1$.
+Let $L = L_1\dot{\cup} L_2$, where $L_1$ are the vertices of $L$ matched to $R$ in $M_1$ and $L_2$ are the remaining vertices of $L_1$.
+Note that there are no edges between $L_2$ and $R_1$.
 
+If we can find a complete matching from $R_1$ to $L'$, we have matched all vertices of $L\cup R$ and we are done.
+\begin{lemma}
+    There exists a complete matching from $R_1$ to $L'$.
+\end{lemma}
+\begin{proof}
+    Suppose not, then by Hall's theorem there exists $T\subseteq R_1$ such that $|N'(T)\cap L'|<|T|$.
+    Let the number of edges from $T$ to $N(T)$ in $G$ be $\ell$. Then $\ell \geq (k+1)|T|$.
+    Let the total number of (additional) copies of vertices in $N(T)$ be $c$.
+    Then
+    \begin{align*}
+        c &= \sum_{v\in N(T)} (\deg(v) - k - 1) \\
+        &\geq \ell + |N(T)| - (k+1)|N(T)| \\
+        &\geq (k+1)|T| - k|N(T)| \\
+        &> |T|.
+    \end{align*}
+    where the first inequality is because $\sum_{v\in N(T)}\deg(v) \geq \ell + |N(T)|$ since $N(T)\subseteq L_1$.
+    This is a contradiction.
+\end{proof}
 
 \bibliographystyle{alpha}
 \bibliography{refs}
