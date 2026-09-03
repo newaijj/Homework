@@ -1,12 +1,16 @@
 \documentclass[11pt,letterpaper]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
 \usepackage{amsthm,amsmath,amssymb}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{xcolor}
 \usepackage{soul}
 \usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
 
 % Theorems
 \newtheorem{theorem}{Theorem}[section]
@@ -17,6 +21,21 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
 
 \newcommand{\reals}{\mathbb{R}}
 \newcommand{\Span}{\mathrm{span}}
@@ -67,8 +86,6 @@
 
 \newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
 
-\usepackage[hidelinks]{hyperref}
-\usepackage{cleveref}
 \title{21-701: Discrete Mathematics \\ Homework 1}
 \author{Poon Tze-Yang}
 \date{Due September 9, 2026}
@@ -188,21 +205,43 @@ Give a probabilistic proof that for an upside-down leveled hypergraph, we have
 
 \solution
 
-Let $\calF$ be the leveled hypergraph consisting of just one edge $f$.
+Order the vertices of $V = \{v_1,.., v_n\}$.
+Let $\calF$ be the leveled hypergraph with one edge $f$ for each subset of $U\subseteq V$ and each $i\in \{1,..,|U|-1\}$. 
+The vertices of $f$ are exactly $U$ and the bottom $f^-$ are the first $i$ vertices of $U$ in the ordering above.
 
-NEED AT LEAST $\binom{n}{|f|}$ elements of $F$.
+\begin{lemma} \label[lemma]{lemma:intersectionAtMostOne}
+    Each upside-down hypergraph shares at most one leveled edge with $\calF$.
+\end{lemma}
+\begin{proof}
+    For any two hyperedges $f,h\in \calF$ such that $h\in \calH$. Let $u$ (resp. $v$) be the largest vertex in $f^-$ (resp. $h^-$), according to the order above.
+    If $u\geq v$, then $f^+\cap h^-= \emptyset$. Similarly,  if $u< v$, then $f^-\cap h^+ = \emptyset$.
+    Thus, $f\notin \calF$.
+\end{proof}
+
+\begin{lemma} \label[lemma]{lemma:correctNumberOfEdges}
+    For integers $0<k<\ell \leq n$, the number of edges in $\calF$ with $\ell$ vertices and $k$ top vertices is $\binom{n}{\ell}$.
+\end{lemma}
+\begin{proof}
+    Each subset $U\subseteq V$ of size $\ell$ is in bijection with the edge $f\in \calF$ of size $\ell$ with its last $k$ elements in $f^+$. 
+\end{proof}
 
 Let $\pi$ by a uniformly random permutation of the vertices.
 For $h\in \calH$, let $\xi_{h}$ be the indicator event that $h=\pi f$.
-By linearity of expectation on the expected number of intersections ......., 
+By linearity of expectation on the expected number of intersections and \cref{lemma:intersectionAtMostOne}, 
 \begin{align*}
-    \sum_{h\in \calH}\EE[\xi_h]= \EE\left[\sum_{h\in \calH}\xi_h\right] \leq 1
+    \sum_{h\in \calH}\EE[\xi_h]= \EE\left[\sum_{h\in \calH}\xi_h\right] \leq 1.
 \end{align*}
 
-For each individual $h\in \calH$, we have 
+For each individual $h\in \calH$, by \cref{lemma:correctNumberOfEdges} we have 
 \begin{align*}
     \EE[\xi_h] &= \sum_{f\in \calF}\Pr(h = \pi f) \\
-    &= \sum_{f\in \calF} \frac{1}{\binom{n}{|f|}}\cdot \frac{1}{\binom{|f|}{|f^+|}}
+    &= \sum_{\substack{f\in \calF \text{ s.t.} \\ |f| = |h| \text{ and } |f^+| = |h^+|}} \frac{1}{\binom{n}{|f|}}\cdot \frac{1}{\binom{|f|}{|f^+|}} \\
+    &= \frac{1}{\binom{|h|}{|h^+|}}.
+\end{align*}
+
+Thus,
+\begin{align*}
+    \sum_{h\in\calH}\frac{1}{\binom{|h|}{|h^+|}} \leq 1.
 \end{align*}
 
 \begin{enumerate}[resume]
@@ -216,6 +255,28 @@ n\cdot\frac{1+\ln(\delta+1)}{\delta+1}.
 
 \solution
 
+We first include each vertex with probability $p$, independently.
+Let $X$ be the random variable for the number of vertices selected this way, so $\EE[X] = np$.
+Let $Y$ be the random variable for the number of vertices which are not selected and all their neighbors are not selected.
+Then by linearity of expectation, $\EE[Y] \leq n(1-p)^{\delta+1}$, and if we select all $X+Y$ vertices we get a dominating set.
+We get
+\begin{align*}
+    \EE[X+Y] = pn + (1-p)^{\delta+1}n.
+\end{align*}
+This is minimized at 
+\begin{align*}
+    p = 1 - \left(\frac{1}{\delta+1}\right)^\frac{1}{\delta}.
+\end{align*}
+Then we have 
+\begin{align*}
+    \EE[X+Y]&= n\left(1-\left(\frac{1}{\delta+1}\right)^\frac{1}{\delta} + \left(\frac{1}{\delta+1}\right)^\frac{\delta+1}{\delta}\right)\\
+    &= n\left(\frac{1+\delta - (\delta+1)\left(\frac{1}{\delta+1}\right)^\frac{1}{\delta} + \left(\frac{1}{\delta+1}\right)^\frac{1}{\delta}}{\delta+1}\right)\\
+    &= n\left(\frac{1+\delta\left(1-\left(\frac{1}{\delta+1}\right)^\frac{1}{\delta}\right)}{\delta+1}\right) \\
+    &= n\left(\frac{1+\delta\left(1-e^{\frac{1}{\delta}\ln(\delta+1)}\right)}{\delta+1}\right) \\
+    &\leq n\left(\frac{1+\ln(\delta+1)}{\delta+1}\right).
+\end{align*}
+So there is at least one dominating set of sufficiently small size.
+
 \noindent In class we briefly discussed an explicit construction that gives triangle-free graphs of arbitrarily large chromatic number. Here is another one:
 
 \begin{enumerate}[resume]
@@ -226,12 +287,82 @@ n\cdot\frac{1+\ln(\delta+1)}{\delta+1}.
 \item The edges of $M(G)$ are all the edges of $G$, together with all edges of the form $\{v,\bar{u}\}$ where $v$ is adjacent to $u$, and all edges of the form $\{\bar{v},x_0\}$, for all $v\in G$.
 \end{enumerate}
 
-% The original handout includes a figure here: an example of M(G) when G is a 5-cycle.
+Here is an example of $M(G)$ when the graph $G$ is a 5-cycle:
+\begin{center}
+\begin{tikzpicture}[scale=1, line width=0.4pt]
+\foreach \i in {0,...,4} {
+    \coordinate (v\i) at (\i*1.2, 0);
+    \coordinate (u\i) at (\i*1.2, 1.5);
+}
+\coordinate (x) at (2.4, 3);
+
+% edges of G among the v_i (a 5-cycle)
+\draw (v0) -- (v1) -- (v2) -- (v3) -- (v4);
+\draw (v4) to[bend left=25] (v0);
+
+% edges {v_i, \bar u} where v_i is adjacent to u in G
+\foreach \i in {0,...,4} {
+    \pgfmathtruncatemacro{\ip}{mod(\i+1,5)}
+    \pgfmathtruncatemacro{\im}{mod(\i+4,5)}
+    \draw (v\i) -- (u\ip);
+    \draw (v\i) -- (u\im);
+}
+
+% edges {\bar v_i, x_0}
+\foreach \i in {0,...,4} {
+    \draw (u\i) -- (x);
+}
+
+\foreach \i in {0,...,4} {
+    \fill (v\i) circle (2.2pt);
+    \fill (u\i) circle (2.2pt);
+}
+\fill (x) circle (2.2pt);
+
+\node[left=2pt] at (v0) {$v$};
+\node[left=2pt] at (u0) {$\bar v$};
+\node[above right=1pt] at (x) {$x$};
+\end{tikzpicture}
+\end{center}
 
 Note that if $G$ is triangle-free then so is $M(G)$. Prove that if $G$ has chromatic number $k$ then $M(G)$ has chromatic number $k+1$, and moreover if $G$ is $k$-critical ($G$ has chromatic number $k$ but every proper subgraph is $(k-1)$-colorable) then $M(G)$ is $(k+1)$-critical.
 \end{enumerate}
 
 \solution
+
+Partition the vertices of $M(G)$ into $V\cup \bar{V} \cup\{x\}$.
+ 
+\paragraph{$M(G)$ is $(k+1)$-colorable.}
+Color all vertices in $V$ and $\bar{V}$ with their corresponding color in $G$.
+Color $x$ with the new color. 
+Each of vertices $u\in V\cup \bar{V}$ is incident only to vertices $v$ or $\bar{v}$ in pairs $(v,\bar{v})$ corresponding to vertices $v$ in $G$ which $u$ are adjacent to.
+Hence, by the $k$-colorability of $G$, this is a valid coloring.
+
+\paragraph{$M(G)$ is not $k$-colorable.}
+
+Suppose $M(G)$ was $k$-colorable. Let $x$ be colored $c_1$.
+Then, none of the vertices $\bar{V}$ are colored $c_1$. 
+If we can obtain a coloring that recolors all $c_1$-colored vertices in $V$, we have obtained $(k-1)$-coloring of $G$, which is a contradiction.
+
+First, consider all pairs $(v,\bar{v})$ which are differently-colored and $v$ is not colored $c_1$. 
+Let $v$ be colored $c_2$.
+Note that $\bar{v}$'s color can be changed to $c_2$, since all vertices adjacent to $\bar{v}$ are adjacent to $v$, except $x$, which is not colored $c_2$.
+
+Now, consider the remaining pairs $(v,\bar{v})$ which are differently-colored.
+Vertices $v$ must be colored $c_1$, and consider a single pair where $\bar{v}$ is colored $c_3$.
+We will recolor each $v$ to be the same color as its $\bar{v}$.
+Note that no two such pairs can have $v$'s that are adjacent to each other, since both $v$'s start out with color $c_1$.
+Therefore, all pairs adjacent to the current $(v,\bar{v})$ pair are similarly colored, so recoloring $v$ to $c_3$ does not introduce any conflicting pairs.
+This gives a contradiction to the fact that $\chi(G) = k$.
+
+\paragraph{$M(G)$ is $(k+1)$-critical.}
+
+Any subgraph which does not take $x$ is $k$-colorable by copying $G$.
+Any subgraph which does not take a pair is $k$-colorable by copying the $(k-1)$-coloring from the corresponding subgraph of $G$
+If you remove a $\bar{v}$, you can use the $k-1$ coloring for the rest of the vertices, and use $x$'s color for the remaining $v$.
+This gives a $k$-coloring.
+If you remove a $v$,
+
 
 
 \end{document}
