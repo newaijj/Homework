@@ -357,12 +357,19 @@ This gives a contradiction to the fact that $\chi(G) = k$.
 
 \paragraph{$M(G)$ is $(k+1)$-critical.}
 
-Any subgraph which does not take $x$ is $k$-colorable by copying $G$.
-Any subgraph which does not take a pair is $k$-colorable by copying the $(k-1)$-coloring from the corresponding subgraph of $G$
-If you remove a $\bar{v}$, you can use the $k-1$ coloring for the rest of the vertices, and use $x$'s color for the remaining $v$.
-This gives a $k$-coloring.
-If you remove a $v$,
+It suffices to show that removing any edge from $M(G)$ results in a $k$-colorable graph.
 
+If we remove any edge $(u,v)$ for $u,v\in V$, by the criticality of $G$, we can recolor all vertices of $V$ with $k-1$ colors. 
+Copying these colors onto the shadow vertices gives a valid $k$-coloring.
 
+If we remove any edge $(x,\bar{v})$, first recolor all vertices of $V-v$ with $k-1$ colors.
+Copy these colors onto $\bar{V} - \bar{v}$. 
+Finally, color $v,\bar{v}$ and $x$ with the $k$-th color.
+
+Finally, if we remove any edge $(\bar{u},v)$, consider the graph $G$ with the edge $(v,u)$ removed.
+By the criticality of $G$, we can recolor all vertices of $V$ with $k-1$ colors, with the only possible conflict being on the edge $(u,v)$.
+Copy these colors onto $\bar{V}$, with the only possible additional conflict being on the edge $(u,\bar{v})$.
+To fix this, recolor $u$ with the $k$-th color, which is the same color we use on $x$.
+This gives a valid $k$-coloring of $M(G)$.
 
 \end{document}
