@@ -255,6 +255,22 @@ This can be converted to a convex combination of elements of $V_1 + \dots + V_n$
 
 \paragraph{(b)}
 Using (a), for each $x\in V$, we can express $x = \sum_{i=1}^n x_i$, where $x_i\in \Conv(V_i)$.
+Using Caratheodory's Theorem, each $x_i$ can be expressed as the convex combination of finitely many ($m+1$) points in $V_i$:
+\begin{align*}
+    x_i = \sum_{j\in [m+1]}\lambda_{i,j} x_{i,j}.
+\end{align*}
+Treating the points $x_{i,j}$ as fixed and $\lambda_{i,j}$ as the variables in $\geq 0$, we can rewrite the contraints on $\lambda$ as follows:
+\begin{align*}
+    &\sum_{i\in[n]}\sum_{j\in [m+1]} \lambda_{i,j}x_{i,j} = x\\
+    &\sum_{j\in[m+1]}\lambda_{i,j} = 1 &\forall i\in [n].
+\end{align*}
+The first set of equations is $m$ equations because $x$ has $m$ dimensions, and the second set of equations is $n$ equations.
+Let the number of $\lambda$s be $\ell$. 
+Then an extreme point, we need at least $\ell - n - m$ of the $\lambda$'s to be zero (tight $\lambda_{i,j}\geq 0$ constraint).
+Thus, at most $n+m$ of the $\lambda$s are positive.
+Furthermore, we need at least one positive lambda for each of the $n$ sets $V_i$, and if one of the $\lambda_{i,j}$ for $V_i$ is fractional, at least two $\lambda_{i,j}$'s for that $V_i$ must be fractional.
+Hence, at most $m$ of the $V_i$'s can have fractional $\lambda_{i,j}$'s, so at least $n-m$ of the $V_i$'s have only one positive $\lambda_{i,j}$ with value equal to 1.
+This gives the claim.
 
 
 
@@ -283,5 +299,30 @@ If you submit an answer to this question, I will ask you to present your answer 
 \end{enumerate}
 
 \solution
+
+\paragraph{(a)}
+Consider the following asteroid field: place one clump of 100 minerals at the origin, and 100 minerals at a distance $d>10$ from the origin in the positive direction on each axis.
+Assume without loss of generality that each clump has radius 1.
+If Astra chooses a point for the space station that is greater than 1 in any coordinate, say, $x$ , Borealis can choose the hyperplane $x=1$ and choose the side with the origin for at least 300 tons.
+If Astra chooses a point with each coordinate smaller than $2$, Borealis can choose the plane $x+y+z= r$ for the appropriate $r$ and choose the side not containing the origin for at least 300 tons.
+This covers all points Astra can choose.
+
+\paragraph{(b)}
+(This seems to need Helly's theorem with infinite sets, which requires compactness)
+% We will use Helly's theorem.
+% Consider the family of subsets of asteroids that can be contained in half-spaces which fully contains at least 301 mineral-bearing asteroids.
+% There are finitely many such subsets of asteroids since there are finitely many asteroids.
+% Also note that any 4 such subsets intersect at at least one asteroid.
+% Hence, by Helly's theorem, there is at least one asteroid that is containted in every such subset.
+
+% Astra can place the space station at this asteroid.
+% Consider any hyperplane passing through this asteroid.
+
+
+\paragraph{(c)}
+
+(The $\varepsilon$ deals with the points along the plane.)
+A similar construction as in (a) works to show that $\frac{M}{n+1} + \varepsilon$ units is not achievable, where we place one cluster of units at the origin and one cluster along each coordinate.
+
 
 \end{document}

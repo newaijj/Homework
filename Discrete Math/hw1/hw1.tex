@@ -128,7 +128,7 @@ Hence, there must exist a 2-coloring of $\calH$.
 \paragraph{(b)}
 The bound is tighter:
 \begin{align*}
-    \frac{\binom{2n}{n}}{2\binom{2n-k}{n}} = \frac{\prod_{i=2n-k+1}^{2n}i}{2\prod_{i=n-k+1}^{n}i} = \frac{1}{2}\prod_{i=1}^{k}\frac{2n-k+i}{n-k+i}<\frac{1}{2}\cdot 2^k = \frac{1}{2^{k-1}}.
+    \frac{\binom{2n}{n}}{2\binom{2n-k}{n}} = \frac{\prod_{i=2n-k+1}^{2n}i}{2\prod_{i=n-k+1}^{n}i} = \frac{1}{2}\prod_{i=1}^{k}\frac{2n-k+i}{n-k+i}>\frac{1}{2}\cdot 2^k = \frac{1}{2^{k-1}}.
 \end{align*}
 We have that 
 \begin{align*}
@@ -170,7 +170,7 @@ Let $\ell = \frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}}$. Then we have $\Pr(
 By the union bound,
 \begin{align*}
     \Pr(\calA) &= \Pr\left(\bigcup_{C \text{ is a coloring}}\calB_C\right) \\
-    &= \sum_{C \text{ is a coloring}}\Pr\left(\calB_C\right)\leq 2^{k^2}\left(1-2\ell\right)^m \\
+    &\leq \sum_{C \text{ is a coloring}}\Pr\left(\calB_C\right)\leq 2^{k^2}\left(1-2\ell\right)^m \\
     &= \exp\left(k^2\ln 2 + m\ln(1-2\ell)\right).
 \end{align*}
 
@@ -264,7 +264,7 @@ Then we have
     \EE[X+Y]&= n\left(1-\left(\frac{1}{\delta+1}\right)^\frac{1}{\delta} + \left(\frac{1}{\delta+1}\right)^\frac{\delta+1}{\delta}\right)\\
     &= n\left(\frac{1+\delta - (\delta+1)\left(\frac{1}{\delta+1}\right)^\frac{1}{\delta} + \left(\frac{1}{\delta+1}\right)^\frac{1}{\delta}}{\delta+1}\right)\\
     &= n\left(\frac{1+\delta\left(1-\left(\frac{1}{\delta+1}\right)^\frac{1}{\delta}\right)}{\delta+1}\right) \\
-    &= n\left(\frac{1+\delta\left(1-e^{\frac{1}{\delta}\ln(\delta+1)}\right)}{\delta+1}\right) \\
+    &= n\left(\frac{1+\delta\left(1-e^{-\frac{1}{\delta}\ln(\delta+1)}\right)}{\delta+1}\right) \\
     &\leq n\left(\frac{1+\ln(\delta+1)}{\delta+1}\right).
 \end{align*}
 So there is at least one dominating set of sufficiently small size.
