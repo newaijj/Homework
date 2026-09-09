@@ -153,42 +153,34 @@ Let $\calA$ be the event that $\calH$ is 2-colorable.
 For a 2-coloring $C$ of $\calH$, let $\calB_C$ be the event that $C$ is proper.
 For a given hyperedge $f_i$, let $\calC_{C,f_i}$ be the event that the edge $f_i$ is not monochromatic in $C$.
 
-\begin{lemma}
-    For all colorings $C$, 
-    \begin{align*}
-        \Pr(\calB_C)\leq \left(1-\frac{1}{2^k}\right)^m.
-    \end{align*}
-\end{lemma}
-\begin{proof}
-    By the independence of selecting each edge, 
+First, we consider the probability that each 2-coloring is proper. By the independence of selecting each edge, 
     \begin{align*}
         \Pr(\calB_C) = \Pr\left(\bigcap_{i\in [m]}\calC_{C,f_i}\right) = \prod_{i\in [m]}\Pr\left(\calC_{C,f_i}\right).
     \end{align*}
-    Each coloring $C$ assigns at least $\frac{k^2}{2}$ vertices to one color $A$, so $|A|\geq \frac{k^2}{2}$. 
+    Let coloring $C$ assign $a$ vertices to one color and $b$ vertices to the other, so $a+b = k^2$. 
     For each hyperedge $f_i$,
     \begin{align*}
         \Pr(\calC_{C,f_i}) &= 1 - \Pr(f_i\text{ is monochromatic in }C) \\
-        & \leq 1 - \Pr(\text{all vertices of }f_i\text{ are in }A) \\
-        & = 1 - \frac{\# k\text{-hyperedges on vertices in }A}{\# k\text{-hyperedges on }k^2\text{ vertices}}\\
-        & \leq 1-\frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}} = 1-\prod_{i=0}^{k-1}\frac{\frac{k^2}{2}-i}{k^2-i} \\
-        & = 1-\prod_{i=0}^{k-1}\frac{1}{2}\cdot\frac{k^2-2i}{k^2-i}
+        & = 1- \frac{\# k\text{-hyperedges on vertices in first color} + \# k\text{-hyperedges on vertices in second color}}{\# k\text{-hyperedges on }k^2\text{ vertices}} \\
+        & = 1- \frac{\binom{a}{k} + \binom{b}{k}}{\binom{k^2}{k}} \\
+        & \leq 1 - 2\cdot \frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}} \qquad \qquad(\binom{x}{k}\text{ is convex in }x)
     \end{align*}
-    This is equal to $1-\frac{1}{2^k}$ up to lower-order terms.
-    % $k^2$ (not $k$) is used around these steps to make sure that asymptotically it is $1/2$ per k.
-\end{proof}
+Let $\ell = \frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}}$. Then we have $\Pr(\calB_C) \leq (1-2\ell)^m$.
 
 By the union bound,
 \begin{align*}
-    \Pr(\calA) = \Pr\left(\bigcup_{C \text{ is a coloring}}\calB_C\right) = \sum_{C \text{ is a coloring}}\Pr\left(\calB_C\right)\leq 2^{k^2}\left(1-\frac{1}{2^k}\right)^m.
+    \Pr(\calA) &= \Pr\left(\bigcup_{C \text{ is a coloring}}\calB_C\right) \\
+    &= \sum_{C \text{ is a coloring}}\Pr\left(\calB_C\right)\leq 2^{k^2}\left(1-2\ell\right)^m \\
+    &= \exp\left(k^2\ln 2 + m\ln(1-2\ell)\right).
 \end{align*}
-Taking the logarithm,
+
+So $\Pr(\calA)<1$ if $k^2\ln 2 + m\ln(1-2\ell)<0$, which is equivalent to $m > \frac{k^2\ln 2}{-\ln(1-2\ell)}$.
+By the Taylor's series for $\ln(1-x)\approx -x$, it suffices to choose $m = O(\frac{k^2}{\ell})$
+Expanding $\ell$:
 \begin{align*}
-    \ln(\Pr(\calA))\leq k^2\ln2 - \frac{m}{2^k},
+    \ell = \frac{\binom{\frac{k^2}{2}}{k}}{\binom{k^2}{k}} &=\prod_{i=0}^{k-1}\frac{\frac{k^2}{2}-i}{k-i}=2^{-k}\prod_{i=0}^{k-1}\frac{k^2-2i}{k^2-i}.
 \end{align*}
-where we use the Taylor's series for $\ln(1-\frac{1}{x})\approx -\frac{1}{x}$. 
-This term is negative when $m = O(k^22^k)$, which implies $\Pr(\calA)< 1$, so there exists some $k$-uniform hypergraph on $m$ edges that is not $2$-colorable.
-
-
+The additional product term is small, so $m=O(k^2 2^k)$ suffices.
 
 \begin{enumerate}[resume]
 \item Say a \emph{leveled hypergraph} is a collection of leveled edges $f\subseteq V$ partitioned into pairs $(f^+,f^-)$, $f = f^+\mathbin{\dot{\cup}}f^-$ consisting of the \emph{top} ($f^+$) and the \emph{bottom} ($f^-$). (Because of the next definition we are only interested in the case where $f^+$ and $f^-$ are both nonempty for every edge.)

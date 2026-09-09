@@ -1,0 +1,287 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Conv}{\mathrm{Conv}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\title{47-834: Linear Programming \\ Homework 1}
+\author{Poon Tze-Yang}
+\date{Due September 15, 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Fall 2026 Mini-1
+
+\begin{enumerate}
+\item \textbf{[15 points]} Consider the problem
+\begin{align*}
+    \text{minimize} \quad & \frac{c^\top x + d}{f^\top x + g} \\
+    \text{subject to} \quad & Ax \leq b \\
+    & f^\top x + g > 0.
+\end{align*}
+\begin{enumerate}[label=(\roman*)]
+\item Suppose that we have some prior knowledge that the optimal cost belongs to an interval $[K,L]$. Provide a procedure that allows us to compute the optimal cost within any desired accuracy.
+\item Suppose that this optimization problem is solvable. Show a way to obtain a lower bound $K$ and an upper bound $L$ for the optimal cost.
+\end{enumerate}
+For both of the questions above, you can use linear programming as a subroutine.
+\end{enumerate}
+
+\solution
+\paragraph{(i)} We can perform binary search on the interval.
+Concretely, given an interval $[K,L]$, let its midpoint be $M$.
+If the minimum value is less than or equal to $M$, then the following program is feasible:
+\begin{align*}
+    \text{find} \quad & x \\
+    \text{subject to} \quad & Ax \leq b \\
+    & c^\top x + d - M(f^\top x + g) \leq 0 \\
+    & f^\top x + g > 0,
+\end{align*}
+and we can update the interval to $[K,M]$.
+Otherwise, we update the interval to $[M,L]$.
+We can repeat this process until the length of the interval is less than the desired accuracy.
+
+\paragraph{(ii)} Any feasible solution $x$ gives an upper bound $L$. 
+We can obtain one by solving for LP feasibility without the objective value.
+
+We can obtain a lower bound by separately minimising the numerator and maximizing the denominator. 
+Concretely, we can solve the following two linear programs:
+\begin{align*}
+    \text{minimize} \quad & c^\top x + d \\
+    \text{subject to} \quad & Ax \leq b \\
+    & f^\top x + g > 0,
+\end{align*}
+and
+\begin{align*}
+    \text{maximize} \quad & f^\top x + g \\
+    \text{subject to} \quad & Ax \leq b \\
+    & f^\top x + g > 0. 
+\end{align*}
+Let the optimal values of these two programs be $N$ and $D$ respectively.
+Then we can take $K = N/D$ as a lower bound for the optimal cost.
+
+\begin{enumerate}[resume]
+\item \textbf{[15 points]} Consider a polyhedron $P$ given in inequality form, i.e., $P = \{x\in\reals^n : a_i^\top x \leq b_i \ \forall i = 1,\ldots,m\}$. A Euclidean ball with center $y\in\reals^n$ and radius $r$ is defined as $B_r(y) := \{x\in\reals^n : \|x-y\|_2 \leq r\}$, i.e., set of all points within Euclidean distance of $r$ from $y$. We are interested in finding a ball with largest possible radius, which is entirely contained in $P$. The center of such a ball is called Chebychev center of $P$. Provide a linear programming formulation of this problem.
+\end{enumerate}
+
+\solution
+First, we observe that given the center $y$ of such a ball of radius $r$, tightening all constraints of $P$ by $r$ preserves the feasibility of $c$.
+Hence, we can try to maximize $r$ subject to the feasibility constraints.
+This can be formulated as follows:
+\begin{align*}
+    \text{maximize} \quad & r \\
+    \text{subject to} \quad & a_i^\top y + r \leq b_i \quad \forall i = 1,\ldots,m \\
+    & r \geq 0.
+\end{align*}    
+The maximizing $y$ gives the Chebychev center of $P$.
+
+\begin{enumerate}[resume]
+\item \textbf{[15 points]} Given two sets $U, V\subset\reals^m$, we define $U + V = \{x\in\reals^m : \exists u\in U, \exists v\in V \text{ s.t. } x = u+v\}$.
+
+Let $D := \{x\in\reals^n : Ax + b + Q_s \subseteq P \ \forall s\in S\}$ where the set $\emptyset \neq P \subset \reals^m$ admits polyhedral representation, the set $\emptyset\neq S\subset\reals^k$ is given but arbitrary, and the sets $\emptyset \neq Q_s \subset \reals^m$ are indexed by $s\in S$.
+\begin{enumerate}
+\item Suppose that $S$ is a finite set and for each $s\in S$ we have $Q_s = \{q_s\}$, i.e., is a single point. Then, will the set $D$ be polyhedrally representable?
+\item State sufficient conditions on the structure of sets $Q_s$ and $S$ that will guarantee that the resulting set $D$ is polyhedral. Here, the goal is to have conditions as general as possible. Among your sufficient conditions, can you identify at least some of those that are necessary?
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\paragraph{(a)} Yes, the set $D$ will be polyhedrally representable.
+For each $s\in S$, we have $Ax + b + q_s \subseteq P$. 
+This defines a polyhedron, and $D$ is the intersection of these polyhedra.
+Hence, $D$ is also a polyhedron.
+
+\paragraph{(b)} In fact, no conditions on $S$ or $Q_s$ are necessary to guarantee that $D$ is polyhedral.
+First, note that the affine transformation $Ax + b$ preserves polyhedrality.
+Furthermore, taking only one $Q$ which is the union of all $Q_s$ is equivalent.
+Thus, $D$ is polyhedral if and only of $D' = \{x\in\reals^n : x + Q \subseteq P\}$ is polyhedral.
+For each constraint of $P$, the set of values of $x$ that satisfy $x + Q \subseteq P$ forms a half-space, since only the largest $Q$ in the direction normal to that constraint matters.
+Hence, $D'$ is the intersection of half-spaces, and is polyhedral.
+
+\begin{enumerate}[resume]
+\item \textbf{[15 points]} Which of the following claims is always true? Give a proof of the correct claim and give a counter example for incorrect one.
+\begin{enumerate}
+\item The set $X = \{x\in\reals^n : Ax\leq b\}$ is a cone if and only if $X = \{x\in\reals^n : Ax\leq 0\}$.
+\item The set $X = \{x\in\reals^n : Ax\leq b\}$ is a cone if and only if $b = 0$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\paragraph{(a)} The claim is true.
+If the set $X$ is a cone, then the zero vector must be in $X$, which implies that $b\geq 0$.
+Furthermore, if $b_i>0$, then for the corresponding row $a_i$ of $A$, $a_i$ must be zero, otherwise we have a contradiction: $a_i$ is in $X$ and since $X$ is a cone, we must be able to scale $a_i$ up until we violate the constraint $a_i^\top x \leq b$.
+Thus, for each row, we either have that $b_i = 0$ or $a_i = 0$ and setting $b_i$ to zero does not change the set $X$.
+
+\paragraph{(b)} The claim is not true. 
+We can add redundant constraints to the system $Ax\leq 0$ to obtain a system $A'x\leq b'$ with $b'\neq 0$ that defines the same set.
+
+\begin{enumerate}[resume]
+\item \textbf{[20 points]} Prove the following statements:
+\begin{enumerate}
+\item If a system of $m$ linear equations $Ax = b$ with $n$ variables (i.e., $x\in\reals^n$) has a nonnegative solution, it has a nonnegative solution with at most $m$ positive entries.
+\item If a system of $m$ linear inequalities $Ax\leq b$ with $n$ variables (i.e., $x\in\reals^n$) is infeasible, so is a properly selected sub-system composed of at most $n+1$ inequalities from the system.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+\paragraph{(a)} Considering the system of equations with the non-negativity constraints, we are guaranteed to have feasible solutions.
+At basic feasible solutions, at least $n-m$ of the non-negativity constraints are tight.
+Hence, at least $n-m$ of the variables are zero, and at most $m$ of the variables are positive.
+
+\paragraph{(b)} We prove the contrapositive, which states that if every sub-system of $n+1$ inequalities from the system is feasible, then the original system is feasible.
+Note that the half-space defined by each inequality is convex.
+Hence, by Helly's theorem, if every sub-system of $n+1$ inequalities is feasible, then the intersection of all half-spaces is non-empty, and the original system is feasible.
+
+
+\begin{enumerate}[resume]
+\item \textbf{[20 points]} Let $V_1,\ldots,V_n$ be $n$ nonempty sets in $\reals^m$, and define
+\[
+V := \Conv(V_1 + V_2 + \ldots + V_n).
+\]
+Prove the following statements:
+\begin{enumerate}
+\item $V = \Conv(V_1) + \ldots + \Conv(V_n)$.
+\item For any $x\in V$, there exists a representation of $x$ such that
+\[
+x = x_1 + \ldots + x_n, \qquad \text{where } x_i \in \Conv(V_i),
+\]
+in which at least $n-m$ of $x_i$'s belong to the respective sets $V_i$.
+
+Informally, this result states that when $n\gg m$, summing up $n$ nonempty sets in $\reals^m$ possesses certain ``convexification property'' -- every point from the convex hull $V$ of the sum of our sets is the sum of points $x_i$ with all but $m$ of them belonging to $V_i$ rather than to $\Conv(V_i)$, and only $\leq m$ of the points belonging to $V_i$ ``fractionally,'' that is, belonging to $\Conv(V_i)$, but not to $V_i$. This nice fact has a lot of useful applications.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\paragraph{(a)}
+
+\ul{$V\subseteq \Conv(V_1) + \ldots + \Conv(V_n)$:} 
+For all $v\in V$, we can express $v = \sum_{j=1}^\ell \lambda_j v_j$ as a convex combination of elements of $V_1 + \dots + V_n$.
+For each $v_j$, we can express $v_j = \sum_{i=1}^n v_{j,i}$, where $v_{j,i}\in V_i$.
+Thus, we have $v = \sum_{j=1}^\ell \lambda_j \sum_{i=1}^n v_{j,i} = \sum_{i=1}^n \sum_{j=1}^\ell \lambda_j v_{j,i}$.
+For each $i$, we have $\sum_{j=1}^\ell \lambda_j v_{j,i} \in \Conv(V_i)$, and hence $v\in \Conv(V_1) + \ldots + \Conv(V_n)$.
+
+\ul{$\Conv(V_1) + \ldots + \Conv(V_n) \subseteq V$:} 
+For all $v\in \Conv(V_1) + \ldots + \Conv(V_n)$, we can express $v = \sum_{i=1}^n v_i$, where $v_i\in \Conv(V_i)$.
+For each $v_i$, we can express $v_i = \sum_{j=1}^{\ell_i} \lambda_{i,j} v_{i,j}$ as a convex combination of elements of $V_i$.
+Thus, we have $v = \sum_{i=1}^n \sum_{j=1}^{\ell_i} \lambda_{i,j} v_{i,j}$.
+This can be converted to a convex combination of elements of $V_1 + \dots + V_n$ by repeatedly taking elements of $V_1 + \dots + V_n$ corresponding to the smallest current $\lambda_{i,j}$.
+
+\paragraph{(b)}
+Using (a), for each $x\in V$, we can express $x = \sum_{i=1}^n x_i$, where $x_i\in \Conv(V_i)$.
+
+
+
+\vspace{\baselineskip}
+
+The following question is extra credit!
+
+\begin{enumerate}[resume]
+\item \textbf{(Extra Credit) [20 points]} An asteroid field contains 400 tons of a rare mineral. You may model each mineral-bearing asteroid as a small three-dimensional ball of positive radius, with the mineral distributed throughout the asteroid.
+
+Two rival space agencies, Astra and Borealis, agree to divide the mineral resources according to the following rather unusual treaty.
+\begin{itemize}
+\item First, Astra chooses a point $x\in\reals^3$ at which to place a space station.
+\item Then Borealis chooses an 2D arbitrary plane $\Pi$ passing through $x$, together with one of the two sides of $\Pi$. Borealis receives all of the mineral lying on its chosen side, while Astra receives all of the mineral on the other side.
+\end{itemize}
+\begin{enumerate}
+\item \textbf{A bad asteroid field:} Construct an arrangement of the asteroids for which Astra cannot guarantee receiving more than 101 tons of of mineral, regardless of where it places its station.
+\item \textbf{A guaranteed safe location:} Astra can always choose the location $x$ so that, no matter which plane and side Borealis chooses, Astra receives at least 99 tons of mineral.
+\item \textbf{An $n$-dimensional universe:} Now imagine that the asteroid field lies in $\reals^n$, contains a mineral mass of $M$, and Astra again chooses a point $x$. Borealis then chooses a nonzero vector $e$ and one of the two half-spaces determined by
+\[
+e^\top (x-a) = 0.
+\]
+Prove that for every $\epsilon > 0$, Astra can place its station so as to guarantee at least $\frac{M}{n+1} - \epsilon$ units of mineral. Also, show that, in general, Astra cannot guarantee $\frac{M}{n+1} + \epsilon$ units of mineral.
+\end{enumerate}
+If you submit an answer to this question, I will ask you to present your answer in person!
+\end{enumerate}
+
+\solution
+
+\end{document}
