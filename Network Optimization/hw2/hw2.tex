@@ -1,0 +1,230 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\dis}[1]{#1}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+
+\title{47-835: Network Optimization I \\ Homework 2}
+\author{Poon Tze-Yang}
+\date{September 2026}
+
+
+\begin{document}
+
+\maketitle
+
+Students in the OR and ACO programs should answer all questions. For the others, the questions marked * are optional. Those marked ** are optional for all.
+
+\begin{enumerate}
+\item Consider the following ``coloring'' algorithm. Initially, all edges are uncolored. Then apply the following rules in arbitrary order until all edges are colored.
+
+\noindent \textbf{Blue rule:} Select a cut containing no blue edge. Among the uncolored edges in the cut, select one of minimum cost and color it blue.
+
+\noindent \textbf{Red rule:} Select a circuit (cycle) containing no red edge. Among the uncolored edges in the circuit, select one of maximum cost and color it red.
+\begin{enumerate}
+\item Show that as long as there are uncolored edges left, one of the rules is applicable.
+\item Show that at all points, there exists a minimum spanning tree containing all blue edges but no red edge, so in the end the algorithm solves the MST problem.
+\item Show that Kruskal's and Prim's algorithms are special cases of this algorithm.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\paragraph{(a)}
+Suppose there exists an uncolored edge $e=uv$. 
+Let $V_u$ and $V_v$ be the vertices reachable from $u$ and $v$, respectively, in the blue subgraph.
+If $V_u = V_v$, there exists a blue path $P$ from $u$ to $v$. 
+But $P+u$ forms a cycle with no red edges, which means the red rule can be applied.
+Otherwise, the cut $\delta(V_u)$ forms a cut with no blue edges, and thus the blue rule can be applied.
+\qed
+
+\paragraph{(b)}
+On a partially colored graph, let $p$ be the cost of an MST $T$ which uses all blue edges and possibly some uncolored edges.
+We will consider the next edge to be colored $e=uv$ and let $p'$ be the same quantity on the new graph.
+We show that both cases of the color of $e$, we have $p=p'$.
+
+If $e$ is colored blue and $e\in T$, we are done since $T$ is still an MST in the new graph that uses all blue edges. 
+If $e\notin T$, consider the fundamental cycle $C$ of $e$. 
+Furthermore, from the cut defined by the blue rule, there must exist an uncolored $e'\in (C - e)$ which also crosses the cut such that $c(e')\geq c(e)$.
+Thus, $c(T-e'+e) \leq c(T)$, and $T-e' + e$ forms our desired MST in the new graph.
+
+Otherwise, $e$ is colored red. 
+If $e\notin T$, we are done, since $T$ is still in the new graph.
+Otherwise, $e\in T$, and let $C$ be the cycle used by the red rule. 
+Deleting $e$ from $T$ splits the remaining edges into two connected components, and there exists some $e'\in C\backslash T$ which connects these two components.
+By the red rule, $c(e)\geq c(e')$.
+Thus, $c(T-e+e')\leq c(T)$, and $T-e+e'$ forms our desired MST in the new graph.
+\qed
+
+\paragraph{(c)}
+Kruskal's repeatedly applies the blue rule with connected blue components (possibly isolated vertices) on one side of the cut.
+Prim's does the same, but always growing the same connected component.
+
+
+\begin{enumerate}[resume]
+\item Alice and Bob play the following game alternatively on a given simple connected graph $G$: Alice starts the game. At each of her turns, she deletes an edge of $G$. Following Alice, Bob fixes an edge at each of his turns. A fixed edge can not be deleted. Bob wins if he builds a spanning tree of $G$, otherwise, Alice wins. Show that if $G$ has two edge-disjoint spanning trees, then Bob wins the game (In fact, this is also the necessary condition).
+\footnote{Serial exchange on the order of selection gives this.}
+\end{enumerate}
+
+\solution
+We describe and prove a winning strategy for Bob.
+Initialize the two spanning trees as the edge-disjoint trees $T_1$ and $T_2$ and let the set of edges Bob takes as $B\gets \emptyset$.
+As the game proceeds we evolve $T_1$, $T_2$ and $B$ such that at the end of each of Bob's turns, we maintain the following invariants:
+\begin{enumerate}
+    \item $T_1$ and $T_2$ remain spanning trees;
+    \item $T_1\cap T_2 = B$.
+\end{enumerate}
+Thus, at the game ends when $|B|=n-1$ and $B=T_1=T_2$ is a spanning tree.
+
+At the start of the $i$th round, we consider two cases on the edge $e$ which Alice deletes:
+
+\textbf{Case 1: }$e\in T_1\triangle T_2$. Without loss of generality, suppose $e\in T_1$. 
+Let $C$ be the fundamental cycle of $e$ in $T_2$.
+Then deleting $e$ from $T_1$ produces two connected components $D_1$ and $D_2$.
+There must exist some edge $e'\in C$ connecting $D_1$ and $D_2$.
+Furthermore, since $e'\notin T_1$, therefore $e'\in T_2\backslash T_1$.
+Thus, Bob can select $e'$, so $B\gets B+e'$. 
+The invariants are maintained, since $T_1\gets T_1-e+e'$ remains a spanning tree, $T_2$ is unchanged and $T_1\cap T_2=B$.
+
+\textbf{Case 2: }$e\notin T_1\cup T_2$. 
+Bob can select any edge $e\in T_1$.
+Let $C$ be the fundamental cycle of $e$ in $T_2$, and select any $e'\in (C-e)$.
+The invariants are maintained since $T_1$ is unchanged, $T_2\gets T_2-e'+e$ remains a spanning tree and $T_1\cap T_2=B$.
+
+\qed
+
+\begin{enumerate}[resume]
+\item Given a graph $G$, we start modifying it as follows: In each round, as long as $G$ is cyclic, pick an arbitrary cycle of $G$, e.g. $C$, and remove all the edges of $C$ from $G$. Then, add a new vertex to the graph, e.g. $v_C$, and connect $v_C$ to all the vertices of $C$ (note that the newly added vertex can be on the cycles that we pick in the next rounds). Show that regardless of the choice of cycles, $G$ becomes a forest (collection of trees) after a finite number of rounds.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item The tree graph of a connected graph $G$ is the graph whose vertices are the spanning trees $T_1, T_2, \ldots, T_r$ of $G$, with an edge between $T_i$ and $T_j$ if and only if they have exactly $n-2$ edges in common. Show that the tree graph of any connected graph is connected.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item Recall that an edge cut is the set of all edges going from a subset of nodes $S$ to its complement $V \setminus S$, and denoted $[S, V \setminus S]$. Prove that the symmetric difference of two different edge cuts is an edge cut.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item Given an $n$-node directed acyclic graph (DAG), show that the nodes can be numbered with distinct integers from $1$ to $n$ such that all arcs go from smaller to higher numbered nodes. This numbering is called a topological ordering of the graph, and is commonly used in computing quantities on the nodes via dynamic programming.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item[7.*] An edge $e$ is a cut edge if $G - e$ has one more connected component than $G$ (in undirected graphs). Show that
+\begin{enumerate}
+\item if each vertex degree in $G$ is even, then $G$ has no cut edge.
+\item if $G$ is a $k$-regular bipartite graph with $k \geq 2$, then $G$ has no cut edge.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item[8.*] Let $G$ be a strongly connected graph with $2n-1$ (directed) edges, i.e., for any ordered pair of vertices $u, v$, there is a directed path from $u$ to $v$. Prove that there exist an edge $e$ in $G$ such that $G - e$ is still strongly connected.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item[9.*] Show that the spanning tree polyhedron of Edmonds with `subtour elimination' constraints describing the convex hull of spanning trees of a connected undirected graph $(V,E)$ has integral solutions whenever the edge costs are nonnegative integers.
+\begin{align*}
+    x(E(S)) &\leq |S| - 1 && \forall S \subset V \\
+    x(E(V)) &= |V| - 1 \\
+    x_e &\geq 0 && \forall e \in E
+\end{align*}
+Hint: Write the dual out carefully and give appropriate values to these duals based on the minimum spanning tree found by Kruskal's greedy algorithm.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume]
+\item[10.**] Given a complete graph on nodes $V$ with a cost $c_{uv}$ between every pair of nodes $\{u,v\}$, partition $V$ into two parts $V_1, V_2$ such that the minimum cost of any edge between nodes in the same part is maximized. In other words, we want to maximize
+\[
+\min\left\{ \min_{u,v \in V_1} c_{uv}, \min_{u,v \in V_2} c_{uv} \right\}.
+\]
+Give an efficient algorithm for the task. Show an easy $O(|V|)$ procedure to check whether the solution is unique.
+\end{enumerate}
+
+\solution
+
+
+\end{document}
