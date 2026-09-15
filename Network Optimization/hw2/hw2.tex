@@ -211,6 +211,38 @@ which is a cut.
 
 \solution
 
+\begin{lemma}
+    For any vertex $u$ in a DAG $G$, let $R_u\subseteq V$ be the set of vertices reachable from $u$. 
+    Then (i) all vertices of $V\backslash R_u$ are not reachable in $G$ from any vertex of $R_u$; (ii) $u$ is not reachable from any vertex in $R_u - u$; and (iii) $G\backslash R_u$ is also a DAG.
+\end{lemma}
+\begin{proof}
+    (i): Clearly, otherwise that vertex would also be in $R_u$.
+    
+    (ii): Any $v\in R_u$ is reachable from $u$, so if there exists a $(v,u)$-path, then there exists a cycle in $G$.
+
+    (iii): Any cycle in $G\backslash R_u$ is also a cycle in $G$.
+\end{proof}
+
+Our algorithm proceeds inductively on the size of $G$.
+If $|V|=1$, the topological ordering is just one vertex.
+Otherwise, select any $u\in V$ and define $A = V\backslash R_u$ and $B = R_u - u$. 
+
+\begin{lemma}
+    There exists a valid topological ordering beginning with the vertices of $A$ in some order, then $u$, then the vertices of $B$ in some order.
+\end{lemma}
+\begin{proof}
+    By the inductive hypothesis, there is a valid topological ordering of the vertices of $A$ and $B$.
+    Our ordering will be that of $A$, then $u$, then that of $B$.
+    Call an edge \emph{reverse-order} if it is directed from vertex later in the ordering to a vertex earlier in the ordering.
+
+    We show that there are no edges of $G$ crossing the partition $A\sqcup \{u\} \sqcup B$ in the reverse order. 
+    There are no reverse-order edges within $A$ or $B$ because they are alredy topologically ordered.
+    There is no reverse-order edge $(x,y)$ ending in $A$ because then $y$ should be in $R_u$.
+    There is no reverse-order edge from $B$ to $u$ because that would be a cycle in $G$.
+\end{proof}
+
+Thus, our algorithm can recursively topologically order $A$ and $B$, giving a topological ordering of $G$.
+
 
 \begin{enumerate}[resume]
 \item[7.*] An edge $e$ is a cut edge if $G - e$ has one more connected component than $G$ (in undirected graphs). Show that
@@ -232,6 +264,19 @@ Suppose for contradiction that there exists a cut edge $e$, which separates comp
 Deleting $e$ decreases the total degree of $V(C_1)$ by $1$. Since all vertices were originally of even degree, this means $C_1$ has odd total degree, a contradiction.
 
 \paragraph{(b)}
+Suppose for contradiction that there is a cut edge $e= uv$. 
+Restrict our attention to the connected component $C$ of $e$ in $G$.
+Furthermore, let $C_u$ be the connected component of $G-e$ containing $u$, and let $C_v$ be the connected component of $G-e$ containing $v$.
+Then all vertices of $C_u$ are of degree $k$ except for $u$, which is of degree $k-1$.
+
+Let the bipartition of $V(C_u)$ be $A\sqcup B$, and without loss of generality let $u\in A$.
+Let $a:=|A|$ and $b:=|B|$. 
+Then by counting the degrees of each side,
+\begin{align*}
+    &(a-1)k + k-1 = bk \\
+    &\Rightarrow (a-b)k = 1.
+\end{align*}
+But $a,b$ are integer and $k\geq 2$, which is a contradiction.
 
 \begin{enumerate}[resume]
 \item[8.*] Let $G$ be a strongly connected graph with $2n-1$ (directed) edges, i.e., for any ordered pair of vertices $u, v$, there is a directed path from $u$ to $v$. Prove that there exist an edge $e$ in $G$ such that $G - e$ is still strongly connected.
