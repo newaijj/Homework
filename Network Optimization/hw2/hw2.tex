@@ -165,7 +165,7 @@ The invariants are maintained since $T_1$ is unchanged, $T_2\gets T_2-e'+e$ rema
 (A counting proof)
 
 Note that after the operation, the total number of vertices in the graph increases by $1$, but the number of edges remains the same. 
-Furthermore, all vertices after each operation have degree at least 1.
+Furthermore, all vertices after each operation have degree at least 1: we only delete edges from vertices of $C$, but we also add one edge to each such vertex.
 
 Hence, if the starting number of edges is $k$, after at most $k$ iterations all vertices have degree at most $1$. 
 Therefore, there are no remaining cycles, since vertices of a cycle have degree at least two.
@@ -283,7 +283,30 @@ But $a,b$ are integer and $k\geq 2$, which is a contradiction.
 \end{enumerate}
 
 \solution
+Select any vertex $r\in G$. 
+Since $G$ is strongly connected, there exists an $r$-arborescence $B$ rooted at $r$.
+The arborescence $B$ has $n-1$ arcs, so there are $n$ arcs of $G$ remaining.
+Since $G$ is strongly connected, each vertex $u\neq r$ has some path to $r$.
 
+If $r$ has an arc outside of $B$, removing it preserves strong connectivity, since $r$ can still reach all other vertices using arcs in $B$ and any other vertex would not use that arc on its shortest path to $r$.
+Otherwise, no arcs outside $B$ start at $r$.
+
+For each vertex $u\neq r$, mark one arc starting at $u$ which is on a shortest path from $u$ to $r$. 
+If there are multiple such arcs for one $u$, mark any of them. 
+Let the set of marked arcs be $C$.
+
+\begin{lemma}
+    The graph with arcs $B\cup C$ is strongly connected.
+\end{lemma}
+\begin{proof}
+    Since we have all arcs of $B$, $r$ can reach all other vertices. 
+    Every other vertex can reach $r$ by following the arcs of $C$: for vertex $u\neq r$ with arc $uv\in C$, $v$ is one arc closer to $C$ than $u$.
+    Hence, all vertices can reach any other vertex by first going through $r$. 
+\end{proof}
+
+There are $n-1$ marked arcs in $C$, since there are $n-1$ vertices in $V-r$. 
+Hence, $|B\cup C| \leq |B| + |C| = 2n-2$. 
+Therefore, there is at least one arc of $G$ that can be removed while preserving strong connectivity.
 
 \begin{enumerate}[resume]
 \item[9.*] Show that the spanning tree polyhedron of Edmonds with `subtour elimination' constraints describing the convex hull of spanning trees of a connected undirected graph $(V,E)$ has integral solutions whenever the edge costs are nonnegative integers.
@@ -296,7 +319,41 @@ Hint: Write the dual out carefully and give appropriate values to these duals ba
 \end{enumerate}
 
 \solution
+% Subtracting each $S$ constraint from the $V$ constraint gives the equivalent formulation:
 
+% \begin{align*}
+%     \min \sum_{e} c_e x_e \\
+%     x(E(V\backslash S)) &\geq |V\backslash S| && \forall S \subset V \\
+%     x(E(V)) &= |V| - 1 \\
+%     x_e &\geq 0 && \forall e \in E
+% \end{align*}
+
+% This gives the following dual
+
+% \begin{align*}
+%     \max \sum_{S\subset V} (|S|-1)y_S\\
+%     \sum_{S:e\notin E(S)} y_S\leq c_e && \forall e\in E \\
+%     y_S\geq 0 && \forall S\subset V 
+% \end{align*}
+
+For each $S\subseteq V$, we have the dual variable $y_s$.
+Assume the primal problem has a non-negative, integral cost vector $c$.
+The dual is as follows:
+
+\begin{align*}
+    \max \ (|V|-1)y_V +\sum_{S\subseteq V} (|S|-1)y_S\\
+    y_V + \sum_{S\subset V:e\in E(S)} y_S\leq c_e && \forall e\in E \\
+    y_S\leq 0 && \forall S\subset V 
+\end{align*}
+
+(Imagine increasing $y_V$ continuously. 
+First constraint to get tight is cheapest edge.
+Then, as we increase $y_V$ further, we somehow decrease $y_S$'s in a way that we cover all the already tight edges but also decrease the objective the least.)
+
+(Variables with $|S|=1 $ do not contribute to the solution so can be set to some non-zero value. Need this argument somewhere)
+
+(Give a dual solution with a laminar set of non-zero dual variables of maximum size.
+Then we have like $n-1$ laminar tight constraints, so comparing tight constraints, we see they differ by adding a ?)
 
 \begin{enumerate}[resume]
 \item[10.**] Given a complete graph on nodes $V$ with a cost $c_{uv}$ between every pair of nodes $\{u,v\}$, partition $V$ into two parts $V_1, V_2$ such that the minimum cost of any edge between nodes in the same part is maximized. In other words, we want to maximize
