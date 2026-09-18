@@ -173,14 +173,58 @@ Hence, w.h.p. there is at least one all-$X$ line.
 \end{enumerate}
 
 \solution
+Let $X$ be the number of $k$-cycles in $G(n,p)$. 
+We will first compute $\EE[X]$ and $\Var(X)$, then use Chebyshev's inequality.
+We can express the expectation of $X$ as
 \begin{align*}
     \EE[X] &=\sum_{k\text{-cycle }C} \Pr(C\in G(n,p)) && (\text{linearity of expectation}) \\
-    &=\underbrace{\binom{n}{k}\cdot\frac{k!}{2k}}_{\text{number of }k\text{-cycles}}\cdot p^k
+    &=\underbrace{\binom{n}{k}\cdot\frac{k!}{2k}}_{\text{number of }k\text{-cycles}}\cdot p^k \\
+    &\geq c_k(np)^{2k}.
 \end{align*}
+for some constant $c_k$ and where we use the inequality $\binom{n}{k}\geq c'_k n^k$ from some constant $c'_k$. 
+For each $k$-cycle $C$ in $K_n$, let $\xi_C$ be the indicator random variable on the event that $C\in G(n,p)$. 
+It follows that $X=\sum_{C}\xi_C$ and therefore we can write its square as
 
 \begin{align*}
-    \EE[X^2] &= \sum_{k\text{-cycle } C}\Pr\left(C\in G(n,p)\right) + 2\sum_{\text{distict }k\text{-cycles }C_1,C_2}\Pr\left(C_1,C_2\in G(n,p)\right)
+    \EE[X]^2 &= \left(\sum_{C}\EE[\xi_C]\right)^2   && \text{(linearity of expectation)}\\
+    &=\sum_{\substack{k\text{-cycles} \\ C_1,C_2}}\EE[\xi_{C_1}]\EE[\xi_{C_2}].
 \end{align*}
+
+Next, we express $\EE[X^2]$ as
+\begin{align*}
+    \EE[X^2]  &= \sum_{\substack{k\text{-cycles} \\ C_1,C_2}} \EE[\xi_{C_1}\xi_{C_2}] \\
+    &= \sum_{h=0}^k\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] \\
+    &\qquad\qquad\qquad\qquad\qquad (\text{split by number of overlapping vertices } h) \\
+    &= \underbrace{\sum_{\substack{k\text{-cycle } C}} \EE[\xi_{C}\xi_{C}] + \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with no overlapping vertices}}} \EE[\xi_{C_1}\xi_{C_2}]}_{(1)} + \underbrace{\sum_{h=1}^{k-1}\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}]}_{(2)}. 
+\end{align*}
+
+Due to the independence of the events in the products of $(1)$, for each expectation we have that $\EE[\xi_{C_1}\xi_{C_2}] = \EE[\xi_{C_1}]\EE[\xi_{C_2}]$. 
+Hence, $(1)\leq \EE[X]^2$.
+For $(2)$, consider each $h$ term separately. We get
+\begin{align*}
+    \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] &= \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] \\
+    &=\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \Pr(C_1,C_2\in G(n,p)) 
+\end{align*}
+There are at most $\binom{n}{2k-h}\binom{2k-h}{k}\leq c^{(2)}_k n^{2k-h}$ terms in the sum for some constant $c^{(2)}_k$. 
+For each such $C_1,C_2$, $C_1$ and $C_2$ combined have $|C_1\cup C_2|\geq 2k-(h-1) = 2k-h+1$ edges. 
+Hence, we can upper bound the probability that they are contained in $G(n,p)$ as
+
+\begin{align*}
+    \Pr(C_1,C_2\in G(n,p)) = p^{|C_1\cup C_2|} \leq p^{2k-h+1}.
+\end{align*}
+Thus, we can bound (2) by
+\begin{align*}
+    \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \Pr(C_1,C_2\in G(n,p))  & \leq c^{(2)}_k n^{2k-h} p^{2k-h+1} \\
+    & = c^{(2)}_k p (np)^{2k-h}.
+\end{align*}
+Finally, by Chebyshev's inequality we have that
+\begin{align*}
+    \Pr(X=0)\leq \Pr(|X-\EE[X]|\geq \EE[X]) &\leq \frac{\Var(X)}{\EE[X]^2} \\
+    &= \frac{\EE[X^2] -\EE[X]^2}{\EE[X]^2} \\
+    &\leq \frac{\sum_{h=1}^{2k-1} c^{(2)}_k p (np)^{2k-h}}{c_k(np)^{2k}}.
+\end{align*}
+All terms in the sum are $o((np)^{2k})$, so the above term goes to zero as $n\to\infty$. 
+Therefore, the probability that $G(n,p)$ contains a $k$-cycle goes to one as $n\to\infty$.
 
 \noindent For the next two questions you may use the following without proof.
 
@@ -200,6 +244,28 @@ Let $\zeta_1,\dots,\zeta_n$ be independent random variables with $\EE(\zeta_i) =
 \end{enumerate}
 
 \solution
+\ul{$\Pr(\nu - pn\geq b)$}:
+Define the random variable $\zeta_i = \xi_i -p$. 
+Its expectation is $\EE[\zeta_i]=0$ and $\lvert \zeta_i\rvert\leq 1$ for all $i$. 
+Hence, we can express our desired term as
+
+\begin{align*}
+    \Pr(\nu-pn\geq b) &=\Pr(\sum_{i=1}^n\left(\xi_i-p\right) \geq b) \\
+    &=\Pr(\sum_{i=1}^n\zeta_i\geq b) \\
+    &\leq e^{-\frac{b^2}{2n}} &&(\Cref{thm:hoeffding}).
+\end{align*}
+
+\ul{$\Pr(\nu - pn\geq b)$}:
+Define the random variable $\zeta'_i = -\zeta_i$. 
+Its expectation is $\EE[\zeta'_i]=0$ and $\lvert \zeta'_i\rvert\leq 1$ for all $i$. 
+Hence, we can express our desired term as
+
+\begin{align*}
+    \Pr(|\nu-pn|\geq b) &= \Pr(\nu-pn\geq b) + \Pr(\nu-pn\leq -b) \\
+    &\leq e^{-\frac{b^2}{2n}} + \Pr(\sum_{i=1}^n\zeta_i\leq -b) \\
+    &=e^{-\frac{b^2}{2n}} + \Pr(\sum_{i=1}^n\zeta'_i\leq b) \\
+    &\leq 2e^{-\frac{b^2}{2n}} &&(\Cref{thm:hoeffding}).
+\end{align*}
 
 \begin{enumerate}[resume]
 \item Prove that for any constant $d$, or for any increasing function $d = d(n)$, we have for sufficiently large $n$ that there is a coloring of $[n]^d$ by X's and O's so that for every geometric line, the number of X's and the number of O's differ by at most
@@ -211,6 +277,37 @@ Here geometric line is as defined in Question 1, and you will want your count fr
 \end{enumerate}
 
 \solution
+We will define a random variable that is the discrepency (the difference in $X$'s and $O$'s) for each line. 
+We will upper bound the probability that the discrepency for each line is higher than the above bound using Chernoff. 
+Finally, we will bound the probability that any line has high discrepency using the union bound.
+
+Select whether each coordinate is colored $X$ or $O$ independently with probability $\frac{1}{2}$.
+For each geometric line $\ell$, define the following indicator random variable
+\begin{align*}
+    \xi_{\ell,j} = \begin{cases}
+        1 &\text{if the }j\text{th point in the line is assigned $X$}, \\
+        -1 &\text{otherwise,}
+    \end{cases}
+\end{align*}
+for each $j\in [n]$. For all lines $\ell$ and all $j\in[n]$, we have that $\EE[\xi_{\ell,j}]=0$ and $\lvert\xi_{\ell,j}\rvert \leq 1$. 
+Define the random variable $X_\ell=\sum_{j\in[n]}\xi_{\ell,j}$. By the answer to Question 3, we get that 
+\begin{align*}
+    \Pr(|X_\ell|\geq \sqrt{10nd\log n})&\leq 2e^{-\frac{10nd\log n}{2n}} \\
+    & = 2e^{-5d\log n} \\
+    & = 2n^{-5d}.
+\end{align*}
+Therefore, the probability that any one line has a discrepency $\lvert X_\ell\rvert$ greater than the threshold is
+\begin{align*}
+    \Pr(\text{any line has }\lvert X_\ell\rvert\geq \sqrt{10nd\log n}) &\leq \sum_{\text{line }\ell}\Pr(|X_\ell|\geq \sqrt{10nd\log n}) && \text{(union bound)} \\
+    &\leq \frac{1}{2}\left((n+2)^d-n^d\right)\cdot 2n^{-5d} \\
+    &\leq n^d\cdot n^{-5d} \\
+    &= n^{-4d},
+\end{align*}
+where the second inequality uses our count of lines from Question 1. 
+For constant or increasing $d$, this approaches zero as $n\to\infty$. 
+Hence, for sufficiently large $n$, the probability that any line has $\lvert X_\ell\rvert\geq \sqrt{10nd\log n}$ is lower than $1$, so there must exist some coloring such that all lines have $\lvert X_\ell\rvert < \sqrt{10nd\log n}$.
+
+
 
 \begin{enumerate}[resume]
 \item This question refers to Section 4 of the probability supplement (\texttt{prob.pdf}), where for random variables $\eta,\nu$ the conditional expectation $\EE(\eta\mid\nu)$ is defined; recall that it is the random variable given by $x_0\mapsto\EE(\eta\mid\nu = \nu(x_0))$.
@@ -228,8 +325,28 @@ Here geometric line is as defined in Question 1, and you will want your count fr
 
 \solution
 \paragraph{(a)}
+Let $T = \{t: \exists x_0\in \Omega \text{ s.t. } \nu(x_0)=t\}$ be the set of values taken by $\nu$.
+\begin{align*}
+    \EE[\EE[\eta|\nu]] &= \sum_{x_0\in \Omega}\Pr(x_0)\EE[\eta|\nu = \nu(x_0)] \\
+    &= \sum_{x_0\in \Omega} \Pr(x_0)\cdot\frac{1}{\Pr(\nu = \nu(x_0))}\sum_{\substack{x\in \Omega\\ \nu(x) = \nu(x_0)}}\Pr(x)\eta(x) \\
+    &= \sum_{t\in T} \frac{\sum_{\substack{x_0\in \Omega \\ \text{s.t. } \nu(x_0) = t} }\Pr(x_0) }{\Pr(\nu = \nu(x_0))}\sum_{\substack{x\in \Omega\\ \nu(x) = t}}\Pr(x)\eta(x) \\
+    &= \sum_{t\in T} \sum_{\substack{x\in \Omega\\ \nu(x) = t}}\Pr(x)\eta(x) \\
+    &= \sum_{x\in \Omega}\Pr(x)\eta(x) \\
+    &= \EE[\nu].
+\end{align*}
 
 \paragraph{(b)}
+\begin{align*}
+    \EE[\eta\nu] &=\sum_{x_0\in \Omega} \Pr(x_0) \eta(x_0) \nu(x_0) \\
+    &=\sum_{t\in T} \sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) t \eta(x_0)  \\
+    &=\sum_{t\in T} t\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0) \\
+    &=\sum_{t\in T} \Pr(\nu=t)\cdot t\cdot \frac{1}{\Pr(\nu=t)}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0) \\
+    &=\sum_{t\in T} \left(\sum_{\substack{x\in \Omega \\ \nu(x) = t}}\Pr(x)\right)\cdot t\cdot \frac{1}{\Pr(\nu=t)}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0)  \\
+    &=\sum_{t\in T} \sum_{\substack{x\in \Omega \\ \nu(x) = t}} \left(\Pr(x)\cdot \nu(x)\cdot \frac{1}{\Pr(\nu=\nu(x))}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = \nu(x)}}\Pr(x_0) \eta(x_0) \right)\\
+    &=\sum_{t\in T} \sum_{\substack{x\in \Omega \\ \nu(x) = t}} \Pr(x)\cdot \nu(x)\cdot \EE[\eta|\nu] \\
+    &=\sum_{x\in \Omega} \Pr(x)\cdot \nu(x)\cdot \EE[\eta|\nu] \\
+    &=\EE[\nu\EE[\eta|\nu]].
+\end{align*}
 
 \begin{enumerate}[resume]
 \item Consider the standard $d$-simplex $S$ embedded in $\reals^{d+1}$, which is the convex hull of the $d+1$ standard basis vectors
@@ -240,9 +357,24 @@ The coordinate values of a random point in $S$ have expected value $1/(d+1)$ (pr
 
 For this problem, note that $S$ is the collection of all points $(x_1,\dots,x_{d+1})$, $x_i\geq 0$, such that $\sum_{i=1}^{d+1}x_i = 1$. Moreover, if one defines $o_i = \sum_{j\leq i}x_j$, where $x\in S$ is a uniform sample, we have that $o_1,o_2,\dots,o_d$ is a list of uniformly random points in $[0,1]$ under the conditioning that $o_1\leq o_2\leq\dots\leq o_d$. (You can use this statement without proof.) There is a hint for this problem on the last page of the assignment.
 
-\emph{Hint:} You want to come up with a way to sample $x$ with a sequence of independent choices so that you can apply Azuma's or McDiarmid's inequality. For this it suffices to sample the list $o_1,\dots,o_d$ indicated above, since from this list you can recover the coordinates $x_1,\dots,x_{d+1}$. You can't just sample $o_1$, then $o_2$, etc, because the choices aren't independent because of the order requirement that $o_1\leq o_2\leq\dots\leq o_d$. How can you sample $o_1,o_2,\dots,o_d$ with a sequence of independent choices?
+% \emph{Hint:} You want to come up with a way to sample $x$ with a sequence of independent choices so that you can apply Azuma's or McDiarmid's inequality. For this it suffices to sample the list $o_1,\dots,o_d$ indicated above, since from this list you can recover the coordinates $x_1,\dots,x_{d+1}$. You can't just sample $o_1$, then $o_2$, etc, because the choices aren't independent because of the order requirement that $o_1\leq o_2\leq\dots\leq o_d$. How can you sample $o_1,o_2,\dots,o_d$ with a sequence of independent choices?
 \end{enumerate}
 
 \solution
+
+Let $X_i$ be the random variable which takes the value of the $i$th coordinate of a uniform sample of the $d$-simplex.
+By linearity of expectation and the fact that $\sum_{i=1}^{d+1}x_i=1$ for all points of the simplex, we have that
+\begin{align*}
+    \sum_{i=1}^{d+1} \EE[X_i] = \EE[1] = 1.
+\end{align*}
+Furthermore, (permuting the dimensions does not change the distributions, so $\EE[X_i] = \EE[X_j]$ for all $i,j\in [d+1]$.)
+Hence, we get that
+\begin{align*}
+    (d+1) * \EE[X] = 1\\
+    \Rightarrow \EE[X] = \frac{1}{d+1}.
+\end{align*}
+FORMALIZE
+
+
 
 \end{document}
