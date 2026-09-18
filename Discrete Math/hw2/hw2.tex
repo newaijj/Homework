@@ -1,0 +1,248 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\title{21-701: Discrete Mathematics \\ Homework 2}
+\author{Poon Tze-Yang}
+\date{Due September 23, 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Instructor: Wesley Pegden
+
+\begin{enumerate}
+\item Throughout this problem we regard $[n]^d = \{1,2,\dots,n\}^d$ as a subset of $\reals^d$ in the standard way.
+
+A \emph{geometric line} in $[n]^d$ is a set $L\subseteq[n]^d$ of $n$ distinct points which are collinear in $\reals^d$; that is, a set $L$ with $|L| = n$ for which there exist $a\in\reals^d$ and $v\in\reals^d\setminus\{0\}$ such that
+\[
+L \subseteq \{a + sv \mid s\in\reals\}.
+\]
+Note that a geometric line is a set of points, so that a line and its reversal are the same line, and note that we require $|L| = n$ exactly. We write $\calL_{n,d}$ for the $n$-uniform hypergraph on the vertex set $[n]^d$ whose edges are the geometric lines of $[n]^d$. In class we studied the case $n=8$, $d=3$, since $\calL_{8,3}$ is the hypergraph underlying $8\times8\times8$ tic-tac-toe.
+\begin{enumerate}
+\item How many geometric lines does $[n]^d$ have? \emph{Suggestion:} begin by characterizing exactly which subsets of $[n]^d$ are geometric lines.
+\item Suppose we set each vertex of $[n]^d$ to be an X with probability $p$ and an O with probability $1-p$, independently. Say a geometric line is \emph{all-X} if every one of its $n$ vertices is set to X.
+
+Taking $d = \alpha n$ for a constant $\alpha>0$, determine a threshold $f_\alpha(n)$ --- make it as simple as you can --- such that
+\begin{itemize}
+\item if $p = o(f_\alpha(n))$, then w.h.p.\ there is no all-X geometric line, while
+\item if $p = \omega(f_\alpha(n))$, then w.h.p.\ there is at least one all-X geometric line.
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+
+\solution
+\paragraph{(a)}
+There are $((n+2)^d -n^d)/2$ geometric lines in $[n]^d$.
+
+All geometric lines are either increasing, decreasing or constant in each dimension, and there are $(n+2)^d$ such choices.
+However, geometric lines cannot be constant in all dimensions, so we need to subtract $n^d$ such choices ($n$ constant values for each dimension).
+Furthermore, each line has two endpoints we can start selecting points from, so it has two representations as a choice of increasing/decreasing/constant coordinates in each dimension, which is why we divide the final expression by 2.
+
+\paragraph{(b)}
+
+\ul{$p$ sufficiently small:}
+\begin{align*}
+    \Pr(\text{there exists an all-}X \text{ line}) &\leq \sum_{\ell} \Pr(\ell \text{ is all-}X)&& (\text{Union Bound}) \\
+    & = \frac{1}{2}((n+2)^{\alpha n}-n^{\alpha n}) p^{ n} \\
+    & \leq (p(n+2)^{\alpha})^n.
+\end{align*}
+
+Thus, if $p= o\left(\frac{1}{(n+2)^\alpha}\right)$, the above term goes to zero as $n\to \infty$.
+Hence, w.h.p there is are no all-$X$ lines.
+
+\ul{$p$ sufficiently big:}
+We construct a large set of lines $L$ which do now share vertices. 
+Hence, the event that each line in $L$ is all-$X$ is independent.
+
+Let $L$ be the set of lines which are constant in the first $d-1$ dimensions and increasing in the $d$th dimension. 
+Then there are $n^{d-1} = n^{\alpha n-1}$ such lines.
+
+The probability that all lines are not all-$X$ is upper bounded by the probability that all lines in $L$ are not all-$X$.
+
+\begin{align*}
+    \Pr(\text{all lines in }L\text{ are not all-}X) &= \prod_{\ell\in L}\Pr (\ell\text{ is not all-}X) \\
+    & =(1-p^n)^{n^{\alpha n - 1}}
+\end{align*}
+
+Using the Taylor's series approximation $\ln (1-x)\approx -x \Rightarrow 1-x \approx \exp(-x)$ for $x=p^n$.
+
+\begin{align*}
+    \Pr(\text{all lines in }L\text{ are not all-}X) &\approx \exp\left(-p^n{n^{\alpha n - 1}}\right) \\
+    & = \exp\left(-\frac{1}{n}(pn^\alpha)^n\right).
+\end{align*}
+
+Thus, if $p = \omega\left(\frac{1}{n^\alpha}\right)$, as $n\to \infty$, $\frac{1}{n}(pn^\alpha)^n \to \infty$, so the above term tends to $0$. 
+Hence, w.h.p. there is at least one all-$X$ line. 
+
+\begin{enumerate}[resume]
+\item Let $k\geq 3$ be a constant, and suppose $np\to\infty$. Prove that
+\[
+\Pr\bigl(G(n,p)\text{ contains a $k$-cycle}\bigr)\to 1 \quad\text{as } n\to\infty.
+\]
+
+\emph{Note:} In lecture we proved a general threshold result for the appearance of an arbitrary fixed subgraph $H$ in $G(n,p)$. Do not simply quote that theorem. Give a self-contained argument for this special case: let $X$ be the number of $k$-cycles in $G(n,p)$, compute $\EE(X)$ and bound $\Var(X)$ directly, and apply the second moment method to these computations.
+\end{enumerate}
+
+\solution
+\begin{align*}
+    \EE[X] &=\sum_{k\text{-cycle }C} \Pr(C\in G(n,p)) && (\text{linearity of expectation}) \\
+    &=\underbrace{\binom{n}{k}\cdot\frac{k!}{2k}}_{\text{number of }k\text{-cycles}}\cdot p^k
+\end{align*}
+
+\begin{align*}
+    \EE[X^2] &= \sum_{k\text{-cycle } C}\Pr\left(C\in G(n,p)\right) + 2\sum_{\text{distict }k\text{-cycles }C_1,C_2}\Pr\left(C_1,C_2\in G(n,p)\right)
+\end{align*}
+
+\noindent For the next two questions you may use the following without proof.
+
+
+\begin{theorem}\label{thm:hoeffding}
+Let $\zeta_1,\dots,\zeta_n$ be independent random variables with $\EE(\zeta_i) = 0$ and $|\zeta_i|\leq 1$ for all $i$, and let $\eta = \sum_{i=1}^n \zeta_i$. Then
+\[
+\Pr(\eta\geq a)\leq e^{-a^2/2n}.
+\]
+\end{theorem}
+
+\begin{enumerate}[resume]
+\item Let $\xi_1,\dots,\xi_n$ be independent random variables with $\Pr(\xi_i = 1) = p$ and $\Pr(\xi_i = 0) = 1-p$, and let $\nu = \sum_{i=1}^n \xi_i$. Use \cref{thm:hoeffding} to bound each of the following:
+\[
+\Pr(\nu - pn\geq b), \qquad \Pr(|\nu - pn|\geq b).
+\]
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[resume]
+\item Prove that for any constant $d$, or for any increasing function $d = d(n)$, we have for sufficiently large $n$ that there is a coloring of $[n]^d$ by X's and O's so that for every geometric line, the number of X's and the number of O's differ by at most
+\[
+\sqrt{10\, n d\log n}.
+\]
+
+Here geometric line is as defined in Question 1, and you will want your count from Question 1(a).
+\end{enumerate}
+
+\solution
+
+\begin{enumerate}[resume]
+\item This question refers to Section 4 of the probability supplement (\texttt{prob.pdf}), where for random variables $\eta,\nu$ the conditional expectation $\EE(\eta\mid\nu)$ is defined; recall that it is the random variable given by $x_0\mapsto\EE(\eta\mid\nu = \nu(x_0))$.
+\begin{enumerate}
+\item (Supplement Ex.~18, the tower property.) Prove that for random variables $\eta,\nu$, we have
+\[
+\EE(\EE(\eta\mid\nu)) = \EE(\eta).
+\]
+\item (Supplement Ex.~19.) Prove that for random variables $\eta,\nu$, we have
+\[
+\EE(\eta\nu) = \EE(\nu\,\EE(\eta\mid\nu)).
+\]
+\end{enumerate}
+\end{enumerate}
+
+\solution
+\paragraph{(a)}
+
+\paragraph{(b)}
+
+\begin{enumerate}[resume]
+\item Consider the standard $d$-simplex $S$ embedded in $\reals^{d+1}$, which is the convex hull of the $d+1$ standard basis vectors
+\[
+(1,0,\dots,0),\ (0,1,0,\dots,0),\ \dots,\ (0,0,\dots,0,1)\in\reals^{d+1}.
+\]
+The coordinate values of a random point in $S$ have expected value $1/(d+1)$ (prove this). Call a point $x\in S$ \emph{unusually small} if more than $.6(d+1)$ of its $d+1$ coordinate values have value less than this expectation. Use Azuma's inequality or (after Wednesday) McDiarmid's inequality to prove that all but at most a $e^{-\beta d}$ fraction of the points of $S$ are unusually small, for a fixed constant $\beta>0$.
+
+For this problem, note that $S$ is the collection of all points $(x_1,\dots,x_{d+1})$, $x_i\geq 0$, such that $\sum_{i=1}^{d+1}x_i = 1$. Moreover, if one defines $o_i = \sum_{j\leq i}x_j$, where $x\in S$ is a uniform sample, we have that $o_1,o_2,\dots,o_d$ is a list of uniformly random points in $[0,1]$ under the conditioning that $o_1\leq o_2\leq\dots\leq o_d$. (You can use this statement without proof.) There is a hint for this problem on the last page of the assignment.
+
+\emph{Hint:} You want to come up with a way to sample $x$ with a sequence of independent choices so that you can apply Azuma's or McDiarmid's inequality. For this it suffices to sample the list $o_1,\dots,o_d$ indicated above, since from this list you can recover the coordinates $x_1,\dots,x_{d+1}$. You can't just sample $o_1$, then $o_2$, etc, because the choices aren't independent because of the order requirement that $o_1\leq o_2\leq\dots\leq o_d$. How can you sample $o_1,o_2,\dots,o_d$ with a sequence of independent choices?
+\end{enumerate}
+
+\solution
+
+\end{document}

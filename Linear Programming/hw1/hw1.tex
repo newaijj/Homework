@@ -144,6 +144,15 @@ and
 Let the optimal values of these two programs be $N$ and $D$ respectively.
 Then we can take $K = N/D$ as a lower bound for the optimal cost.
 
+(CORRECTION:)
+
+(The above method solves a problem with a >0, which is not allowed.)
+
+Instead, we should define variables $y = \frac{1}{f^T x + g}$ and $z=y x$. (picture taken of solution)
+This rewrite makes the objective writable as a linear program, then we can directly change relax inequality $y>0$ to $y\geq 0$. 
+The new formulation is a relaxation
+
+
 \begin{enumerate}[resume]
 \item \textbf{[15 points]} Consider a polyhedron $P$ given in inequality form, i.e., $P = \{x\in\reals^n : a_i^\top x \leq b_i \ \forall i = 1,\ldots,m\}$. A Euclidean ball with center $y\in\reals^n$ and radius $r$ is defined as $B_r(y) := \{x\in\reals^n : \|x-y\|_2 \leq r\}$, i.e., set of all points within Euclidean distance of $r$ from $y$. We are interested in finding a ball with largest possible radius, which is entirely contained in $P$. The center of such a ball is called Chebychev center of $P$. Provide a linear programming formulation of this problem.
 \end{enumerate}
@@ -158,6 +167,10 @@ This can be formulated as follows:
     & r \geq 0.
 \end{align*}    
 The maximizing $y$ gives the Chebychev center of $P$.
+
+(CORRECTION:)
+$r$ needs to be normalized in each direction. 
+We need to multiply $a^T\frac{a_i}{\lVert a_i\rVert}$ to the $r$ term.
 
 \begin{enumerate}[resume]
 \item \textbf{[15 points]} Given two sets $U, V\subset\reals^m$, we define $U + V = \{x\in\reals^m : \exists u\in U, \exists v\in V \text{ s.t. } x = u+v\}$.
@@ -182,6 +195,10 @@ Furthermore, taking only one $Q$ which is the union of all $Q_s$ is equivalent.
 Thus, $D$ is polyhedral if and only of $D' = \{x\in\reals^n : x + Q \subseteq P\}$ is polyhedral.
 For each constraint of $P$, the set of values of $x$ that satisfy $x + Q \subseteq P$ forms a half-space, since only the largest $Q$ in the direction normal to that constraint matters.
 Hence, $D'$ is the intersection of half-spaces, and is polyhedral.
+
+CORRECTION:
+
+Need to take supremum in each direction, not just "largest $Q$".
 
 \begin{enumerate}[resume]
 \item \textbf{[15 points]} Which of the following claims is always true? Give a proof of the correct claim and give a counter example for incorrect one.
@@ -213,6 +230,8 @@ We can add redundant constraints to the system $Ax\leq 0$ to obtain a system $A'
 \paragraph{(a)} Considering the system of equations with the non-negativity constraints, we are guaranteed to have feasible solutions.
 At basic feasible solutions, at least $n-m$ of the non-negativity constraints are tight.
 Hence, at least $n-m$ of the variables are zero, and at most $m$ of the variables are positive.
+
+(Can do this, alternatively, can use Caratheodory for conic combinations to be cleaner and more formal)
 
 \paragraph{(b)} We prove the contrapositive, which states that if every sub-system of $n+1$ inequalities from the system is feasible, then the original system is feasible.
 Note that the half-space defined by each inequality is convex.
