@@ -357,7 +357,7 @@ The coordinate values of a random point in $S$ have expected value $1/(d+1)$ (pr
 
 For this problem, note that $S$ is the collection of all points $(x_1,\dots,x_{d+1})$, $x_i\geq 0$, such that $\sum_{i=1}^{d+1}x_i = 1$. Moreover, if one defines $o_i = \sum_{j\leq i}x_j$, where $x\in S$ is a uniform sample, we have that $o_1,o_2,\dots,o_d$ is a list of uniformly random points in $[0,1]$ under the conditioning that $o_1\leq o_2\leq\dots\leq o_d$. (You can use this statement without proof.) There is a hint for this problem on the last page of the assignment.
 
-% \emph{Hint:} You want to come up with a way to sample $x$ with a sequence of independent choices so that you can apply Azuma's or McDiarmid's inequality. For this it suffices to sample the list $o_1,\dots,o_d$ indicated above, since from this list you can recover the coordinates $x_1,\dots,x_{d+1}$. You can't just sample $o_1$, then $o_2$, etc, because the choices aren't independent because of the order requirement that $o_1\leq o_2\leq\dots\leq o_d$. How can you sample $o_1,o_2,\dots,o_d$ with a sequence of independent choices?
+\emph{Hint:} You want to come up with a way to sample $x$ with a sequence of independent choices so that you can apply Azuma's or McDiarmid's inequality. For this it suffices to sample the list $o_1,\dots,o_d$ indicated above, since from this list you can recover the coordinates $x_1,\dots,x_{d+1}$. You can't just sample $o_1$, then $o_2$, etc, because the choices aren't independent because of the order requirement that $o_1\leq o_2\leq\dots\leq o_d$. How can you sample $o_1,o_2,\dots,o_d$ with a sequence of independent choices?
 \end{enumerate}
 
 \solution
@@ -375,6 +375,12 @@ Hence, we get that
 \end{align*}
 FORMALIZE
 
-
+Use McDiarmid's inequality, $Y_i$ is the coordinate of the $i$th (unsorted) point.
+Let $Z$ be the number of coordinates smaller than expectation.
+Let $\xi_i$ be the event that the $i$th coordinate is smaller than expectation.
+By linearity of expectation, $\EE[Z] = \sum_{i=1}^n \Pr (\xi_i)$.
+But the dimensions are symmetric.
+Now we just need to calculate $\Pr(\xi)$.
+Equal to probability that one point is smaller than expectation of the first coordinate.
 
 \end{document}

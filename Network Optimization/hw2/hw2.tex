@@ -346,14 +346,60 @@ The dual is as follows:
     y_S\leq 0 && \forall S\subset V 
 \end{align*}
 
-(Imagine increasing $y_V$ continuously. 
-First constraint to get tight is cheapest edge.
-Then, as we increase $y_V$ further, we somehow decrease $y_S$'s in a way that we cover all the already tight edges but also decrease the objective the least.)
+Consider Kruskal's algorithm on the given graph. 
+Let the sequence of edges it selects be $E^\ALG = \langle e_1, .. , e_{n-1}\rangle$.
+This produces a sequence of forests $F_i:=\bigcup_{j=1}^i \{e_j\}$ for $i\in \{0 .. n-1\}$, where $F_0=\emptyset$ and $F_{n-1}$ is a minimum spanning tree.
+For each $i \in \{0.. n-2\}$, let $C_i$ be the connected-component containing $e_i$ in $F_i$, and let $e'_i$ be next edge added to $C_i$.
+Let the collection of these components and the final tree $F_{n-1}$ be $\calC$.
 
-(Variables with $|S|=1 $ do not contribute to the solution so can be set to some non-zero value. Need this argument somewhere)
+Consider the solution $y$ such that 
 
-(Give a dual solution with a laminar set of non-zero dual variables of maximum size.
-Then we have like $n-1$ laminar tight constraints, so comparing tight constraints, we see they differ by adding a ?)
+\begin{align*}
+    y_S = \begin{cases}
+        c_{e_{n-1}} & \text{for } S=V, \\
+        -(c_{e'_i} - c_{e_i})  & \text{for } S = V(C_i), \\
+        0 & \text{otherwise.}
+    \end{cases}
+\end{align*}
+
+\begin{lemma}
+    $y$ is dual-feasible.
+\end{lemma}
+\begin{proof}
+    Since Kruskal's adds each $e'_i$ at a later time than $e_i$ we have that $c_{e'_i}\geq c_{e_i}$, so all non-positivity constraints are satisfied.
+    For each $e\in E$, consider the following cases
+    \begin{enumerate}
+        \item \ul{$e \in E^\ALG$.} 
+        The only non-zero dual variables in the corresponding constraints are the elements of $\calC$ containing $e$.
+        Let $E'':=\langle e''_0=e, .. , e''_k = e_{n-1}\rangle$ be the sequence of edges starting at $e$ such that $e''_{j+1} = e'_j$, i.e., $e''_{j+1}$ is the next edge added to the first component containing $e_j$.
+        Note that this sequence must end in $e_{n-1}$, since $e_{n-1}$ is the last edge added and there is only one component in the final spanning tree.
+        Hence, we get
+        \begin{align*}
+            y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{C\in \calC: e\in C} y_{V(C)} \\
+            & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + e''_j\right) \\
+            & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
+            & = c_e. 
+        \end{align*}
+        Thus, the corresponding constraint holds.
+        \item \ul{$e \notin E^\ALG$.} Let $C_i$ be the first component that contains $e$, such that $e_i$ is the corresponding edge in $E^\ALG$ that created that component.
+        It follows that the terms on the left-hand-side of the constraint corresponding to $e$ are the same as those of $e_i$'s, since $e$ and $e_i$ share the same first component.
+        
+        Additionally, $e_i$ and $e$ sharing the first component means that at the time when $e_i$ was first picked, $e$ was not spanned by any existing component.
+        According to Kruskal's this means that $c_e\geq c_{e_i}$. Hence, the constraint corresponding to $e$ also holds.
+    \end{enumerate}
+\end{proof}
+
+Next, we show that the dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's. 
+Together with the fact that all $y_S$ values are integer if all $c_e$ are integer non-negative, This shows that the primal optimal value is also integer, completing the proof.
+
+\begin{lemma}
+    The dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+\end{lemma}
+\begin{proof}
+    (Sketch): Since each component is a tree, the coefficient exactly splits $y_S$ of value into each edge of the final tree it contains.
+    Then, we can redistribute the objective such that each edge taken by Kruskal's gets exactly $c_e$ of value.
+\end{proof}
+
 
 \begin{enumerate}[resume]
 \item[10.**] Given a complete graph on nodes $V$ with a cost $c_{uv}$ between every pair of nodes $\{u,v\}$, partition $V$ into two parts $V_1, V_2$ such that the minimum cost of any edge between nodes in the same part is maximized. In other words, we want to maximize
@@ -365,5 +411,21 @@ Give an efficient algorithm for the task. Show an easy $O(|V|)$ procedure to che
 
 \solution
 
+Algorithm: 
+Starting from an empty graph, add edges in ascending order of weight.
+After adding each edge, check whether the graph contains an odd cycle.
+We can compute this by trying to 2-color the graph.
+Return the bipartition just before we get an odd cycle.
+
+Runtime: 
+2-coloring can be done by bfs.
+At most $E$ iterations.
+
+Correctness:
+Any bipartition of the vertices of the odd cycle must contain a monochromatic edge of the cycle.
+Hence, we canot do better than cutting every edge of the odd cycle less the most expensive edge.
+
+Unique solution:
+For each connected component of a graph with a valid 2-coloring, 
 
 \end{document}
