@@ -33,7 +33,7 @@ scaffolded `.tex`. Steps:
    space to write into:
 
    ```latex
-   \begin{enumerate}[resume]
+   \begin{enumerate}[resume=q]
    \item <question text>
    \end{enumerate}
 
@@ -42,8 +42,15 @@ scaffolded `.tex`. Steps:
 
    ```
 
-   - The *first* question uses `\begin{enumerate}` (no `[resume]`); every later one uses
-     `\begin{enumerate}[resume]` so numbering continues across the interleaved solutions.
+   - The *first* question opens the named series with `\begin{enumerate}[series=q]`; every later
+     one uses `\begin{enumerate}[resume=q]` so numbering continues across the interleaved
+     solutions.
+   - Use the named series, never a bare `[resume]`. Because each question's list is closed
+     immediately, solution text sits *outside* any list, so any `enumerate` written inside a
+     solution is itself a level-1 list sharing the `enumi` counter. A bare `[resume]` resumes from
+     whichever level-1 list ended most recently, so one list in one solution silently shifts every
+     subsequent question number (and desynchronises the hard-coded `\item[7.*]` labels below).
+     `resume=q` resumes from the question series regardless of what lists appear in between.
    - Questions marked optional on the sheet keep their marker in an explicit label:
      `\item[7.*]`, `\item[10.**]`. Note these must be hard-coded, so they have to match the
      question's actual position.
