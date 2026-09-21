@@ -375,12 +375,52 @@ Hence, we get that
 \end{align*}
 FORMALIZE
 
-Use McDiarmid's inequality, $Y_i$ is the coordinate of the $i$th (unsorted) point.
-Let $Z$ be the number of coordinates smaller than expectation.
-Let $\xi_i$ be the event that the $i$th coordinate is smaller than expectation.
-By linearity of expectation, $\EE[Z] = \sum_{i=1}^n \Pr (\xi_i)$.
-But the dimensions are symmetric.
-Now we just need to calculate $\Pr(\xi)$.
-Equal to probability that one point is smaller than expectation of the first coordinate.
+For $i\in [d]$, let $Y_i$ be the location of the $i$th point, sampled independently and uniformly from $[0,1]$.
+Call two points \emph{close} if the distance between them is $\leq \frac{1}{d+1}$.
+Define the function $f: [0,1]^d \mapsto \reals_{\geq 0}$ to be half the number of pairs of close consecutive points if we sort all $d$ points in increasing order and include the points $0$ and $1$.
+The function $f$ is 1-coordinate Lipschitz, since each additional point can only increase the number of close pairs by two, i.e., the pairs involving the point immediately before and after it in the sorted order.
+Let the random variable of the value of $f$ be $X:= f(Y_1,.., Y_d)$.
+
+\begin{lemma}
+    $\EE[X] \leq \frac{d+1}{2}\cdot \left(1-\frac{1}{e}\right)\approx 0.316 (d+1)$.
+\end{lemma}
+\begin{proof}
+    By symmetry, the probability that each coordinate is small is equal to the probability that the first coordinate is small.
+    Calculating this probability:
+    \begin{align*}
+        \Pr(\text{first coordinate is small}) &= 1- \Pr\left(\text{all points }\geq \frac{1}{d+1}\right) \\
+        &= 1- \left(\frac{d}{d+1}\right)^d \\
+        &= 1- \left(1-\frac{1}{d+1}\right)^d \\
+        &\leq 1-\frac{1}{e}\approx 0.632.
+    \end{align*}
+    To show the inequality, start with $\left(1-\frac{1}{d+1}\right)^d = \left(\frac{d}{d+1}\right)^d = \left(1+\frac{1}{d}\right)^{-d}$. 
+    Taking logarithms and using $\ln(1+x)\leq x$ with $x=\frac{1}{d}$, we get $\ln\left(\left(1+\frac{1}{d}\right)^{-d}\right) = -d\ln\left(1+\frac{1}{d}\right)\geq -d\cdot\frac{1}{d} =-1$.
+    Exponentiating and combining with the previous equality gives us the inequality $\left(1-\frac{1}{d+1}\right)^d\geq \frac{1}{e}$.
+    By linearity of expectation, we can write 
+    \begin{align*}
+        \EE[X] &= \frac{1}{2}\sum_{i=1}^{d+1} \Pr(i\text{th coordinate is small}) \\
+        &\leq \frac{d+1}{2}\cdot \left(1-\frac{1}{e}\right).
+    \end{align*}
+\end{proof}
+
+McDiarmid's inequality states, 
+\begin{align*}
+    \Pr(X\geq \EE[X]+a)\leq e^{-\frac{a^2}{2d}}
+\end{align*}
+since $f$ takes a $d$-ary input.
+Substituting $a=0.2(d+1)$, we get 
+\begin{align*}
+    \Pr(X\geq 0.6(d+1))
+\end{align*}
+
+A point is unusually small if at least $0.6(d+1)$ pairs are close, i.e., if $X\geq 0.3(d+1)$
+
+% Use McDiarmid's inequality, $Y_i$ is the coordinate of the $i$th (unsorted) point.
+% Let $Z$ be the number of coordinates smaller than expectation.
+% Let $\xi_i$ be the event that the $i$th coordinate is smaller than expectation.
+% By linearity of expectation, $\EE[Z] = \sum_{i=1}^n \Pr (\xi_i)$.
+% But the dimensions are symmetric.
+% Now we just need to calculate $\Pr(\xi)$.
+% Equal to probability that one point is smaller than expectation of the first coordinate.
 
 \end{document}
