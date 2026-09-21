@@ -425,7 +425,7 @@ Consider the solution $y$ such that
         Hence, we get
         \begin{align*}
             y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{C\in \calC: e\in C} y_{V(C)} \\
-            & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + e''_j\right) \\
+            & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + c_{e''_j}\right) \\
             & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
             & = c_e. 
         \end{align*}
@@ -449,6 +449,120 @@ Together with the fact that all $y_S$ values are integer if all $c_e$ are intege
     Then, we can redistribute the objective such that each edge taken by Kruskal's gets exactly $c_e$ of value.
 \end{proof}
 
+% ======================================================================
+% REVISED COPY of the Q9 solution (minimal edits for rigour).
+% Delete either this block or the one above before submitting.
+% ======================================================================
+
+\medskip\noindent\textbf{Solution (revised).}\par\medskip
+
+For each $S\subseteq V$, we have the dual variable $y_S$; here $n:=|V|$ and $S$ ranges over the
+\emph{nonempty} proper subsets of $V$ (for $S=\emptyset$ the primal constraint reads $0\leq -1$).
+Assume the primal problem has a non-negative, integral cost vector $c$.
+The dual is as follows, with $y_V$ free because the constraint for $V$ is an equality:
+
+\begin{align*}
+    \max \ (|V|-1)y_V +\sum_{S\subset V} (|S|-1)y_S\\
+    y_V + \sum_{S\subset V:e\in E(S)} y_S\leq c_e && \forall e\in E \\
+    y_S\leq 0 && \forall S\subset V 
+\end{align*}
+
+Consider Kruskal's algorithm on the given graph. 
+Let the sequence of edges it selects be $E^\ALG = \langle e_1, .. , e_{n-1}\rangle$, so that $c_{e_1}\leq .. \leq c_{e_{n-1}}$.
+This produces a sequence of forests $F_i:=\bigcup_{j=1}^i \{e_j\}$ for $i\in \{0 .. n-1\}$, where $F_0=\emptyset$ and $T:=F_{n-1}$ is a minimum spanning tree.
+For each $i \in \{1.. n-1\}$, let $C_i$ be the connected-component containing $e_i$ in $F_i$, write $S_i:=V(C_i)$, and for $i\leq n-2$ let $e'_i=e_{\iota(i)}$ be the next edge added to $C_i$, i.e.\ $\iota(i):=\min\{j>i: e_j \text{ has an endpoint in } S_i\}$.
+Let the collection of these components and the final tree $F_{n-1}$ be $\calC = \{S_1, .. ,S_{n-1}\}$, where $S_{n-1}=V$ since $T$ is spanning and connected.
+
+\begin{observation}\label{obs:q9}
+    \begin{enumerate}
+        \item $C_i$ is a tree and $E(T)\cap E(S_i)=E(C_i)$; in particular $|S_i|-1=|E(T)\cap E(S_i)|$.
+        \item The $S_i$ are pairwise distinct and $S_i\neq V$ for $i\leq n-2$ (so $e'_i$ exists and $y$ below is well defined), and $\calC$ is laminar.
+        \item For $e\in E$ put $\iota(e):=\min\{i: e\in E(S_i)\}$. Then $\{S\in \calC: e\in E(S)\}$ is the chain $S_{i_0}\subsetneq .. \subsetneq S_{i_k}=V$ given by $i_0=\iota(e)$ and $i_{j+1}=\iota(i_j)$.
+        \item Every component of $F_{i}$ with at least one edge equals $C_j$ for some $j\leq i$.
+    \end{enumerate}
+\end{observation}
+\begin{proof}
+    (1) $C_i$ is a component of a forest, hence a tree on $S_i$; and no $e_j$ with $j>i$ has both endpoints in $S_i$, since $C_i\subseteq F_{j-1}$ is connected and $e_j$ would then close a cycle.
+
+    (2) For $i<j$ both endpoints of $e_j$ lie in $S_j$ but, by (1), not in $S_i$; hence $S_i\neq S_j$.
+    By (1), $|S_i|=|E(C_i)|+1\leq i+1<|V|$ for $i\leq n-2$, and as $T$ is connected some later edge then leaves $S_i$, so $\iota(i)$ is well defined.
+    Laminarity: $S_i$ is connected in $F_i\subseteq F_j$, hence lies inside a single component of $F_j$, which either is $S_j$ or is disjoint from it.
+
+    (3) First, for $i\leq n-2$, we show that the set $S_{\iota(i)}$ is the smallest member of $\calC$ properly containing $S_i$.
+    It contains $S_i$ together with the far endpoint of $e'_i$. 
+    For any other member of $\calC$ containing $S_i$, i.e., $S_j \in \calC$ such that $S_j\supsetneq S_i$, by definition of $\iota(i)$, we have that $j>\iota(i)$.
+    By the laminarity of $\calC$, $S_j$ must also contain $S_{\iota(i)}$ and is therefore larger than $S_{\iota(i)}$.
+    
+    Second, $\{S\in\calC : e\in E(S)\}=\{S\in\calC: S\supseteq S_{\iota(e)}\}$: any $S_j$ containing $e$ meets $S_{\iota(e)}$, so by laminarity it contains or is contained in $S_{\iota(e)}$, and in the latter case the paragraph above gives $j<\iota(e)$, contradicting the minimality of $\iota(e)$ unless the two are equal; the converse inclusion is immediate.
+    Iterating the first part gives the stated chain, which ends at $S_{n-1}=V$.
+
+    (4) Let $K$ be such a component and $e_j$ its last-added edge, so $j\leq i$ and no edge of $F_i\setminus F_j$ touches $K$; then $K$ is the component of $F_j$ containing $e_j$, i.e.\ $K=C_j$.
+\end{proof}
+
+Consider the solution $y$ such that 
+
+\begin{align*}
+    y_S = \begin{cases}
+        c_{e_{n-1}} & \text{for } S=V, \\
+        -(c_{e'_i} - c_{e_i})  & \text{for } S = S_i,\ i\leq n-2, \\
+        0 & \text{otherwise.}
+    \end{cases}
+\end{align*}
+
+\begin{lemma}\label{lem:q9feas}
+    $y$ is dual-feasible, and the constraint of every $e\in E^\ALG$ is tight.
+\end{lemma}
+\begin{proof}
+    Since Kruskal's adds each $e'_i$ at a later time than $e_i$ we have that $c_{e'_i}\geq c_{e_i}$, so all non-positivity constraints are satisfied.
+    For each $e\in E$, consider the following cases
+    \begin{enumerate}
+        \item \ul{$e \in E^\ALG$.} 
+        The only non-zero dual variables in the corresponding constraint are those indexed by the elements of $\calC$ containing $e$, and by Observation~\ref{obs:q9}(3) these form the chain $S_{i_0}\subsetneq .. \subsetneq S_{i_k}=V$ with $i_0=\iota(e)$.
+        Writing $e''_j:=e_{i_j}$, this gives the sequence of edges $E'':=\langle e''_0, .. , e''_k = e_{n-1}\rangle$ with $e''_{j+1} = e'_{i_j}$, i.e., $e''_{j+1}$ is the next edge added to the component $S_{i_j}$.
+        Note that this sequence must end in $e_{n-1}$, since $e_{n-1}$ is the last edge added and there is only one component in the final spanning tree.
+        Moreover $e''_0=e$: both endpoints of $e=e_m$ lie in $S_m$, and for $j<m$ they cannot both lie in $S_j$ by Observation~\ref{obs:q9}(1), so $\iota(e)=m$.
+        Hence, we get
+        \begin{align*}
+            y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{j=0}^{k} y_{S_{i_j}} \\
+            & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + c_{e''_j}\right) \\
+            & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
+            & = c_e. 
+        \end{align*}
+        Thus, the corresponding constraint holds with equality.
+        \item \ul{$e \notin E^\ALG$.} Let $C_i$ be the first component that contains $e$, i.e.\ $i=\iota(e)$, such that $e_i$ is the corresponding edge in $E^\ALG$ that created that component.
+        It follows that the terms on the left-hand-side of the constraint corresponding to $e$ are the same as those of $e_i$'s, since by Observation~\ref{obs:q9}(3) both families are $\{S\in\calC: S\supseteq S_i\}$; by case 1 they sum to $c_{e_i}$.
+        
+        Additionally, $e_i$ and $e$ sharing the first component means that at the time when $e_i$ was first picked, $e$ was not spanned by any existing component: by minimality of $i$ the endpoints of $e$ do not both lie in any $S_j$ with $j<i$, and by Observation~\ref{obs:q9}(4) every component of $F_{i-1}$ with an edge is such an $S_j$ (a component without edges is a single vertex).
+        So $e$ was available when Kruskal's chose the cheapest such edge $e_i$, which means $c_e\geq c_{e_i}$. Hence, the constraint corresponding to $e$ also holds.
+    \end{enumerate}
+\end{proof}
+
+The incidence vector $x^T$ of $T$ is primal-feasible: $x^T\geq 0$, $x^T(E(V))=n-1$, and for each $S$ the edges of $T$ inside $S$ form a forest on $S$, so $x^T(E(S))\leq |S|-1$.
+Next, we show that the dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+By weak duality this proves that $x^T$ is an optimal primal solution; since $x^T\in\{0,1\}^E$, the LP attains its optimum at an integral point, and its value $\sum_{e\in E^\ALG}c_e$ is an integer whenever $c$ is, completing the proof.
+
+\begin{lemma}
+    The dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+\end{lemma}
+\begin{proof}
+    Since each component is a tree, Observation~\ref{obs:q9}(1) says that the coefficient $|S_i|-1$ of $y_{S_i}$ counts exactly the edges of the final tree inside $S_i$ (for $S_{n-1}=V$ this count is $|V|-1=|E(T)|$).
+    All other coordinates of $y$ vanish, so redistributing the objective over those edges, i.e.\ exchanging the order of summation, gives
+    \begin{align*}
+        (|V|-1)y_V + \sum_{S\subset V} (|S|-1)y_S 
+        & = \sum_{i=1}^{n-1} \left|E(T)\cap E(S_i)\right| y_{S_i} \\
+        & = \sum_{e\in E^\ALG} \ \sum_{S\in \calC : e\in E(S)} y_S \\
+        & = \sum_{e\in E^\ALG} \left( y_V + \sum_{S\subset V:e\in E(S)} y_S \right) \\
+        & = \sum_{e\in E^\ALG} c_e && (\text{Lemma~\ref{lem:q9feas}}) \\
+        & = c^\top x^T,
+    \end{align*}
+    where the third equality uses that $V\in\calC$ contains every edge and that $y_S=0$ for $S\notin \calC$.
+    So each edge taken by Kruskal's gets exactly $c_e$ of value.
+\end{proof}
+
+
+
+
+
 
 \begin{enumerate}[resume=q]
 \item[10.**] Given a complete graph on nodes $V$ with a cost $c_{uv}$ between every pair of nodes $\{u,v\}$, partition $V$ into two parts $V_1, V_2$ such that the minimum cost of any edge between nodes in the same part is maximized. In other words, we want to maximize
@@ -460,21 +574,34 @@ Give an efficient algorithm for the task. Show an easy $O(|V|)$ procedure to che
 
 \solution
 
-Algorithm: 
-Starting from an empty graph, add edges in ascending order of weight.
-After adding each edge, check whether the graph contains an odd cycle.
-We can compute this by trying to 2-color the graph.
-Return the bipartition just before we get an odd cycle.
+Assume $|V|\geq 3$, otherwise both parts are singletons and the objective is $\min\emptyset=+\infty$.
+For a threshold $t$ write $G_{<t}:=(V,\{\{u,v\}: c_{uv}<t\})$, and likewise $G_{\leq t}$.
 
-Runtime: 
-2-coloring can be done by bfs.
-At most $E$ iterations.
+\paragraph{Algorithm.}
+Starting from the empty graph on $V$, add the edges in ascending order of cost, all edges of one cost at a time.
+After each batch, check whether the current graph contains an odd cycle by 2-colouring it with BFS.
+Let $t^*$ be the cost of the first batch that creates an odd cycle, and return the 2-colouring $(V_1,V_2)$ of the graph held just before that batch, which is $G_{<t^*}$ (vertices of a component not forced by any edge are coloured arbitrarily).
+Some batch does create an odd cycle, since the complete graph on $|V|\geq3$ nodes contains a triangle.
 
-Correctness:
-Any bipartition of the vertices of the odd cycle must contain a monochromatic edge of the cycle.
-Hence, we canot do better than cutting every edge of the odd cycle less the most expensive edge.
+\paragraph{Runtime.}
+Sorting costs $O(|V|^2\log|V|)$, and each of the at most $\binom{|V|}{2}$ iterations runs a BFS on $O(|V|^2)$ edges, for $O(|V|^4)$ in total.
 
-Unique solution:
-For each connected component of a graph with a valid 2-coloring, 
+\paragraph{Correctness.}
+The monochromatic edges of a bipartition are exactly the uncut ones, so for every $t$:
+\begin{observation}\label{obs:q10}
+    A bipartition $(V_1,V_2)$ has objective value $\geq t$ if and only if it cuts every edge of cost $<t$, i.e.\ if and only if it is a proper 2-colouring of $G_{<t}$.
+\end{observation}
+\noindent
+The graph $G_{<t^*}$ is bipartite, so the returned $(V_1,V_2)$ is a proper 2-colouring of it and by Observation~\ref{obs:q10} has value $\geq t^*$.
+Conversely, $G_{\leq t^*}$ contains an odd cycle $C$; no bipartition 2-colours $C$ properly, so every bipartition leaves some edge of $C$ monochromatic, and that edge has cost $\leq t^*$.
+Hence $\OPT=t^*$ and the returned bipartition is optimal.
+
+\paragraph{Unique solution.}
+Applying Observation~\ref{obs:q10} with $t=t^*=\OPT$: the optimal bipartitions are exactly the proper 2-colourings of $H:=G_{<t^*}$.
+Let $k$ be the number of connected components of $H$ and fix the returned colouring $\chi$.
+Flipping the colours on any union of components of $H$ again gives a proper 2-colouring, and conversely any proper 2-colouring $\chi'$ agrees with $\chi$ either everywhere or nowhere on each component, since the colour of one vertex of a component determines the colours of the rest.
+So the proper 2-colourings are indexed by the $2^k$ subsets of components that are flipped, and two subsets give the same unordered partition exactly when they are complementary; there are $2^{k-1}$ optimal bipartitions.
+The solution is therefore unique iff $k=1$, i.e.\ iff $H$ is connected.
+The BFS that produced $\chi$ also labels every vertex with its component, so it suffices to scan the $|V|$ labels and check that they are all equal, which takes $O(|V|)$ time.
 
 \end{document}
