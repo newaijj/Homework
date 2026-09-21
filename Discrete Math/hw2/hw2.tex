@@ -362,18 +362,27 @@ For this problem, note that $S$ is the collection of all points $(x_1,\dots,x_{d
 
 \solution
 
-Let $X_i$ be the random variable which takes the value of the $i$th coordinate of a uniform sample of the $d$-simplex.
-By linearity of expectation and the fact that $\sum_{i=1}^{d+1}x_i=1$ for all points of the simplex, we have that
-\begin{align*}
-    \sum_{i=1}^{d+1} \EE[X_i] = \EE[1] = 1.
-\end{align*}
-Furthermore, (permuting the dimensions does not change the distributions, so $\EE[X_i] = \EE[X_j]$ for all $i,j\in [d+1]$.)
-Hence, we get that
-\begin{align*}
-    (d+1) * \EE[X] = 1\\
-    \Rightarrow \EE[X] = \frac{1}{d+1}.
-\end{align*}
-FORMALIZE
+Let $x = (X_1,\dots,X_{d+1})$ be a uniform random point of $S$, i.e., $\Pr(x\in A) = \mathrm{vol}(A)/\mathrm{vol}(S)$ for $A\subseteq S$, where $\mathrm{vol}$ denotes $d$-dimensional volume.
+
+\begin{lemma}\label{lem:symmetry}
+    $X_1,\dots,X_{d+1}$ all have the same distribution.
+\end{lemma}
+\begin{proof}
+    Fix $i,j\in[d+1]$ and let $\tau:\reals^{d+1}\to\reals^{d+1}$ swap the $i$th and $j$th coordinates.
+    Its matrix is a permutation matrix, hence orthogonal, so $\tau$ is an isometry and therefore preserves $\mathrm{vol}$.
+    Also $\tau(S)\subseteq S$, since swapping two coordinates preserves both nonnegativity and the coordinate sum.
+    As $\tau^{-1} = \tau$, for every $A\subseteq S$,
+    \begin{align*}
+        \Pr(\tau(x)\in A) = \Pr(x\in\tau(A)) = \frac{\mathrm{vol}(\tau(A))}{\mathrm{vol}(S)} = \frac{\mathrm{vol}(A)}{\mathrm{vol}(S)} = \Pr(x\in A),
+    \end{align*}
+    so $\tau(x)$ has the same distribution as $x$.
+    The $i$th coordinate of $\tau(x)$ is $X_j$, so in particular $X_j$ has the same distribution as $X_i$.
+\end{proof}
+
+By linearity of expectation and $\sum_{i=1}^{d+1}X_i = 1$, we have $\sum_{i=1}^{d+1}\EE[X_i] = 1$.
+By \cref{lem:symmetry}, all $d+1$ terms are equal, so $\EE[X_i] = \frac{1}{d+1}$ for every $i\in[d+1]$.
+
+\qed
 
 For $i\in [d]$, let $Y_i$ be the location of the $i$th point, sampled independently and uniformly from $[0,1]$.
 Call two points \emph{close} if the distance between them is $\leq \frac{1}{d+1}$.
@@ -382,7 +391,7 @@ The function $f$ is 1-coordinate Lipschitz, since each additional point can only
 Let the random variable of the value of $f$ be $X:= f(Y_1,.., Y_d)$.
 
 \begin{lemma}
-    $\EE[X] \leq \frac{d+1}{2}\cdot \left(1-\frac{1}{e}\right)\approx 0.316 (d+1)$.
+    $\EE[X] \geq \frac{d+1}{2}\left(1-e^{-\frac{d}{d+1}}\right)$.
 \end{lemma}
 \begin{proof}
     By symmetry, the probability that each coordinate is small is equal to the probability that the first coordinate is small.
@@ -390,30 +399,38 @@ Let the random variable of the value of $f$ be $X:= f(Y_1,.., Y_d)$.
     \begin{align*}
         \Pr(\text{first coordinate is small}) &= 1- \Pr\left(\text{all points }\geq \frac{1}{d+1}\right) \\
         &= 1- \left(\frac{d}{d+1}\right)^d \\
-        &= 1- \left(1-\frac{1}{d+1}\right)^d \\
-        &\leq 1-\frac{1}{e}\approx 0.632.
+        &= 1- \left(1-\frac{1}{d+1}\right)^{d} \\
+        &\geq 1-e^{-\frac{d}{d+1}},
     \end{align*}
-    To show the inequality, start with $\left(1-\frac{1}{d+1}\right)^d = \left(\frac{d}{d+1}\right)^d = \left(1+\frac{1}{d}\right)^{-d}$. 
-    Taking logarithms and using $\ln(1+x)\leq x$ with $x=\frac{1}{d}$, we get $\ln\left(\left(1+\frac{1}{d}\right)^{-d}\right) = -d\ln\left(1+\frac{1}{d}\right)\geq -d\cdot\frac{1}{d} =-1$.
-    Exponentiating and combining with the previous equality gives us the inequality $\left(1-\frac{1}{d+1}\right)^d\geq \frac{1}{e}$.
+    For the inequality, start with $1-x\leq e^{-x}$.
+    Then using $x=\frac{1}{d+1}$, we have $1-\frac{1}{d+1}\leq e^{-\frac{1}{d+1}} \Rightarrow \left(1-\frac{1}{d+1}\right)^d\leq e^{-\frac{d}{d+1}}$.
+    % To show the inequality, start with $\left(1-\frac{1}{d+1}\right)^d = \left(\frac{d}{d+1}\right)^d = \left(1+\frac{1}{d}\right)^{-d}$. 
+    % Taking logarithms and using $\ln(1+x)\leq x$ with $x=\frac{1}{d}$, we get $\ln\left(\left(1+\frac{1}{d}\right)^{-d}\right) = -d\ln\left(1+\frac{1}{d}\right)\geq -d\cdot\frac{1}{d} =-1$.
+    % Exponentiating and combining with the previous equality gives us the inequality $\left(1-\frac{1}{d+1}\right)^d\geq \frac{1}{e}$.
     By linearity of expectation, we can write 
     \begin{align*}
         \EE[X] &= \frac{1}{2}\sum_{i=1}^{d+1} \Pr(i\text{th coordinate is small}) \\
-        &\leq \frac{d+1}{2}\cdot \left(1-\frac{1}{e}\right).
+        &\geq \frac{d+1}{2}\cdot \left(1-e^{-\frac{d}{d+1}}\right).
     \end{align*}
 \end{proof}
 
-McDiarmid's inequality states, 
+The lower tail bound for McDiarmid's inequality states, 
 \begin{align*}
-    \Pr(X\geq \EE[X]+a)\leq e^{-\frac{a^2}{2d}}
+    \Pr(X\leq \EE[X]-a)\leq e^{-\frac{a^2}{2d}}
 \end{align*}
 since $f$ takes a $d$-ary input.
-Substituting $a=0.2(d+1)$, we get 
+Our lower bound for $\EE[X]$ is increasing in $d$. 
+When $d\geq 19$, we get that $\EE[X]>0.306(d+1)$.
+A point is unusually small if at least $0.6(d+1)$ pairs are close, i.e., if $X\geq 0.3(d+1)$.
+Setting $a=0.006$, we get that the probability that a point is not unusually small is
 \begin{align*}
-    \Pr(X\geq 0.6(d+1))
+    \Pr(X\leq 0.3(d+1)) &<\Pr(X\leq \EE[X] - 0.006(d+1)) \\
+    &\leq e^{-\frac{0.006^2(d+1)^2}{2d}} \\
+    &\leq e^{-\frac{0.006^2 d^2}{2d}} \\
+    &= e^{-\beta d},
 \end{align*}
-
-A point is unusually small if at least $0.6(d+1)$ pairs are close, i.e., if $X\geq 0.3(d+1)$
+where $\beta = \frac{0.006^2}{2}$.
+Hence, at most a $e^{-\beta d}$-fraction of points are not unusally small when $d\geq 19$.
 
 % Use McDiarmid's inequality, $Y_i$ is the coordinate of the $i$th (unsorted) point.
 % Let $Z$ be the number of coordinates smaller than expectation.
