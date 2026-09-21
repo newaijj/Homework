@@ -179,52 +179,88 @@ We can express the expectation of $X$ as
 \begin{align*}
     \EE[X] &=\sum_{k\text{-cycle }C} \Pr(C\in G(n,p)) && (\text{linearity of expectation}) \\
     &=\underbrace{\binom{n}{k}\cdot\frac{k!}{2k}}_{\text{number of }k\text{-cycles}}\cdot p^k \\
-    &\geq c_k(np)^{2k}.
+    &\geq c_k(np)^{k}.
 \end{align*}
 for some constant $c_k$ and where we use the inequality $\binom{n}{k}\geq c'_k n^k$ from some constant $c'_k$. 
+% At the same time, we also have that $\binom{n}{k}\leq n^k$, so we also get
+% \begin{align*}
+%     \EE[X] \leq d_k(np)^k
+% \end{align*}
+% for some constant $d_k$.
+
 For each $k$-cycle $C$ in $K_n$, let $\xi_C$ be the indicator random variable on the event that $C\in G(n,p)$. 
-It follows that $X=\sum_{C}\xi_C$ and therefore we can write its square as
+Since $X = \sum_C \xi_C$,
+\[
+    \Var(X) = \sum_{C_1,C_2} \mathrm{Cov}(\xi_{C_1},\xi_{C_2}).
+\]
+If $C_1$ and $C_2$ share no vertices, then $\xi_{C_1}$ and $\xi_{C_2}$ depend on disjoint sets of
+edges, so they are independent and $\mathrm{Cov}(\xi_{C_1},\xi_{C_2}) = 0$. Otherwise, let $h \in \{1,\dots,k\}$
+be the number of shared vertices. Then
+\[
+    \mathrm{Cov}(\xi_{C_1},\xi_{C_2}) \le \EE[\xi_{C_1}\xi_{C_2}] = p^{|C_1\cup C_2|} \le p^{2k-h},
+\]
+since $C_1$ and $C_2$ share at most $h$ edges. There are at most $c'_k n^{2k-h}$ such pairs, so
+\[
+    \Var(X) \le \sum_{h=1}^{k} c'_k\, n^{2k-h} p^{2k-h} = \sum_{h=1}^{k} c'_k (np)^{2k-h},
+\]
+and hence
+\begin{align*}
+    \Pr(X=0) &\leq \Pr(|X-\EE[X]|\geq \EE[X]) \\
+     &\le \frac{\Var(X)}{\EE[X]^2} \\
+     &\le \sum_{h=1}^{k} \frac{c'_k}{c_k^2}(np)^{-h} \to 0.
+\end{align*}
+    
 
-\begin{align*}
-    \EE[X]^2 &= \left(\sum_{C}\EE[\xi_C]\right)^2   && \text{(linearity of expectation)}\\
-    &=\sum_{\substack{k\text{-cycles} \\ C_1,C_2}}\EE[\xi_{C_1}]\EE[\xi_{C_2}].
-\end{align*}
 
-Next, we express $\EE[X^2]$ as
-\begin{align*}
-    \EE[X^2]  &= \sum_{\substack{k\text{-cycles} \\ C_1,C_2}} \EE[\xi_{C_1}\xi_{C_2}] \\
-    &= \sum_{h=0}^k\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] \\
-    &\qquad\qquad\qquad\qquad\qquad (\text{split by number of overlapping vertices } h) \\
-    &= \underbrace{\sum_{\substack{k\text{-cycle } C}} \EE[\xi_{C}\xi_{C}] + \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with no overlapping vertices}}} \EE[\xi_{C_1}\xi_{C_2}]}_{(1)} + \underbrace{\sum_{h=1}^{k-1}\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}]}_{(2)}. 
-\end{align*}
+% For each $k$-cycle $C$ in $K_n$, let $\xi_C$ be the indicator random variable on the event that $C\in G(n,p)$. 
+% It follows that $X=\sum_{C}\xi_C$ and therefore we can write its square as
 
-Due to the independence of the events in the products of $(1)$, for each expectation we have that $\EE[\xi_{C_1}\xi_{C_2}] = \EE[\xi_{C_1}]\EE[\xi_{C_2}]$. 
-Hence, $(1)\leq \EE[X]^2$.
-For $(2)$, consider each $h$ term separately. We get
-\begin{align*}
-    \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] &= \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] \\
-    &=\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \Pr(C_1,C_2\in G(n,p)) 
-\end{align*}
-There are at most $\binom{n}{2k-h}\binom{2k-h}{k}\leq c^{(2)}_k n^{2k-h}$ terms in the sum for some constant $c^{(2)}_k$. 
-For each such $C_1,C_2$, $C_1$ and $C_2$ combined have $|C_1\cup C_2|\geq 2k-(h-1) = 2k-h+1$ edges. 
-Hence, we can upper bound the probability that they are contained in $G(n,p)$ as
+% \begin{align*}
+%     \EE[X]^2 &= \left(\sum_{C}\EE[\xi_C]\right)^2   && \text{(linearity of expectation)}\\
+%     &=\sum_{\substack{k\text{-cycles} \\ C_1,C_2}}\EE[\xi_{C_1}]\EE[\xi_{C_2}].
+% \end{align*}
 
-\begin{align*}
-    \Pr(C_1,C_2\in G(n,p)) = p^{|C_1\cup C_2|} \leq p^{2k-h+1}.
-\end{align*}
-Thus, we can bound (2) by
-\begin{align*}
-    \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \Pr(C_1,C_2\in G(n,p))  & \leq c^{(2)}_k n^{2k-h} p^{2k-h+1} \\
-    & = c^{(2)}_k p (np)^{2k-h}.
-\end{align*}
-Finally, by Chebyshev's inequality we have that
-\begin{align*}
-    \Pr(X=0)\leq \Pr(|X-\EE[X]|\geq \EE[X]) &\leq \frac{\Var(X)}{\EE[X]^2} \\
-    &= \frac{\EE[X^2] -\EE[X]^2}{\EE[X]^2} \\
-    &\leq \frac{\sum_{h=1}^{2k-1} c^{(2)}_k p (np)^{2k-h}}{c_k(np)^{2k}}.
-\end{align*}
-All terms in the sum are $o((np)^{2k})$, so the above term goes to zero as $n\to\infty$. 
-Therefore, the probability that $G(n,p)$ contains a $k$-cycle goes to one as $n\to\infty$.
+% Next, we express $\EE[X^2]$ as
+% \begin{align*}
+%     \EE[X^2]  &= \sum_{\substack{k\text{-cycles} \\ C_1,C_2}} \EE[\xi_{C_1}\xi_{C_2}] \\
+%     &= \sum_{h=0}^k\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] \\
+%     &\qquad\qquad\qquad\qquad\qquad (\text{split by number of overlapping vertices } h) \\
+%     &= \underbrace{\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with no overlapping vertices}}} \EE[\xi_{C_1}\xi_{C_2}]}_{(1)} + \underbrace{\sum_{h=1}^{k}\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}]}_{(2)}. 
+% \end{align*}
+
+% % We have that $\xi_C\xi_C = \xi_C$, so the first term in (1) is equal to $\EE[X]$.
+% For (1), the events in the product in each term are independent, so for each expectation we have that $\EE[\xi_{C_1}\xi_{C_2}] = \EE[\xi_{C_1}]\EE[\xi_{C_2}]$. 
+% These are the off-diagonal terms of $\EE[X]^2$, and since the diagonal terms are non-negative, these terms $\leq \EE[X]^2$.
+% Hence, $(1)\leq \EE[X]+ \EE[X]^2$.
+% For $(2)$, consider each $h$ term separately. We get
+% \begin{align*}
+%     \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] &= \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \EE[\xi_{C_1}\xi_{C_2}] \\
+%     &=\sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \Pr(C_1,C_2\in G(n,p)) 
+% \end{align*}
+% There are at most $\binom{n}{2k-h}\binom{2k-h}{k}\leq c^{(2)}_k n^{2k-h}$ terms in the sum for some constant $c^{(2)}_k$. 
+% For each such $C_1,C_2$, $C_1$ and $C_2$ are $k$-cycles that share at most $h$ vertices, so they share at most $h$ edges.
+% Therefore, we get that $|C_1\cup C_2|\geq 2k-h$ edges. 
+% Hence, we can upper bound the probability that they are contained in $G(n,p)$ as
+
+% \begin{align*}
+%     \Pr(C_1,C_2\in G(n,p)) = p^{|C_1\cup C_2|} \leq p^{2k-h}.
+% \end{align*}
+% Thus, we can bound (2) by
+% \begin{align*}
+%     \sum_{\substack{k\text{-cycles } C_1,C_2 \\ \text{with overlap of }h \text{ vertices}}} \Pr(C_1,C_2\in G(n,p))  & \leq c^{(2)}_k n^{2k-h} p^{2k-h} \\
+%     & = c^{(2)}_k (np)^{2k-h}.
+% \end{align*}
+% Finally, by Chebyshev's inequality we have that
+% \begin{align*}
+%     \Pr(X=0)\leq \Pr(|X-\EE[X]|\geq \EE[X]) &\leq \frac{\Var(X)}{\EE[X]^2} \\
+%     &= \frac{\EE[X^2] -\EE[X]^2}{\EE[X]^2} \\
+%     &\leq \frac{\EE[X] + \EE[X]^2 + \sum_{h=1}^{2k-1} c^{(2)}_k (np)^{2k-h} -\EE[X]^2 }{\EE[X]^2} \\
+%     &\leq \frac{d_k (np)^k + \sum_{h=1}^{2k-1} c^{(2)}_k (np)^{2k-h}}{c_k(np)^{2k}}.
+% \end{align*}
+% All terms in the numerator are $o((np)^{2k})$, so the above term goes to zero as $n\to\infty$. 
+% Therefore, the probability that $G(n,p)$ contains a $k$-cycle goes to one as $n\to\infty$.
+
+\qed
 
 \noindent For the next two questions you may use the following without proof.
 
@@ -300,8 +336,9 @@ Therefore, the probability that any one line has a discrepency $\lvert X_\ell\rv
 \begin{align*}
     \Pr(\text{any line has }\lvert X_\ell\rvert\geq \sqrt{10nd\log n}) &\leq \sum_{\text{line }\ell}\Pr(|X_\ell|\geq \sqrt{10nd\log n}) && \text{(union bound)} \\
     &\leq \frac{1}{2}\left((n+2)^d-n^d\right)\cdot 2n^{-5d} \\
-    &\leq n^d\cdot n^{-5d} \\
-    &= n^{-4d},
+    &\leq n^{2d}\cdot n^{-5d}  \\
+    &\qquad\text{(for sufficiently large $n$ such that $n^2\geq n+2$)}\\
+    &= n^{-3d},
 \end{align*}
 where the second inequality uses our count of lines from Question 1. 
 For constant or increasing $d$, this approaches zero as $n\to\infty$. 
