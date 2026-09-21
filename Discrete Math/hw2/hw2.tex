@@ -121,11 +121,21 @@ Taking $d = \alpha n$ for a constant $\alpha>0$, determine a threshold $f_\alpha
 
 \solution
 \paragraph{(a)}
-There are $((n+2)^d -n^d)/2$ geometric lines in $[n]^d$.
 
-All geometric lines are either increasing, decreasing or constant in each dimension, and there are $(n+2)^d$ such choices.
-However, geometric lines cannot be constant in all dimensions, so we need to subtract $n^d$ such choices ($n$ constant values for each dimension).
-Furthermore, each line has two endpoints we can start selecting points from, so it has two representations as a choice of increasing/decreasing/constant coordinates in each dimension, which is why we divide the final expression by 2.
+The points of any geometric line can be written as $a+s_j v$ for $s_1<..<s_n$.
+If $v_i=0$, the line is constant in that coordinate, and there are $n$ choices for $a_i$ that result in $n$ different sets of values in that coordinate.
+If $v_i\neq 0$, the values in that coordinate are either $1, .. ,n$ or $n, .. ,1$.
+
+Conversely, every choice of one of $n$ constants or increasing or decreasing in each coordinate uniquely determines $a_i$ and $v_i\in \{0,-1,1\}$.
+There are $(n+2)^d$ such choices.
+This defines a valid geometric line so long as not all coordinates are constant, of which there are $n^d$ choices.
+
+Each geometric line has two possible representations in the form $\{a+s_j v\}$ since we can start counting the points from either end.
+Hence, are $((n+2)^d -n^d)/2$ geometric lines in $[n]^d$.
+
+% All geometric lines are either increasing, decreasing or constant in each dimension, and there are $(n+2)^d$ such choices.
+% However, geometric lines cannot be constant in all dimensions, so we need to subtract $n^d$ such choices ($n$ constant values for each dimension).
+% Furthermore, each line has two endpoints we can start selecting points from, so it has two representations as a choice of increasing/decreasing/constant coordinates in each dimension, which is why we divide the final expression by 2.
 
 \paragraph{(b)}
 
@@ -136,8 +146,8 @@ Furthermore, each line has two endpoints we can start selecting points from, so 
     & \leq (p(n+2)^{\alpha})^n.
 \end{align*}
 
-Thus, if $p= o\left(\frac{1}{(n+2)^\alpha}\right)$, the above term goes to zero as $n\to \infty$.
-Hence, w.h.p there is are no all-$X$ lines.
+Thus, if $p< \frac{1}{(n+2)^\alpha}$, the above term goes to zero as $n\to \infty$.
+Since $3n\geq n+2$, we have that $ \frac{1}{3^\alpha}\cdot\frac{1}{n^\alpha} \leq \frac{1}{(n+2)^\alpha}$, so selecting $p = o\left(\frac{1}{(n+2)^\alpha}\right)$ suffices to show that w.h.p there is are no all-$X$ lines.
 
 \ul{$p$ sufficiently big:}
 We construct a large set of lines $L$ which do now share vertices. 
@@ -153,15 +163,17 @@ The probability that all lines are not all-$X$ is upper bounded by the probabili
     & =(1-p^n)^{n^{\alpha n - 1}}
 \end{align*}
 
-Using the Taylor's series approximation $\ln (1-x)\approx -x \Rightarrow 1-x \approx \exp(-x)$ for $x=p^n$.
+Using the inequality $1-x \leq \exp(-x)$ for $x=p^n$:
 
 \begin{align*}
-    \Pr(\text{all lines in }L\text{ are not all-}X) &\approx \exp\left(-p^n{n^{\alpha n - 1}}\right) \\
+    \Pr(\text{all lines in }L\text{ are not all-}X) &\leq \exp\left(-p^n{n^{\alpha n - 1}}\right) \\
     & = \exp\left(-\frac{1}{n}(pn^\alpha)^n\right).
 \end{align*}
 
 Thus, if $p = \omega\left(\frac{1}{n^\alpha}\right)$, as $n\to \infty$, $\frac{1}{n}(pn^\alpha)^n \to \infty$, so the above term tends to $0$. 
 Hence, w.h.p. there is at least one all-$X$ line. 
+
+Therefore, the threshold is $f_\alpha(n) = \frac{1}{n^\alpha}$.
 
 \begin{enumerate}[resume]
 \item Let $k\geq 3$ be a constant, and suppose $np\to\infty$. Prove that
@@ -282,6 +294,7 @@ Let $\zeta_1,\dots,\zeta_n$ be independent random variables with $\EE(\zeta_i) =
 \solution
 \ul{$\Pr(\nu - pn\geq b)$}:
 Define the random variable $\zeta_i = \xi_i -p$. 
+These random variables are independent.
 Its expectation is $\EE[\zeta_i]=0$ and $\lvert \zeta_i\rvert\leq 1$ for all $i$. 
 Hence, we can express our desired term as
 
@@ -291,15 +304,16 @@ Hence, we can express our desired term as
     &\leq e^{-\frac{b^2}{2n}} &&(\Cref{thm:hoeffding}).
 \end{align*}
 
-\ul{$\Pr(\nu - pn\geq b)$}:
+\ul{$\Pr(\lvert\nu - pn\rvert\geq b)$}:
 Define the random variable $\zeta'_i = -\zeta_i$. 
+These random variables are independent.
 Its expectation is $\EE[\zeta'_i]=0$ and $\lvert \zeta'_i\rvert\leq 1$ for all $i$. 
 Hence, we can express our desired term as
 
 \begin{align*}
     \Pr(|\nu-pn|\geq b) &= \Pr(\nu-pn\geq b) + \Pr(\nu-pn\leq -b) \\
     &\leq e^{-\frac{b^2}{2n}} + \Pr(\sum_{i=1}^n\zeta_i\leq -b) \\
-    &=e^{-\frac{b^2}{2n}} + \Pr(\sum_{i=1}^n\zeta'_i\leq b) \\
+    &=e^{-\frac{b^2}{2n}} + \Pr(\sum_{i=1}^n\zeta'_i\geq b) \\
     &\leq 2e^{-\frac{b^2}{2n}} &&(\Cref{thm:hoeffding}).
 \end{align*}
 
@@ -326,7 +340,7 @@ For each geometric line $\ell$, define the following indicator random variable
     \end{cases}
 \end{align*}
 for each $j\in [n]$. For all lines $\ell$ and all $j\in[n]$, we have that $\EE[\xi_{\ell,j}]=0$ and $\lvert\xi_{\ell,j}\rvert \leq 1$. 
-Define the random variable $X_\ell=\sum_{j\in[n]}\xi_{\ell,j}$. By the answer to Question 3, we get that 
+Define the random variable $X_\ell=\sum_{j\in[n]}\xi_{\ell,j}$. By considering both tails and using \cref{thm:hoeffding}, we get that 
 \begin{align*}
     \Pr(|X_\ell|\geq \sqrt{10nd\log n})&\leq 2e^{-\frac{10nd\log n}{2n}} \\
     & = 2e^{-5d\log n} \\
@@ -361,15 +375,16 @@ Hence, for sufficiently large $n$, the probability that any line has $\lvert X_\
 \end{enumerate}
 
 \solution
+
 \paragraph{(a)}
 Let $T = \{t: \exists x_0\in \Omega \text{ s.t. } \nu(x_0)=t\}$ be the set of values taken by $\nu$.
 \begin{align*}
     \EE[\EE[\eta|\nu]] &= \sum_{x_0\in \Omega}\Pr(x_0)\EE[\eta|\nu = \nu(x_0)] \\
-    &= \sum_{x_0\in \Omega} \Pr(x_0)\cdot\frac{1}{\Pr(\nu = \nu(x_0))}\sum_{\substack{x\in \Omega\\ \nu(x) = \nu(x_0)}}\Pr(x)\eta(x) \\
-    &= \sum_{t\in T} \frac{\sum_{\substack{x_0\in \Omega \\ \text{s.t. } \nu(x_0) = t} }\Pr(x_0) }{\Pr(\nu = \nu(x_0))}\sum_{\substack{x\in \Omega\\ \nu(x) = t}}\Pr(x)\eta(x) \\
+    &= \sum_{x_0\in \Omega} \Pr(x_0)\cdot\frac{1}{\Pr(\nu = \nu(x_0))}\sum_{\substack{x\in \Omega\\ \nu(x) = \nu(x_0)}}\Pr(x)\eta(x) && (\Pr(\nu = \nu(x_0))>0)\\
+    &= \sum_{t\in T} \frac{\sum_{\substack{x_0\in \Omega \\ \text{s.t. } \nu(x_0) = t} }\Pr(x_0) }{\Pr(\nu = t)}\sum_{\substack{x\in \Omega\\ \nu(x) = t}}\Pr(x)\eta(x) \\
     &= \sum_{t\in T} \sum_{\substack{x\in \Omega\\ \nu(x) = t}}\Pr(x)\eta(x) \\
     &= \sum_{x\in \Omega}\Pr(x)\eta(x) \\
-    &= \EE[\nu].
+    &= \EE[\eta].
 \end{align*}
 
 \paragraph{(b)}
@@ -377,11 +392,11 @@ Let $T = \{t: \exists x_0\in \Omega \text{ s.t. } \nu(x_0)=t\}$ be the set of va
     \EE[\eta\nu] &=\sum_{x_0\in \Omega} \Pr(x_0) \eta(x_0) \nu(x_0) \\
     &=\sum_{t\in T} \sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) t \eta(x_0)  \\
     &=\sum_{t\in T} t\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0) \\
-    &=\sum_{t\in T} \Pr(\nu=t)\cdot t\cdot \frac{1}{\Pr(\nu=t)}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0) \\
+    &=\sum_{t\in T} \Pr(\nu=t)\cdot t\cdot \frac{1}{\Pr(\nu=t)}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0)  && (\Pr(\nu = t)>0)\\
     &=\sum_{t\in T} \left(\sum_{\substack{x\in \Omega \\ \nu(x) = t}}\Pr(x)\right)\cdot t\cdot \frac{1}{\Pr(\nu=t)}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = t}}\Pr(x_0) \eta(x_0)  \\
     &=\sum_{t\in T} \sum_{\substack{x\in \Omega \\ \nu(x) = t}} \left(\Pr(x)\cdot \nu(x)\cdot \frac{1}{\Pr(\nu=\nu(x))}\sum_{\substack{x_0\in \Omega \\ \nu(x_0) = \nu(x)}}\Pr(x_0) \eta(x_0) \right)\\
-    &=\sum_{t\in T} \sum_{\substack{x\in \Omega \\ \nu(x) = t}} \Pr(x)\cdot \nu(x)\cdot \EE[\eta|\nu] \\
-    &=\sum_{x\in \Omega} \Pr(x)\cdot \nu(x)\cdot \EE[\eta|\nu] \\
+    &=\sum_{t\in T} \sum_{\substack{x\in \Omega \\ \nu(x) = t}} \Pr(x)\cdot \nu(x)\cdot \EE[\eta|\nu = \nu(x)] \\
+    &=\sum_{x\in \Omega} \Pr(x)\cdot \nu(x)\cdot \EE[\eta|\nu = \nu(x)] \\
     &=\EE[\nu\EE[\eta|\nu]].
 \end{align*}
 
@@ -424,7 +439,7 @@ By \cref{lem:symmetry}, all $d+1$ terms are equal, so $\EE[X_i] = \frac{1}{d+1}$
 For $i\in [d]$, let $Y_i$ be the location of the $i$th point, sampled independently and uniformly from $[0,1]$.
 Call two points \emph{close} if the distance between them is $\leq \frac{1}{d+1}$.
 Define the function $f: [0,1]^d \mapsto \reals_{\geq 0}$ to be half the number of pairs of close consecutive points if we sort all $d$ points in increasing order and include the points $0$ and $1$.
-The function $f$ is 1-coordinate Lipschitz, since each additional point can only increase the number of close pairs by two, i.e., the pairs involving the point immediately before and after it in the sorted order.
+The function $f$ is 1-coordinate Lipschitz, since changing the location of each point can only decrease the number of close pairs by at most 2 (moving a point away can remove its left and right close pair) and increase the number of close pairs by at most two, (creating the close pairs involving the point immediately before and after the new location of a point).
 Let the random variable of the value of $f$ be $X:= f(Y_1,.., Y_d)$.
 
 \begin{lemma}
@@ -468,6 +483,8 @@ Setting $a=0.006$, we get that the probability that a point is not unusually sma
 \end{align*}
 where $\beta = \frac{0.006^2}{2}$.
 Hence, at most a $e^{-\beta d}$-fraction of points are not unusally small when $d\geq 19$.
+
+Note that the $d\geq 19$ assumption is unavoidable, because, for example, no point is unusually small when $d=1$.
 
 % Use McDiarmid's inequality, $Y_i$ is the coordinate of the $i$th (unsorted) point.
 % Let $Z$ be the number of coordinates smaller than expectation.
