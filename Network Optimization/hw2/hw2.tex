@@ -368,93 +368,91 @@ Hint: Write the dual out carefully and give appropriate values to these duals ba
 \end{enumerate}
 
 \solution
-% Subtracting each $S$ constraint from the $V$ constraint gives the equivalent formulation:
+% % Subtracting each $S$ constraint from the $V$ constraint gives the equivalent formulation:
+
+% % \begin{align*}
+% %     \min \sum_{e} c_e x_e \\
+% %     x(E(V\setminus S)) &\geq |V\setminus S| && \forall S \subset V \\
+% %     x(E(V)) &= |V| - 1 \\
+% %     x_e &\geq 0 && \forall e \in E
+% % \end{align*}
+
+% % This gives the following dual
+
+% % \begin{align*}
+% %     \max \sum_{S\subset V} (|S|-1)y_S\\
+% %     \sum_{S:e\notin E(S)} y_S\leq c_e && \forall e\in E \\
+% %     y_S\geq 0 && \forall S\subset V 
+% % \end{align*}
+
+% For each $S\subseteq V$, we have the dual variable $y_s$.
+% Assume the primal problem has a non-negative, integral cost vector $c$.
+% The dual is as follows:
 
 % \begin{align*}
-%     \min \sum_{e} c_e x_e \\
-%     x(E(V\setminus S)) &\geq |V\setminus S| && \forall S \subset V \\
-%     x(E(V)) &= |V| - 1 \\
-%     x_e &\geq 0 && \forall e \in E
+%     \max \ (|V|-1)y_V +\sum_{S\subseteq V} (|S|-1)y_S\\
+%     y_V + \sum_{S\subset V:e\in E(S)} y_S\leq c_e && \forall e\in E \\
+%     y_S\leq 0 && \forall S\subset V 
 % \end{align*}
 
-% This gives the following dual
+% Consider Kruskal's algorithm on the given graph. 
+% Let the sequence of edges it selects be $E^\ALG = \langle e_1, .. , e_{n-1}\rangle$.
+% This produces a sequence of forests $F_i:=\bigcup_{j=1}^i \{e_j\}$ for $i\in \{0 .. n-1\}$, where $F_0=\emptyset$ and $F_{n-1}$ is a minimum spanning tree.
+% For each $i \in \{0.. n-2\}$, let $C_i$ be the connected-component containing $e_i$ in $F_i$, and let $e'_i$ be next edge added to $C_i$.
+% Let the collection of these components and the final tree $F_{n-1}$ be $\calC$.
+
+% Consider the solution $y$ such that 
 
 % \begin{align*}
-%     \max \sum_{S\subset V} (|S|-1)y_S\\
-%     \sum_{S:e\notin E(S)} y_S\leq c_e && \forall e\in E \\
-%     y_S\geq 0 && \forall S\subset V 
+%     y_S = \begin{cases}
+%         c_{e_{n-1}} & \text{for } S=V, \\
+%         -(c_{e'_i} - c_{e_i})  & \text{for } S = V(C_i), \\
+%         0 & \text{otherwise.}
+%     \end{cases}
 % \end{align*}
 
-For each $S\subseteq V$, we have the dual variable $y_s$.
-Assume the primal problem has a non-negative, integral cost vector $c$.
-The dual is as follows:
-
-\begin{align*}
-    \max \ (|V|-1)y_V +\sum_{S\subseteq V} (|S|-1)y_S\\
-    y_V + \sum_{S\subset V:e\in E(S)} y_S\leq c_e && \forall e\in E \\
-    y_S\leq 0 && \forall S\subset V 
-\end{align*}
-
-Consider Kruskal's algorithm on the given graph. 
-Let the sequence of edges it selects be $E^\ALG = \langle e_1, .. , e_{n-1}\rangle$.
-This produces a sequence of forests $F_i:=\bigcup_{j=1}^i \{e_j\}$ for $i\in \{0 .. n-1\}$, where $F_0=\emptyset$ and $F_{n-1}$ is a minimum spanning tree.
-For each $i \in \{0.. n-2\}$, let $C_i$ be the connected-component containing $e_i$ in $F_i$, and let $e'_i$ be next edge added to $C_i$.
-Let the collection of these components and the final tree $F_{n-1}$ be $\calC$.
-
-Consider the solution $y$ such that 
-
-\begin{align*}
-    y_S = \begin{cases}
-        c_{e_{n-1}} & \text{for } S=V, \\
-        -(c_{e'_i} - c_{e_i})  & \text{for } S = V(C_i), \\
-        0 & \text{otherwise.}
-    \end{cases}
-\end{align*}
-
-\begin{lemma}
-    $y$ is dual-feasible.
-\end{lemma}
-\begin{proof}
-    Since Kruskal's adds each $e'_i$ at a later time than $e_i$ we have that $c_{e'_i}\geq c_{e_i}$, so all non-positivity constraints are satisfied.
-    For each $e\in E$, consider the following cases
-    \begin{enumerate}
-        \item \ul{$e \in E^\ALG$.} 
-        The only non-zero dual variables in the corresponding constraints are the elements of $\calC$ containing $e$.
-        Let $E'':=\langle e''_0=e, .. , e''_k = e_{n-1}\rangle$ be the sequence of edges starting at $e$ such that $e''_{j+1} = e'_j$, i.e., $e''_{j+1}$ is the next edge added to the first component containing $e_j$.
-        Note that this sequence must end in $e_{n-1}$, since $e_{n-1}$ is the last edge added and there is only one component in the final spanning tree.
-        Hence, we get
-        \begin{align*}
-            y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{C\in \calC: e\in C} y_{V(C)} \\
-            & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + c_{e''_j}\right) \\
-            & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
-            & = c_e. 
-        \end{align*}
-        Thus, the corresponding constraint holds.
-        \item \ul{$e \notin E^\ALG$.} Let $C_i$ be the first component that contains $e$, such that $e_i$ is the corresponding edge in $E^\ALG$ that created that component.
-        It follows that the terms on the left-hand-side of the constraint corresponding to $e$ are the same as those of $e_i$'s, since $e$ and $e_i$ share the same first component.
+% \begin{lemma}
+%     $y$ is dual-feasible.
+% \end{lemma}
+% \begin{proof}
+%     Since Kruskal's adds each $e'_i$ at a later time than $e_i$ we have that $c_{e'_i}\geq c_{e_i}$, so all non-positivity constraints are satisfied.
+%     For each $e\in E$, consider the following cases
+%     \begin{enumerate}
+%         \item \ul{$e \in E^\ALG$.} 
+%         The only non-zero dual variables in the corresponding constraints are the elements of $\calC$ containing $e$.
+%         Let $E'':=\langle e''_0=e, .. , e''_k = e_{n-1}\rangle$ be the sequence of edges starting at $e$ such that $e''_{j+1} = e'_j$, i.e., $e''_{j+1}$ is the next edge added to the first component containing $e_j$.
+%         Note that this sequence must end in $e_{n-1}$, since $e_{n-1}$ is the last edge added and there is only one component in the final spanning tree.
+%         Hence, we get
+%         \begin{align*}
+%             y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{C\in \calC: e\in C} y_{V(C)} \\
+%             & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + c_{e''_j}\right) \\
+%             & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
+%             & = c_e. 
+%         \end{align*}
+%         Thus, the corresponding constraint holds.
+%         \item \ul{$e \notin E^\ALG$.} Let $C_i$ be the first component that contains $e$, such that $e_i$ is the corresponding edge in $E^\ALG$ that created that component.
+%         It follows that the terms on the left-hand-side of the constraint corresponding to $e$ are the same as those of $e_i$'s, since $e$ and $e_i$ share the same first component.
         
-        Additionally, $e_i$ and $e$ sharing the first component means that at the time when $e_i$ was first picked, $e$ was not spanned by any existing component.
-        According to Kruskal's this means that $c_e\geq c_{e_i}$. Hence, the constraint corresponding to $e$ also holds.
-    \end{enumerate}
-\end{proof}
+%         Additionally, $e_i$ and $e$ sharing the first component means that at the time when $e_i$ was first picked, $e$ was not spanned by any existing component.
+%         According to Kruskal's this means that $c_e\geq c_{e_i}$. Hence, the constraint corresponding to $e$ also holds.
+%     \end{enumerate}
+% \end{proof}
 
-Next, we show that the dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's. 
-Together with the fact that all $y_S$ values are integer if all $c_e$ are integer non-negative, This shows that the primal optimal value is also integer, completing the proof.
+% Next, we show that the dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's. 
+% Together with the fact that all $y_S$ values are integer if all $c_e$ are integer non-negative, This shows that the primal optimal value is also integer, completing the proof.
 
-\begin{lemma}
-    The dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
-\end{lemma}
-\begin{proof}
-    (Sketch): Since each component is a tree, the coefficient exactly splits $y_S$ of value into each edge of the final tree it contains.
-    Then, we can redistribute the objective such that each edge taken by Kruskal's gets exactly $c_e$ of value.
-\end{proof}
+% \begin{lemma}
+%     The dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+% \end{lemma}
+% \begin{proof}
+%     (Sketch): Since each component is a tree, the coefficient exactly splits $y_S$ of value into each edge of the final tree it contains.
+%     Then, we can redistribute the objective such that each edge taken by Kruskal's gets exactly $c_e$ of value.
+% \end{proof}
 
-% ======================================================================
-% REVISED COPY of the Q9 solution (minimal edits for rigour).
-% Delete either this block or the one above before submitting.
-% ======================================================================
-
-\medskip\noindent\textbf{Solution (revised).}\par\medskip
+% % ======================================================================
+% % REVISED COPY of the Q9 solution (minimal edits for rigour).
+% % Delete either this block or the one above before submitting.
+% % ======================================================================
 
 For each $S\subseteq V$, we have the dual variable $y_S$; here $n:=|V|$ and $S$ ranges over the
 \emph{nonempty} proper subsets of $V$ (for $S=\emptyset$ the primal constraint reads $0\leq -1$).
@@ -558,9 +556,6 @@ By weak duality this proves that $x^T$ is an optimal primal solution; since $x^T
     where the third equality uses that $V\in\calC$ contains every edge and that $y_S=0$ for $S\notin \calC$.
     So each edge taken by Kruskal's gets exactly $c_e$ of value.
 \end{proof}
-
-
-
 
 
 
