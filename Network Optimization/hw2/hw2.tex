@@ -465,97 +465,168 @@ The dual is as follows, with $y_V$ free because the constraint for $V$ is an equ
     y_S\leq 0 && \forall S\subset V 
 \end{align*}
 
-Consider Kruskal's algorithm on the given graph. 
-Let the sequence of edges it selects be $E^\ALG = \langle e_1, .. , e_{n-1}\rangle$, so that $c_{e_1}\leq .. \leq c_{e_{n-1}}$.
-This produces a sequence of forests $F_i:=\bigcup_{j=1}^i \{e_j\}$ for $i\in \{0 .. n-1\}$, where $F_0=\emptyset$ and $T:=F_{n-1}$ is a minimum spanning tree.
-For each $i \in \{1.. n-1\}$, let $C_i$ be the connected-component containing $e_i$ in $F_i$, write $S_i:=V(C_i)$, and for $i\leq n-2$ let $e'_i=e_{\iota(i)}$ be the next edge added to $C_i$, i.e.\ $\iota(i):=\min\{j>i: e_j \text{ has an endpoint in } S_i\}$.
-Let the collection of these components and the final tree $F_{n-1}$ be $\calC = \{S_1, .. ,S_{n-1}\}$, where $S_{n-1}=V$ since $T$ is spanning and connected.
-
-\begin{observation}\label{obs:q9}
-    \begin{enumerate}
-        \item $C_i$ is a tree and $E(T)\cap E(S_i)=E(C_i)$; in particular $|S_i|-1=|E(T)\cap E(S_i)|$.
-        \item The $S_i$ are pairwise distinct and $S_i\neq V$ for $i\leq n-2$ (so $e'_i$ exists and $y$ below is well defined), and $\calC$ is laminar.
-        \item For $e\in E$ put $\iota(e):=\min\{i: e\in E(S_i)\}$. Then $\{S\in \calC: e\in E(S)\}$ is the chain $S_{i_0}\subsetneq .. \subsetneq S_{i_k}=V$ given by $i_0=\iota(e)$ and $i_{j+1}=\iota(i_j)$.
-        \item Every component of $F_{i}$ with at least one edge equals $C_j$ for some $j\leq i$.
-    \end{enumerate}
-\end{observation}
-\begin{proof}
-    (1) $C_i$ is a component of a forest, hence a tree on $S_i$; and no $e_j$ with $j>i$ has both endpoints in $S_i$, since $C_i\subseteq F_{j-1}$ is connected and $e_j$ would then close a cycle.
-
-    (2) For $i<j$ both endpoints of $e_j$ lie in $S_j$ but, by (1), not in $S_i$; hence $S_i\neq S_j$.
-    By (1), $|S_i|=|E(C_i)|+1\leq i+1<|V|$ for $i\leq n-2$, and as $T$ is connected some later edge then leaves $S_i$, so $\iota(i)$ is well defined.
-    Laminarity: $S_i$ is connected in $F_i\subseteq F_j$, hence lies inside a single component of $F_j$, which either is $S_j$ or is disjoint from it.
-
-    (3) First, for $i\leq n-2$, we show that the set $S_{\iota(i)}$ is the smallest member of $\calC$ properly containing $S_i$.
-    It contains $S_i$ together with the far endpoint of $e'_i$. 
-    For any other member of $\calC$ containing $S_i$, i.e., $S_j \in \calC$ such that $S_j\supsetneq S_i$, by definition of $\iota(i)$, we have that $j>\iota(i)$.
-    By the laminarity of $\calC$, $S_j$ must also contain $S_{\iota(i)}$ and is therefore larger than $S_{\iota(i)}$.
-    
-    Second, $\{S\in\calC : e\in E(S)\}=\{S\in\calC: S\supseteq S_{\iota(e)}\}$: any $S_j$ containing $e$ meets $S_{\iota(e)}$, so by laminarity it contains or is contained in $S_{\iota(e)}$, and in the latter case the paragraph above gives $j<\iota(e)$, contradicting the minimality of $\iota(e)$ unless the two are equal; the converse inclusion is immediate.
-    Iterating the first part gives the stated chain, which ends at $S_{n-1}=V$.
-
-    (4) Let $K$ be such a component and $e_j$ its last-added edge, so $j\leq i$ and no edge of $F_i\setminus F_j$ touches $K$; then $K$ is the component of $F_j$ containing $e_j$, i.e.\ $K=C_j$.
-\end{proof}
-
-Consider the solution $y$ such that 
+Sort the edges of the graph in ascending order, so that their weights are $c_{e_1}\leq \dots \leq c_{e_m}$.
+For $i\in \{0,1,\dots,m\}$, let $\calC_i$ be the collection of connected components (i.e., collections of subsets of vertices) of the graph keeping only edges of cost $\leq c_{e_i}$, with the convention that $c_{e_0}=0$.
+Since the graph is connected, $\calC_m=\{V\}$.
+For every $S\subseteq V$, let
+\begin{align*}
+    z_S := \sum_{\substack{i=0:\\ S\in \calC_i}}^{m-1} \left(c_{e_{i}}-c_{e_{i+1}}\right),
+\end{align*}
+that is, $S$ collects $c_{e_{i}}-c_{e_{i+1}}$ for each $i\leq m-1$ at which it is a connected component.
+Define a dual solution as follows:
 
 \begin{align*}
-    y_S = \begin{cases}
-        c_{e_{n-1}} & \text{for } S=V, \\
-        -(c_{e'_i} - c_{e_i})  & \text{for } S = S_i,\ i\leq n-2, \\
-        0 & \text{otherwise.}
+    y_S =\begin{cases}
+        c_{e_m} + z_V &\text{for }S=V, \\
+        z_S &\text{otherwise}.
     \end{cases}
 \end{align*}
 
-\begin{lemma}\label{lem:q9feas}
-    $y$ is dual-feasible, and the constraint of every $e\in E^\ALG$ is tight.
-\end{lemma}
-\begin{proof}
-    Since Kruskal's adds each $e'_i$ at a later time than $e_i$ we have that $c_{e'_i}\geq c_{e_i}$, so all non-positivity constraints are satisfied.
-    For each $e\in E$, consider the following cases
-    \begin{enumerate}
-        \item \ul{$e \in E^\ALG$.} 
-        The only non-zero dual variables in the corresponding constraint are those indexed by the elements of $\calC$ containing $e$, and by Observation~\ref{obs:q9}(3) these form the chain $S_{i_0}\subsetneq .. \subsetneq S_{i_k}=V$ with $i_0=\iota(e)$.
-        Writing $e''_j:=e_{i_j}$, this gives the sequence of edges $E'':=\langle e''_0, .. , e''_k = e_{n-1}\rangle$ with $e''_{j+1} = e'_{i_j}$, i.e., $e''_{j+1}$ is the next edge added to the component $S_{i_j}$.
-        Note that this sequence must end in $e_{n-1}$, since $e_{n-1}$ is the last edge added and there is only one component in the final spanning tree.
-        Moreover $e''_0=e$: both endpoints of $e=e_m$ lie in $S_m$, and for $j<m$ they cannot both lie in $S_j$ by Observation~\ref{obs:q9}(1), so $\iota(e)=m$.
-        Hence, we get
-        \begin{align*}
-            y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{j=0}^{k} y_{S_{i_j}} \\
-            & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + c_{e''_j}\right) \\
-            & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
-            & = c_e. 
-        \end{align*}
-        Thus, the corresponding constraint holds with equality.
-        \item \ul{$e \notin E^\ALG$.} Let $C_i$ be the first component that contains $e$, i.e.\ $i=\iota(e)$, such that $e_i$ is the corresponding edge in $E^\ALG$ that created that component.
-        It follows that the terms on the left-hand-side of the constraint corresponding to $e$ are the same as those of $e_i$'s, since by Observation~\ref{obs:q9}(3) both families are $\{S\in\calC: S\supseteq S_i\}$; by case 1 they sum to $c_{e_i}$.
-        
-        Additionally, $e_i$ and $e$ sharing the first component means that at the time when $e_i$ was first picked, $e$ was not spanned by any existing component: by minimality of $i$ the endpoints of $e$ do not both lie in any $S_j$ with $j<i$, and by Observation~\ref{obs:q9}(4) every component of $F_{i-1}$ with an edge is such an $S_j$ (a component without edges is a single vertex).
-        So $e$ was available when Kruskal's chose the cheapest such edge $e_i$, which means $c_e\geq c_{e_i}$. Hence, the constraint corresponding to $e$ also holds.
-    \end{enumerate}
-\end{proof}
-
-The incidence vector $x^T$ of $T$ is primal-feasible: $x^T\geq 0$, $x^T(E(V))=n-1$, and for each $S$ the edges of $T$ inside $S$ form a forest on $S$, so $x^T(E(S))\leq |S|-1$.
-Next, we show that the dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
-By weak duality this proves that $x^T$ is an optimal primal solution; since $x^T\in\{0,1\}^E$, the LP attains its optimum at an integral point, and its value $\sum_{e\in E^\ALG}c_e$ is an integer whenever $c$ is, completing the proof.
+Since $c_{e_{i}}\leq c_{e_{i+1}}$ for every $i$, every summand of $z_S$ is non-positive, so the non-positivity constraints are met for each $y_S$ where $S\subset V$; the sign of $y_V$ is unconstrained.
 
 \begin{lemma}
-    The dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+    $y$ is dual-feasible.
 \end{lemma}
 \begin{proof}
-    Since each component is a tree, Observation~\ref{obs:q9}(1) says that the coefficient $|S_i|-1$ of $y_{S_i}$ counts exactly the edges of the final tree inside $S_i$ (for $S_{n-1}=V$ this count is $|V|-1=|E(T)|$).
-    All other coordinates of $y$ vanish, so redistributing the objective over those edges, i.e.\ exchanging the order of summation, gives
+    Consider each edge $e_j =uv$. 
+    Let $i'$ be the first $i\in\{0,\dots,m\}$ such that $u$ and $v$ are in the same connected component in $\calC_{i}$.
+    Once $e_j$ is included in the graph, $u$ and $v$ are guaranteed to be in the same component, so $i'\leq j$.
+    Since we only add higher cost edges to the graph in later $i$'s, $u$ and $v$ remain in the same component for all $\calC_{i}$ for $i\geq i'$.
+    Hence, for each $i<i'$, there is no connected component of $\calC_i$ containing $u$ and $v$; and for each $i'\leq i\leq m$, there is exactly one connected component of $\calC_i$ containing $u$ and $v$, which for $i\leq m-1$ collects $c_{e_i} - c_{e_{i+1}} $ worth of value from this $i$ iteration.
+    Grouping the left hand side of the constraint for $e_j$ by $i$ rather than by $S$, and using $y_V = c_{e_m}+z_V$, it can be written as:
     \begin{align*}
-        (|V|-1)y_V + \sum_{S\subset V} (|S|-1)y_S 
-        & = \sum_{i=1}^{n-1} \left|E(T)\cap E(S_i)\right| y_{S_i} \\
-        & = \sum_{e\in E^\ALG} \ \sum_{S\in \calC : e\in E(S)} y_S \\
-        & = \sum_{e\in E^\ALG} \left( y_V + \sum_{S\subset V:e\in E(S)} y_S \right) \\
-        & = \sum_{e\in E^\ALG} c_e && (\text{Lemma~\ref{lem:q9feas}}) \\
-        & = c^\top x^T,
+        y_V + \sum_{S\subset V:e_j\in E(S)} y_S &= c_{e_m} + \sum_{S\subseteq V:e_j\in E(S)} z_S \\
+            &= c_{e_m} + \sum_{i=i'}^{m-1}\left(c_{e_{i}} - c_{e_{i+1}}\right) \\
+         &= c_{e_m} + c_{e_{i'}} - c_{e_m} && (\text{telescoping}) \\
+         &= c_{e_{i'}} \ \leq \ c_{e_j},
     \end{align*}
-    where the third equality uses that $V\in\calC$ contains every edge and that $y_S=0$ for $S\notin \calC$.
-    So each edge taken by Kruskal's gets exactly $c_e$ of value.
+    where the last inequality holds because $i'\leq j$ and the edges are sorted by cost.
+    Hence, $y$ is dual-feasible.
 \end{proof}
+
+Note that for integral edge costs, the above dual solution is integral, so its dual objective value is integral.
+We will next show that Kruskal's algorithm returns a primal-feasible solution that attains the same objective value as this dual solution, so Kruskal's solution value is integral. 
+By the optimality of Kruskal's, this implies that the solution to the primal is also integral, completing the proof.
+
+\begin{lemma}
+    Kruskal's algorithm returns a primal-feasible solution that attains the same primal objective value as $y_S$'s dual objective value.
+\end{lemma}
+\begin{proof}
+    Since Kruskal returns a spanning tree $T$, its solution $\chi^T$ is primal-feasible for this polytope.
+
+    For each $i\in [m]$, Kruskal's takes exactly $|\calC_{i-1}| - |\calC_{i}|$ edges of weight $c_{e_i}$ (if several edges share a cost, then $\calC_{i-1}=\calC_{i}$ for every index $i$ carrying that cost except the smallest one, at which all of them are counted).
+    Hence, using $c_{e_0}=0$ and $|\calC_m|=1$, the cost of the tree $T$ can be written as:
+    \begin{align*}
+        c(T) = \sum_{i=1}^{m} (|\calC_{i-1}| - |\calC_{i}|) c_{e_i}
+        &= \sum_{i=0}^{m-1} |\calC_i| c_{e_{i+1}} - \sum_{i=1}^{m} |\calC_i| c_{e_i} \\
+        &= \sum_{i=0}^{m-1} |\calC_i| (c_{e_{i+1}}-c_{e_{i}}) + |\calC_0| c_{e_0} - |\calC_m| c_{e_m} \\
+        &= \sum_{i=0}^{m-1} |\calC_i| (c_{e_{i+1}}-c_{e_{i}}) - c_{e_m}.
+    \end{align*}
+
+    For the dual, the elements of $\calC_i$ partition $V$, so $\sum_{S\in \calC_i} (|S|-1) = |V|-|\calC_i|$.
+    Exchanging the order of summation as before, the dual objective value of $y$ reads:
+    \begin{align*}
+        (|V|-1) y_V + \sum_{S\subset V} (|S|-1) y_S &= (|V|-1) c_{e_m} + \sum_{S\subseteq V} (|S|-1) z_S \\
+        &= (|V|-1) c_{e_m} + \sum_{i=0}^{m-1} \sum_{S\in \calC_i} (|S|-1)  (c_{e_{i}} - c_{e_{i+1}}) \\
+        &= (|V|-1) c_{e_m} + \sum_{i=0}^{m-1} \left(|V|-|\calC_i|\right)  (c_{e_{i}} - c_{e_{i+1}}) \\
+        &= (|V|-1) c_{e_m} - |V| c_{e_m} + \sum_{i=0}^{m-1} |\calC_i|  (c_{e_{i+1}} - c_{e_{i}}) \\
+        &= \sum_{i=0}^{m-1} |\calC_i|  (c_{e_{i+1}} - c_{e_{i}}) - c_{e_m} \ = \ c(T),
+    \end{align*}
+    where the fourth equality telescopes $\sum_{i=0}^{m-1} |V| (c_{e_{i}} - c_{e_{i+1}}) = |V|(c_{e_0}-c_{e_m}) = -|V|c_{e_m}$.
+    Hence, $\chi^T$ and $y$ attain the same objective value.
+\end{proof}
+
+% Consider Kruskal's algorithm on the given graph. 
+% Let the sequence of edges it selects be $E^\ALG = \langle e_1, .. , e_{n-1}\rangle$, so that $c_{e_1}\leq .. \leq c_{e_{n-1}}$.
+% This produces a sequence of forests $F_i:=\bigcup_{j=1}^i \{e_j\}$ for $i\in \{0 .. n-1\}$, where $F_0=\emptyset$ and $T:=F_{n-1}$ is a minimum spanning tree.
+% For each $i \in \{1.. n-1\}$, let $C_i$ be the connected-component containing $e_i$ in $F_i$, write $S_i:=V(C_i)$, and for $i\leq n-2$ let $e'_i=e_{\iota(i)}$ be the next edge added to $C_i$, i.e.\ $\iota(i):=\min\{j>i: e_j \text{ has an endpoint in } S_i\}$.
+% Let the collection of these components and the final tree $F_{n-1}$ be $\calC = \{S_1, .. ,S_{n-1}\}$, where $S_{n-1}=V$ since $T$ is spanning and connected.
+
+% \begin{observation}\label{obs:q9}
+%     \begin{enumerate}
+%         \item $C_i$ is a tree and $E(T)\cap E(S_i)=E(C_i)$; in particular $|S_i|-1=|E(T)\cap E(S_i)|$.
+%         \item The $S_i$ are pairwise distinct and $S_i\neq V$ for $i\leq n-2$ (so $e'_i$ exists and $y$ below is well defined), and $\calC$ is laminar.
+%         \item For $e\in E$ put $\iota(e):=\min\{i: e\in E(S_i)\}$. Then $\{S\in \calC: e\in E(S)\}$ is the chain $S_{i_0}\subsetneq .. \subsetneq S_{i_k}=V$ given by $i_0=\iota(e)$ and $i_{j+1}=\iota(i_j)$.
+%         \item Every component of $F_{i}$ with at least one edge equals $C_j$ for some $j\leq i$.
+%     \end{enumerate}
+% \end{observation}
+% \begin{proof}
+%     (1) $C_i$ is a component of a forest, hence a tree on $S_i$; and no $e_j$ with $j>i$ has both endpoints in $S_i$, since $C_i\subseteq F_{j-1}$ is connected and $e_j$ would then close a cycle.
+
+%     (2) For $i<j$ both endpoints of $e_j$ lie in $S_j$ but, by (1), not in $S_i$; hence $S_i\neq S_j$.
+%     By (1), $|S_i|=|E(C_i)|+1\leq i+1<|V|$ for $i\leq n-2$, and as $T$ is connected some later edge then leaves $S_i$, so $\iota(i)$ is well defined.
+%     Laminarity: $S_i$ is connected in $F_i\subseteq F_j$, hence lies inside a single component of $F_j$, which either is $S_j$ or is disjoint from it.
+
+%     (3) First, for $i\leq n-2$, we show that the set $S_{\iota(i)}$ is the smallest member of $\calC$ properly containing $S_i$.
+%     It contains $S_i$ together with the far endpoint of $e'_i$. 
+%     For any other member of $\calC$ containing $S_i$, i.e., $S_j \in \calC$ such that $S_j\supsetneq S_i$, by definition of $\iota(i)$, we have that $j>\iota(i)$.
+%     By the laminarity of $\calC$, $S_j$ must also contain $S_{\iota(i)}$ and is therefore larger than $S_{\iota(i)}$.
+    
+%     Second, $\{S\in\calC : e\in E(S)\}=\{S\in\calC: S\supseteq S_{\iota(e)}\}$: any $S_j$ containing $e$ meets $S_{\iota(e)}$, so by laminarity it contains or is contained in $S_{\iota(e)}$, and in the latter case the paragraph above gives $j<\iota(e)$, contradicting the minimality of $\iota(e)$ unless the two are equal; the converse inclusion is immediate.
+%     Iterating the first part gives the stated chain, which ends at $S_{n-1}=V$.
+
+%     (4) Let $K$ be such a component and $e_j$ its last-added edge, so $j\leq i$ and no edge of $F_i\setminus F_j$ touches $K$; then $K$ is the component of $F_j$ containing $e_j$, i.e.\ $K=C_j$.
+% \end{proof}
+
+% Consider the solution $y$ such that 
+
+% \begin{align*}
+%     y_S = \begin{cases}
+%         c_{e_{n-1}} & \text{for } S=V, \\
+%         -(c_{e'_i} - c_{e_i})  & \text{for } S = S_i,\ i\leq n-2, \\
+%         0 & \text{otherwise.}
+%     \end{cases}
+% \end{align*}
+
+% \begin{lemma}\label{lem:q9feas}
+%     $y$ is dual-feasible, and the constraint of every $e\in E^\ALG$ is tight.
+% \end{lemma}
+% \begin{proof}
+%     Since Kruskal's adds each $e'_i$ at a later time than $e_i$ we have that $c_{e'_i}\geq c_{e_i}$, so all non-positivity constraints are satisfied.
+%     For each $e\in E$, consider the following cases
+%     \begin{enumerate}
+%         \item \ul{$e \in E^\ALG$.} 
+%         The only non-zero dual variables in the corresponding constraint are those indexed by the elements of $\calC$ containing $e$, and by Observation~\ref{obs:q9}(3) these form the chain $S_{i_0}\subsetneq .. \subsetneq S_{i_k}=V$ with $i_0=\iota(e)$.
+%         Writing $e''_j:=e_{i_j}$, this gives the sequence of edges $E'':=\langle e''_0, .. , e''_k = e_{n-1}\rangle$ with $e''_{j+1} = e'_{i_j}$, i.e., $e''_{j+1}$ is the next edge added to the component $S_{i_j}$.
+%         Note that this sequence must end in $e_{n-1}$, since $e_{n-1}$ is the last edge added and there is only one component in the final spanning tree.
+%         Moreover $e''_0=e$: both endpoints of $e=e_m$ lie in $S_m$, and for $j<m$ they cannot both lie in $S_j$ by Observation~\ref{obs:q9}(1), so $\iota(e)=m$.
+%         Hence, we get
+%         \begin{align*}
+%             y_V + \sum_{S\subset V:e\in E(S)} y_S & =\sum_{j=0}^{k} y_{S_{i_j}} \\
+%             & = c_{e_{n-1}} + \sum_{j=0}^{k-1} \left(- c_{e''_{j+1}} + c_{e''_j}\right) \\
+%             & = c_{e_{n-1}} - c_{e_{n-1}} + c_{e}&&(\text{telescoping}) \\
+%             & = c_e. 
+%         \end{align*}
+%         Thus, the corresponding constraint holds with equality.
+%         \item \ul{$e \notin E^\ALG$.} Let $C_i$ be the first component that contains $e$, i.e.\ $i=\iota(e)$, such that $e_i$ is the corresponding edge in $E^\ALG$ that created that component.
+%         It follows that the terms on the left-hand-side of the constraint corresponding to $e$ are the same as those of $e_i$'s, since by Observation~\ref{obs:q9}(3) both families are $\{S\in\calC: S\supseteq S_i\}$; by case 1 they sum to $c_{e_i}$.
+        
+%         Additionally, $e_i$ and $e$ sharing the first component means that at the time when $e_i$ was first picked, $e$ was not spanned by any existing component: by minimality of $i$ the endpoints of $e$ do not both lie in any $S_j$ with $j<i$, and by Observation~\ref{obs:q9}(4) every component of $F_{i-1}$ with an edge is such an $S_j$ (a component without edges is a single vertex).
+%         So $e$ was available when Kruskal's chose the cheapest such edge $e_i$, which means $c_e\geq c_{e_i}$. Hence, the constraint corresponding to $e$ also holds.
+%     \end{enumerate}
+% \end{proof}
+
+% The incidence vector $x^T$ of $T$ is primal-feasible: $x^T\geq 0$, $x^T(E(V))=n-1$, and for each $S$ the edges of $T$ inside $S$ form a forest on $S$, so $x^T(E(S))\leq |S|-1$.
+% Next, we show that the dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+% By weak duality this proves that $x^T$ is an optimal primal solution; since $x^T\in\{0,1\}^E$, the LP attains its optimum at an integral point, and its value $\sum_{e\in E^\ALG}c_e$ is an integer whenever $c$ is, completing the proof.
+
+% \begin{lemma}
+%     The dual objective value attained by $y$ is equal to the primal objective value attained by Kruskal's.
+% \end{lemma}
+% \begin{proof}
+%     Since each component is a tree, Observation~\ref{obs:q9}(1) says that the coefficient $|S_i|-1$ of $y_{S_i}$ counts exactly the edges of the final tree inside $S_i$ (for $S_{n-1}=V$ this count is $|V|-1=|E(T)|$).
+%     All other coordinates of $y$ vanish, so redistributing the objective over those edges, i.e.\ exchanging the order of summation, gives
+%     \begin{align*}
+%         (|V|-1)y_V + \sum_{S\subset V} (|S|-1)y_S 
+%         & = \sum_{i=1}^{n-1} \left|E(T)\cap E(S_i)\right| y_{S_i} \\
+%         & = \sum_{e\in E^\ALG} \ \sum_{S\in \calC : e\in E(S)} y_S \\
+%         & = \sum_{e\in E^\ALG} \left( y_V + \sum_{S\subset V:e\in E(S)} y_S \right) \\
+%         & = \sum_{e\in E^\ALG} c_e && (\text{Lemma~\ref{lem:q9feas}}) \\
+%         & = c^\top x^T,
+%     \end{align*}
+%     where the third equality uses that $V\in\calC$ contains every edge and that $y_S=0$ for $S\notin \calC$.
+%     So each edge taken by Kruskal's gets exactly $c_e$ of value.
+% \end{proof}
 
 
 
