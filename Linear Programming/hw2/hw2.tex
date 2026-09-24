@@ -1,0 +1,427 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{etoolbox}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+% The environments above share the `theorem` counter, and cleveref names a label
+% after its counter -- so without these aliases every \cref to a lemma, claim,
+% etc. comes out as "Theorem". \crefalias is local to the environment's group,
+% so each one is typed correctly while the shared numbering is left alone.
+\AtBeginEnvironment{corollary}{\crefalias{theorem}{corollary}}
+\AtBeginEnvironment{lemma}{\crefalias{theorem}{lemma}}
+\AtBeginEnvironment{claim}{\crefalias{theorem}{claim}}
+\AtBeginEnvironment{definition}{\crefalias{theorem}{definition}}
+\AtBeginEnvironment{remark}{\crefalias{theorem}{remark}}
+\AtBeginEnvironment{observation}{\crefalias{theorem}{observation}}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+\newcommand{\cone}{\mathrm{cone}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Conv}{\mathrm{Conv}}
+\newcommand{\One}{\mathds{1}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\title{47-834: Linear Programming \\ Homework 2}
+\author{Poon Tze-Yang}
+\date{Due October 6, 2026, 12pm}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Fall 2026 Mini-1
+
+\begin{enumerate}[series=q]
+\item \textbf{[15 points]} Given a cone $K \subseteq \reals^n$, we define its dual cone $K^*$ by $K^* := \{u \in \reals^n : u^\top x \geq 0, \ \forall x \in K\}$.
+\begin{enumerate}
+\item Prove that if $K = \{x \in \reals^n : a_i^\top x \geq 0, \ i = 1, \ldots, m\}$, then its dual cone $K^* = \mathrm{cone}(\{a_1, \ldots, a_m\})$.
+\item Prove that if $K = \{x \in \reals^n : x_1 \geq x_2 \geq \ldots \geq x_n\}$, then its dual cone is given by $K^* = \{y \in \reals^n : \sum_{i=1}^k y_i \geq 0, \ \forall k = 1, \ldots, n-1, \ \sum_{i=1}^n y_i = 0\}$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+$\cone\{a_1,..,a_m\} := \{x\in \reals^n : \exists \lambda\geq 0, x = \sum_{i=1}^m\lambda_i a_i\}$ 
+
+\paragraph{(a)}
+\ul{$\cone(\{a_1,..,a_m\})\subseteq K^*$:}
+For all $u\in \cone(\{a_1,..,a_m\})$, there exist non-negative $\lambda_i$'s such that $\sum_{i=1}^m\lambda_i a_i = u$.
+For any $x\in K$, we have that
+\begin{align*}
+    u^\top x = \sum_{i=1}^m\lambda_i a_i^\top x \geq \sum_{i=1}^m\lambda_i\cdot 0 = 0.
+\end{align*}
+Hence, $u\in K^*$.
+
+\ul{$K^*\subseteq \cone(\{a_1,..,a_m\}$):} 
+Let $u\notin \cone(\{a_1,\dots,a_m\})$.
+By the homogeneous Farkas lemma, the homogeneous linear inequality $u^Tx\geq 0$ is not a consequence of the system
+\begin{align*}
+    a_1^\top x\geq 0,\\
+    \dots  \\
+    a_n^\top x\geq 0.
+\end{align*}
+Therefore, there must exist an $x\in \reals^n$ such that $a_i^\top x\geq 0$ for all $i\in [m]$, i.e., $x\in K$, but $u^\top x<0$.
+This directly implies that $u\notin K^*$.
+
+\paragraph{(b)}
+We can rewrite $K$ as $K = \{x\in \reals^n: x_i-x_{i+1}\geq 0\  \forall i\in [n-1]\}$.
+Then, using part (a), we have that $K^* = \cone(\{(e_1-e_2),(e_2-e_3),\dots,(e_{n-1}-e_n)\})$, where $e_i$ is the $i$'th unit coordinate vector.
+Using the definition of a cone:
+\begin{align*}
+    K^* &= \{y\in\reals^n: \exists \lambda\geq 0,\ y=\sum_{i=1}^{n-1} \lambda_i(e_i - e_{i+1})\} \\
+    &= \{y\in\reals^n: \exists \lambda\geq 0,\sum_{i=1}^k y_i = \lambda_i, \ \forall k = 1, \ldots, n-1, \ \sum_{i=1}^n y_i = 0\} &&\text{(considering the sum of each prefix of }y) \\
+    &= \{y\in\reals^n: \sum_{i=1}^k y_i \geq 0, \ \forall k = 1, \ldots, n-1, \ \sum_{i=1}^n y_i = 0\}.
+\end{align*}
+This gives the desired claim.
+
+\begin{enumerate}[resume=q]
+\item \textbf{[10 points]} Suppose that we are given a subroutine which, given a system of linear inequality constraints, either produces a solution or decides that no solution exists. Construct a simple algorithm that uses a single call to this routine and finds an optimal solution to any LO program that has an optimal solution.
+\end{enumerate}
+
+\solution
+
+We may assume that the program is in the standard form
+\begin{align*}
+    \min_x\{c^\top x : Ax = b,\ x\geq 0\},\tag{$P$}
+\end{align*}
+since any LO program can be brought into this form by splitting the free variables and adding slack variables, and an optimal solution of the original program is read off an optimal solution of $(P)$.
+The dual of $(P)$ is
+\begin{align*}
+    \max_y\{b^\top y : A^\top y\leq c\}.\tag{$D$}
+\end{align*}
+
+\paragraph{Algorithm.}
+Call the subroutine once on the following system of linear inequalities in the variables $(x,y)$:
+\begin{align*}
+    Ax = b,\quad x\geq 0,\quad A^\top y\leq c,\quad c^\top x\leq b^\top y,\tag{$S$}
+\end{align*}
+and return the $x$-part of the solution it produces.
+
+\paragraph{Correctness.}
+First, $(S)$ is feasible.
+Indeed, let $x^*$ be an optimal solution of $(P)$, which exists by assumption.
+By strong duality, $(D)$ has an optimal solution $y^*$ with $b^\top y^* = c^\top x^*$, so $(x^*,y^*)$ satisfies $(S)$.
+Hence the subroutine does not report infeasibility, and returns some $(x,y)$ satisfying $(S)$.
+
+Second, the returned $x$ is optimal for $(P)$.
+It is feasible for $(P)$ by the first two constraints of $(S)$.
+Let $x'$ be any feasible solution of $(P)$.
+Since $x'\geq 0$ and $A^\top y\leq c$,
+\begin{align*}
+    b^\top y = (Ax')^\top y = x'^\top(A^\top y)\leq c^\top x',
+\end{align*}
+and combining this with the last constraint of $(S)$ gives $c^\top x\leq b^\top y\leq c^\top x'$.
+As $x'$ was an arbitrary feasible solution, $x$ is optimal for $(P)$.
+
+
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{[10 points]} For positive integers $k \leq n$, let $s_k(x)$ be the sum of the $k$ largest entries in a vector $x \in \reals^n$, e.g., $s_2([1; -2; -1]) = 1 + (-1) = 0$, $s_2([1; 2; 3]) = 2 + 3 = 5$. Find a polyhedral representation of the function $s_k(x)$, i.e., find the polyhedral representation of the epigraph of $s_k(x)$.
+
+\noindent \emph{Hint:} Take into account that the extreme points of the set $\{x \in \reals^n : 0 \leq x_i \leq 1, \ \sum_i x_i = k\}$ are exactly the $0/1$ vectors from this set, and derive from this that
+\[
+s_k(x) = \max_y \left\{ y^\top x : 0 \leq y_i \leq 1 \ \forall i, \ \sum_i y_i = k \right\}.
+\]
+\end{enumerate}
+
+\solution
+
+\begin{lemma}
+    The extreme points of the set $Y =\{y\in \reals^n:0\leq x_i\leq 1, \sum_i x_i = k\}$ are exactly the 0/1 vectors with $n$ entries and $k$ non-zero entries.
+\end{lemma}
+\begin{proof}
+    We first show that the extreme points are exactly the 0/1 points in this set. 
+    
+    At the extreme points of the above set, we know that the given equality holds and $y$ lives in $\reals^n$. 
+    Hence, at least $n-1$ of the inequalities $0\leq y_i\leq 1$ must hold with equality. 
+    For each $i$, only one of the two inequalities $0\leq y_i$ and $y_i\leq 1$ can hold, so these $\geq n-1$ tight inequalities must be on different $y_i$'s.
+    Thus, only at most one of the coordinates of $y_i$ is still undetermined, but then the equality $\sum_i y_i = k$ uniquely determines the value of the last $y_i$ once we know the values of the remaining $n-1$ $y_i$'s.
+    Furthermore, this last $y_i$ must also be integer, since $k$ is integer and the other $y_i$ values are 0/1. 
+    Therefore, all extreme points are 0/1.
+
+    For any 0/1 point in the set, we know that one inequality is tight on each $y_i$, forming a linearly independent set of tight constraints. 
+    Thus, by the same algebraic characterization of extreme points, that point is an extreme point.
+
+    Finally, due to the constraint $\sum_i y_i = k$, all extreme points have exactly $k$ ones and $n-k$ zeroes.
+\end{proof}
+
+For a given $x\in \reals^n$, the cost function $y^\top x$ is linear, so we know that its optimal value on the polytope $Y$ is attained at one of $Y$'s extreme points.
+By the above lemma, this means that the optimal objective value is exactly the largest sum of the $k$ entries of $x$, which is the definiton of $s_k(x)$.
+Thus, we have derived that $s_k(x) = \max_y \left\{ y^\top x : 0 \leq y_i \leq 1 \ \forall i, \ \sum_i y_i = k \right\}.$
+
+Finally, to get the epigraph of $s_k(x)$, we apply the definition of the epigraph:
+
+\begin{align*}
+    \mathrm{epi}(s_k) &= \{(x,t)\in \reals^{n+1}: t \geq s_k(x)\} \\
+    &= \left\{(x,t)\in \reals^{n+1}: t \geq \max_y \left\{ y^\top x : 0 \leq y_i \leq 1 \ \forall i, \ \sum_i y_i = k \right\}\right\} \\
+    &= \left\{(x,t)\in \reals^{n+1}: t \geq \sum_{i\in \ell} x_i\ \forall \ell\subseteq [n], \ |\ell| = k \right\} .
+\end{align*}
+
+This is polyhedral as it is a system of linear inequalities on only the variables $x$ and $t$.
+
+\begin{enumerate}[resume=q]
+\item \textbf{[15 points]} Suppose we are given the linear program
+\begin{align*}
+    \min_x \{c^\top x : Ax = b, \ x \geq 0\} \tag{$P$}
+\end{align*}
+and its associated Lagrangian function
+\[
+L(x, \lambda) := c^\top x + \lambda^\top (b - Ax).
+\]
+Now, let us consider the following game: Player 1 chooses some $x \geq 0$, and player 2 chooses some $\lambda$ simultaneously; then, player 1 pays to player 2 the amount $L(x, \lambda)$. In this game, player 1 would like to minimize $L(x, \lambda)$, and player 2 would like to maximize $L(x, \lambda)$.
+
+A pair $(x^*, \lambda^*)$ with $x^* \geq 0$, is called an equilibrium point (or saddle point or Nash equilibrium if)
+\[
+L(x^*, \lambda) \leq L(x^*, \lambda^*) \leq L(x, \lambda^*), \quad \forall x \geq 0, \ \forall \lambda.
+\]
+(That is, in an equilibrium no player is able to improve his performance by unilaterally modifying his choice.)
+
+Show that $x^*$ and $\lambda^*$ are optimal solutions to the problem $(P)$ and to its dual, respectively, if and only if $(x^*, \lambda^*)$ is an equilibrium point.
+\end{enumerate}
+
+\solution
+
+The dual problem is $\max_{\lambda}\{b^\top \lambda : A^\top \lambda \leq c \}$.
+
+\ul{Equilibrium point $\Rightarrow$ optimal solutions:}
+Suppose $x^*$ and $\lambda^*$ are equilibrium points. First, we show primal and dual feasibility.
+We have that $b-Ax^*=0$, otherwise there is some coordinate on which player 2 can change $\lambda^*_i$ to increase $L(x^*,\lambda^*)$.
+Combined with the given restriction that $x\geq 0$, we have primal feasibility.
+Next, consider $(c^\top - \lambda^{*\top} A)$.
+If any coordinate $(c^\top - \lambda^{*\top} A)_i$ was negative, player 1 could increase $x_i$ to decrease the objective, so we have that $(c^\top - \lambda^{*\top} A)\geq 0^\top$. 
+This gives dual feasibility.
+Furthermore, if any coordinate $(c^\top - \lambda^{*\top} A)>0$, we must have that $x_i=0$, otherwise player 1 could decrease $x_i$ to lower the objective. 
+(This is complementary slackness.)
+
+Let $x$ be any other primal-feasible solution, with primal objective value $c^\top x$.
+Since $Ax=b$ and $Ax^*=b$, we get that:
+\begin{align*}
+    c^\top x^* = c^\top x^* + \lambda^\top 0 = L(x^*,\lambda^*) \le L(x,\lambda^*) &= c^\top x + \lambda^\top 0 = c^\top x.
+\end{align*}
+Hence, $x^*$ is primal-optimal.
+
+Similarly, let $\lambda$ be any dual-feasible solution, with dual objective value $b^\top \lambda$.
+Since $A^\top \lambda\leq c$ and $x^*\geq 0$, we get that $0\leq(c^\top - \lambda^{*T} A) x^*$.
+Due to complementary slackness, $(c^\top - \lambda^{*\top} A) x^*=0$ (recall above that for any coordinate $i$ such that $(c^\top - \lambda^{*\top} A)_i\neq 0$, we must have that $x_i=0$.)
+Hence, we have:
+\begin{align*}
+    b^\top \lambda^*=  b^\top \lambda^* + (c^\top - \lambda^{*\top} A) x^* = L(x^*, \lambda^*) \geq L(x^*,\lambda) = b^\top\lambda + (c^\top - \lambda ^\top A) x^* \geq b^\top \lambda.
+\end{align*}
+Hence, $\lambda^*$ is dual-optimal.
+
+\ul{Optimal solutions $\Rightarrow$ equilibrium point:}
+We are given that $x^*$ and $\lambda^*$ are optimal solutions to the primal and dual problems.
+Since $x^*$ is a solution to the primal problem, we have that $b-Ax^*=0$. 
+Hence, no matter what player 2 plays, they cannot change the Lagrangian value, so $L(x^*,\lambda)\leq L(x^*,\lambda^*)$ for all $\lambda$.
+
+Since $\lambda^*$ is a solution to the dual problem, we have that $(c^\top - \lambda^{*\top} A)\geq 0$.
+Furthermore, by the complementary slackness conditions for optimal primal-dual pairs, whenever $(c^\top - \lambda^{*\top} A)_i>0$, we have that $x^*_i=0$. 
+Hence, for each coordinate $i$, either $(c^\top - \lambda^{*\top} A)_i=0$ and player 1's play on this coordinate does not change the Lagrangian value, or $(c^\top - \lambda^{*\top} A)_i>0$ and $x^*_i=0$ is already optimal.
+Therefore, for any $x$, we get that $L(x,\lambda^*)\leq L(x^*,\lambda^*)$.
+
+Thus, $(x^*,\lambda^*)$ is an equilibrium point.
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{[20 points]} Let $S = \{a_1, a_2, \ldots, a_n\}$ be a finite set composed of $n$ distinct elements, and let $f$ be a real-valued function defined on the set of all subsets of $S$. We say that $f$ is \emph{submodular} if, for every $X, Y \subseteq S$, the following inequality holds:
+\[
+f(X) + f(Y) \geq f(X \cup Y) + f(X \cap Y).
+\]
+\begin{enumerate}
+\item Let $f : 2^S \to \mathbb{Z}$ be an integer-valued submodular function such that $f(\emptyset) = 0$. Consider the polyhedron
+\[
+P_f := \left\{ x \in \reals^{|S|} : \sum_{t \in T} x_t \leq f(T), \ \forall T \subseteq S \right\},
+\]
+Consider
+\[
+\bar{x}_{a_k} := f(\{a_1, \ldots, a_k\}) - f(\{a_1, \ldots, a_{k-1}\}), \quad k = 1, \ldots, n.
+\]
+Show that $\bar{x}$ is feasible to $P_f$.
+\item Consider the following optimization problem associated with $P_f$:
+\[
+\max_x \left\{ c^\top x : x \in P_f \right\}.
+\]
+Write down the dual of this LP.
+\item Assume without loss of generality that $c_{a_1} \geq c_{a_2} \geq \ldots \geq c_{a_n}$. Show that the solution $\bar{x}$ specified in item (a) is optimal to the above maximization problem associated with $P_f$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+\paragraph{(a)}
+
+\begin{lemma}[Diminishing marginal returns]\label{lem:dmr}
+    Let $f$ be submodular. Then for all $A \subseteq B \subseteq S$ and every $s \in S \setminus B$,
+    \[
+        f(A \cup \{s\}) - f(A) \geq f(B \cup \{s\}) - f(B),
+    \]
+    i.e.\ the marginal value of adding $s$ never increases as the set it is added to grows.
+\end{lemma}
+\begin{proof}
+    Apply the submodular inequality to the pair $X := A \cup \{s\}$ and $Y := B$.
+    Since $A \subseteq B$, their union is $X \cup Y = A \cup \{s\} \cup B = B \cup \{s\}$.
+    For the intersection, distributing gives $X \cap Y = (A \cap B) \cup (\{s\} \cap B) = A \cup \emptyset = A$,
+    where we used $A \cap B = A$ (as $A \subseteq B$) and $s \notin B$.
+    Submodularity of $f$ therefore reads
+    \[
+        f(A \cup \{s\}) + f(B) \geq f(B \cup \{s\}) + f(A),
+    \]
+    and subtracting $f(A) + f(B)$ from both sides yields the claim.
+\end{proof}
+
+Let $A_k:= \{a_1,\dots,a_k\}$ and let $f(s|A) = f(A\cup\{s\}) - f(A)$ for $s\notin A$.
+For each $T\subseteq S$, write $T_k := A_k\cap T$, so that $T_0=\emptyset$ and $T_n=T$. We can write
+\begin{align*}
+    \sum_{t\in T}\overline{x}_t &= \sum_{k\in 1}^n \One(a_k\in T) f(a_k|A_{k-1})\\
+    &\leq \sum_{k= 1}^n \One(a_k\in T) f(a_k|A_{k-1}\cap T) && (\Cref{lem:dmr})\\
+    &= \sum_{k=1}^n \bigl(f(T_k) - f(T_{k-1})\bigr) && (T_{k-1}=A_{k-1}\cap T)\\
+    &= f(T_n) - f(T_0) = f(T).  
+\end{align*}
+Hence, each constraint for $T\subseteq S$ can be satisfied.
+
+\paragraph{(b)}
+\begin{align*}
+    \min_{y} \sum_{T\subseteq S} f(T)y_T \\
+    s.t. \sum_{T\subseteq S: T\ni a_i} y_T &\geq c_{a_i} &\forall a_i\in S \\
+    y_T&\geq 0 & \forall T\subseteq S
+\end{align*}
+
+\paragraph{(c)}
+We give a feasible dual solution that attains the same objective value as $\bar{x}$, which proves optimality of $\bar{x}$ by weak duality.
+First, note that the primal objective value of $\bar{x}$ is 
+\begin{align*}
+    \sum_{k=1}^n c_{a_k} f(a_k|A_{k-1}) &= \sum_{k=1}^n c_{a_k} (f(A_{k}) - f(A_{k-1})) \\
+    &= \sum_{k=1}^n c_{a_k} f(A_{k}) -  \sum_{k=0}^{n-1}c_{a_{k+1}}f(A_{k}) \\
+    &= - c_{a_0}f(A_0)+ \sum_{k=1}^{n-1}(c_{a_k} - c_{a_{k+1}})f(A_k) + c_{a_n} f(A_n)\\
+    &=\sum_{k=1}^{n-1}(c_{a_k} - c_{a_{k+1}})f(A_k)  + c_{a_n} f(A_n),
+\end{align*}
+where the last equality is because $f(\emptyset)=0$. Clearly, the following dual solution achieves the same objective value:
+\begin{align*}
+    y_T = 
+    \begin{cases}
+        c_{a_n} &\text{if }T = A_n \\
+        c_{a_k} - c_{a_{k+1}} &\text{if }T = A_k, \ k\in [1 \dots (n-1)],\\
+        0  &\text{otherwise.}
+    \end{cases}
+\end{align*}
+It remains to show that this dual is feasible. For each $a_i\in S$, the only non-zero dual variables in the corresponding constraints are the ones corresponding to $T=A_k\ni a_i$, which are the $A_k$ where $k\geq i$. 
+Thus, we have that for $a_i$,
+\begin{align*}
+    \sum_{T\subseteq S: T\ni a_i} y_T &= \sum_{k=i}^{n-1} (c_{a_k} - c_{a_{k-1}}) + c_{a_n}\\
+    & = c_{a_i} - c_{n} + c_{a_n} = c_{a_i}.
+\end{align*}
+Hence, the dual is feasible, completing the proof.
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{[15 points]} Let $X = \{x \in \reals^n : a_i^\top x \leq b_i, \ 1 \leq i \leq k\}$ be a polyhedral set.
+\begin{enumerate}
+\item Prove that if $X'$ is a face of $X$, then there exists a linear function $e^\top x$ such that
+\[
+X' = \operatorname*{arg\,max}_{x \in X} e^\top x := \{x \in X : e^\top x = \sup_{x' \in X} e^\top x'\}.
+\]
+\item Prove that if $v$ is a vertex of $X$, then there exists a linear function $e^\top x$ such that $v$ is the unique maximizer of this function on $X$.
+\item Let $Y \subseteq \reals^m$ be the image of $X \subseteq \reals^n$ under the affine mapping $x \mapsto Px + p : \reals^n \to \reals^m$.
+\begin{enumerate}[label=(\roman*)]
+\item Is it true that if $v$ is an extreme point of $X$, then $z = Pv + p$ is an extreme point of $Y$?
+\item Is it true that any extreme point $z$ of $Y$ has the form $z = Pv + p$ for some extreme point $v$ of $X$?
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{[15 points]} Let $K := \{x \in \reals^n : Ax \leq 0\}$ be a nontrivial pointed cone. Let $K^*$ be its dual cone.
+\begin{enumerate}
+\item Prove that $K^*$ has a nonempty interior.
+\item Prove that the set $B_f := \{x \in K : f^\top x = 1\}$ is a base of $K$ if and only if $f$ is in the interior of $K^*$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\end{document}
