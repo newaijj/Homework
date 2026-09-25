@@ -54,6 +54,9 @@
 \newcommand{\coreq}{\mathrm{coreq}}
 \newcommand{\cone}{\mathrm{cone}}
 
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+
 \newcommand{\calA}{\mathcal{A}}
 \newcommand{\calB}{\mathcal{B}}
 \newcommand{\calC}{\mathcal{C}}
@@ -412,6 +415,50 @@ X' = \operatorname*{arg\,max}_{x \in X} e^\top x := \{x \in X : e^\top x = \sup_
 
 \solution
 
+\paragraph{(a)}
+Since $X'$ is a face of the polyhedron $X$, then there exists an index set $I\subseteq [k]$ such that 
+\begin{align*}
+    X' = \{x\in X:\ a^\top_i x= b_i \ \forall i\in I\}.
+\end{align*}
+Let $e = \sum_{i\in I} a_i$. For each $x'\in X'$, we have that 
+\begin{align*}
+    e^\top x' = \sum_{i\in I} a^\top_i x' = \sum_{i\in I}b_i.
+\end{align*}
+Alternatively, for each $x\in X\setminus X'$, we know that $a^\top_i x\le b_i\ \forall i\in I$, and $\exists i'\in I:\ a^\top_{i'} x< b_{i'}$.
+Thus, we have that 
+\begin{align*}
+    e^\top x = \sum_{i\in I} a^\top_i x < \sum_{i\in I} b_i.
+\end{align*}
+Hence, we have that $\sup_{x\in X } e^\top x = \sum_{i\in I}b_i$, and the $x\in X$ that attain this value are exactly the $x\in X'$.
+Therefore,
+ \begin{align*}
+    X' = \operatorname*{arg\,max}_{x \in X} e^\top x.
+ \end{align*}
+
+\paragraph{(b)}
+Let $I$ be the index set on the active constraints at $v$.
+Since $v$ is a vertex, $\{a_i\}_{i\in I}$ has rank $n$, so the face defined by the active set $I$ is a singleton that only contains $v$
+Thus, $\{v\}$ is an extreme points (i.e., a 0-dimensional faces).
+Hence, applying $(a)$, there must exist some linear functional $e^\top x$ such that the set $\{v\}$ is exactly the subset of $X$ which maximizes this function.
+This makes $v$ the unique maximizer of $e^\top x$ on $X$.
+
+\paragraph{(ci)}
+False. Let $X$ be the polyhedral set $X=\{x\in \reals^2:\ x_1\geq 0, x_2\geq 0\}$.
+Consider the affine map $f$ defined by $p=0$,\ $P(x_1,x_2) = x_1-x_2$. 
+First, note that $(0,0)$ is and extreme point of $X$, where the two inequalities are equalties. 
+Under the map $f$, this maps to the point $0$.
+
+However, there are no extreme points of the image $Y$ of $X$ under $f$. 
+Take an arbitrary point $y\in Y\subseteq \reals$, which is the image of $(x_1,x_2)\in X$ under $f$, such that $x_1-x_2 = y$. 
+Note that $(x_1,x_2+1)$ and $(x_1+1,x_2)$ are points in $X$, since we only increase each coordinate, and they map to $y-1$ and $y+1$, respectively, under $f$.
+Hence, $y-1, y+1\in Y$, which suffices to show that $y$ is not an extreme point since $y = \frac{1}{2}(y-1) + \frac{1}{2}(y+1)$.
+
+\paragraph{(cii)}
+False. Let $X$ be the polyhedral set $X = \{x\in \reals^2:\ 0\le x_1\le 1\}$. 
+This is a classic example of a set with no extreme points.
+However, consider the affine map $f$ defined by $p=0,\ P(x_1,x_2) = x_1$.
+Clearly, $f$ maps $X$ to the closed interval $Y:=\{x\in \reals: 0\le x \le 1\} $, which has extreme points $0$ and $1$.
+Thus, these extreme points of $Y$ are not of the form $z=Px+p$ for any extreme point $v$ of $X$.
 
 \begin{enumerate}[resume=q]
 \item \textbf{[15 points]} Let $K := \{x \in \reals^n : Ax \leq 0\}$ be a nontrivial pointed cone. Let $K^*$ be its dual cone.
@@ -422,6 +469,31 @@ X' = \operatorname*{arg\,max}_{x \in X} e^\top x := \{x \in X : e^\top x = \sup_
 \end{enumerate}
 
 \solution
+\paragraph{(a)}
+Suppose for contradiction that $\mathrm{rank}(A)<n$. 
+Then there exists $0\neq d\in \reals^n$ such that $Ad=0$, so $d$ spans a line $\{x\in \reals^n: x=td, t\in \reals\}$ in $K$. 
+This contradicts that $K$ is a pointed cone, so we have that $\mathrm{rank}(A)=n$ and there are $n$ linearly independent vectors $a_i$ (which are rows of $A$).
+
+By question 1a, if $K = \{x \in \reals^n : a_i^\top x \geq 0, \ i = 1, \ldots, m\}$, then its dual cone $K^* = \mathrm{cone}(\{a_1, \ldots, a_m\})$.
+Select the $n$ linearly independent directions $\{a_1, \ldots, a_n\}$ from the vectors defining $K^*$ as defined above, and some positive real number $c$.
+Then the point $b = \sum_{i=1}^{n}= c a_i$ is a conic combination of $\{a_1, \ldots, a_n\}$, hence $b\in K^*$. 
+Furthermore, since the $n$ directions are linearly independent, all points in a sufficiently small $\epsilon$-neighborhood around $b$ can also be expressed as a conic combination of the same vectors, if we choose an $\epsilon<c$.
+Therefore, the interior of $K^*$ is non-empty.
+
+\paragraph{(b)}
+intersect every ray, scale
+
+\ul{Base $\Rightarrow$ interior}:
+We are given that $B_f := \{x \in K : f^\top x = 1\}$ is a base of $K$.
+
+So for all $0\neq x\in K$, there exists some $t\in \reals_{>0}$ such that $f^\top(tx)=1$.
+So for all $0\neq x\in K$, $f^\top x> 0$.
+
+Claim: all points $y$ on an exposed face of the dual cone has some point $x\in K$ such that $y^\top x = 0$.
+If $y$ on boundary of $K^*$, there exists a direction $e$ such that for all $\varepsilon>0$, $y+\varepsilon e\notin K^*$.
+Then there exists some $x\in K$ such that $(y+\epsilon e)^\top x<0$
+Then we must have equality $y^\top x$.
+
 
 
 \end{document}
