@@ -1,0 +1,169 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\dis}[1]{#1}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+
+\title{47-835: Network Optimization I \\ Homework 3}
+\author{Poon Tze-Yang}
+\date{September 2026}
+
+
+\begin{document}
+
+\maketitle
+
+Students in the OR and ACO programs should answer all questions. For the others, the questions marked * are optional. Those marked ** are optional for all.
+
+\begin{enumerate}[series=q]
+\item Show that every vertex of a connected nontrivial graph is covered by some maximum matching.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Let $M_1$ and $M_2$ be two maximal matchings in $G$ (not necessarily bipartite). Prove that $|M_1| \leq 2|M_2|$. Infer that any maximal matching is at least half the size of a \emph{maximum} matching in $G$.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Prove the following pairing lemma: Given any even number of nodes of a connected undirected graph, there is a way to pair them up and construct paths between the pairs that are edge disjoint. Moreover such a pairing can be computed in polynomial time.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Show that if $G$ is a forest with exactly $2k$ vertices of odd degree, then there are $k$ edge-disjoint paths $P_1, P_2, \ldots, P_k$ in $G$ such that $E(G) = E(P_1) \cup E(P_2) \cup \ldots \cup E(P_k)$.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Given two nodes $r$ and $s$ in an undirected graph with \emph{nonnegative} edge weights, show how to use an algorithm to find minimum-weight perfect matchings to find a minimum-weight simple path connecting $r$ and $s$ with an odd number of edges. (Hint: Consider a new graph by making two copies of the original graph and connecting corresponding copies of nodes with zero weight edges; thus, an original node $v$ becomes two nodes $v^1$ and $v^2$ and the total number of edges is $2m+n$. In this graph delete the nodes $r^1$ and $s^1$ and find a perfect matching). Adapt your method to find a minimum-weight simple path with an even number of edges.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Show how a minimum-weight edge cover can be found by using an algorithm for finding maximum-weight matchings. (Hint: Considered modified edge-weights $c'_{uv} = c_u + c_v - c_{uv}$ where $c_v = \min(c_e : e \in \delta(v))$.)
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Consider the weighted set cover problem with sets $S$ which are subsets over the ground set of elements $E$ and nonnegative costs $c$ on the sets. We are going to consider the special case of this problem where every set in $S$ has small bounded cardinality $\rho$ (like 3 or 4).
+\begin{enumerate}
+\item Give a polynomial time algorithm to solve this problem when $\rho = 2$.
+\item Design a simple approximation algorithm for any $\rho$ with approximation ratio $\rho$. (Hint: One idea to get a cheap solution is to choose the cheapest set covering every element. You can then come up with a dual solution with objective value that is only a factor $\rho$ smaller than the cost of this greedy primal solution.)
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item[8.*] Provide a convex combination (``gluing'') proof for the arborescence polyhedron of Fulkerson describing the convex hull of rooted directed spanning trees of a connected directed graph $(V,A)$ with root $r$:
+\begin{align*}
+    x(\delta^-(S)) &\geq 1 && \forall\, r \notin S \subset V \\
+    x_a &\geq 0 && \forall\, a \in A
+\end{align*}
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item[9.*] Let $G$ be an undirected graph that contains two edge-disjoint spanning trees. (It can also have other edges than those in these trees).
+\begin{enumerate}
+\item Show that $G$ contains an Eulerian spanning subgraph (i.e.\ a subset of edges that span all the nodes, and form a connected graph with even degree at every node).
+\item Show that the edges of $G$ can be covered by two even subgraphs (i.e., the edges of $G$ can be written the union of two edge subsets, each of which induces even degree at all nodes of $G$; Note that every edge of $G$ may appear in both subsets, but must appear in at least one).
+\end{enumerate}
+HINT: Use the pairing lemma on the odd nodes of one tree in the other.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item[10.**] In both problems below, we are looking for conditions that are both necessary and sufficient.
+\begin{enumerate}
+\item Which connected graphs have a spanning subgraph (subset of edges, not necessarily connected) with all degrees odd?
+\item Given an undirected graph $G$, when can one orient its edges in such a way so that the outdegree of every node $v$ is equal to a prescribed number $f(v)$? (Hint: subdivide every edge with a new node, and look for a `matching' where the new nodes have degree 1 and the original nodes $v$ have degree $f(v)$. Notice that the new graph is bipartite).
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\end{document}
