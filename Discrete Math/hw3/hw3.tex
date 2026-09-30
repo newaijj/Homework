@@ -139,6 +139,35 @@ for $d\geq 1$. Hence, by the symmetric Lovasz Local Lemma, there exists an assig
 
 \solution
 
+Fix $T$ and let $b_1b_2\cdots b_T$ be a sequence of independent uniformly random bits.
+For $n>N$ and $1\leq i<j\leq T-n+1$ with $j-i<(2-\varepsilon)^n$, let $A_{i,j,n}$ be the event that $b_{i+t}=b_{j+t}$ for all $0\leq t<n$.
+Any sequence in which no $A_{i,j,n}$ occurs has the required property.
+
+\paragraph{Probability.}
+Conditioned on $b_1,\dots,b_{j+t-1}$, the bit $b_{j+t}$ equals the earlier bit $b_{i+t}$ with probability $1/2$.
+Hence $\Pr(A_{i,j,n})=2^{-n}$, even when the two blocks overlap.
+
+\paragraph{Dependency graph.}
+$A_{i,j,n}$ is determined by the at most $2n$ bits in $S=[i,i+n-1]\cup[j,j+n-1]$, so it is mutually independent of all events whose bits avoid $S$.
+Join two events if their sets of bits intersect.
+A neighbour $A_{i',j',m}$ of $A_{i,j,n}$ is specified by a position $k\in S$ (at most $2n$ ways), which of its two blocks contains $k$ ($2$ ways), the offset of $k$ in that block ($m$ ways), and the start of its other block, which is at distance less than $(2-\varepsilon)^m$ (fewer than $(2-\varepsilon)^m$ ways).
+So $A_{i,j,n}$ has at most $4nm(2-\varepsilon)^m$ neighbours of block length $m$.
+
+\paragraph{Local Lemma.}
+Set $x_{i,j,n}=x_n=\frac{1}{(2-\varepsilon)^n n^3}\leq\frac12$.
+We use $1-x\geq e^{-2x}$ for $0\leq x\leq\frac12$ (the convex function $e^{-2x}$ lies below its chord from $(0,1)$ to $(\frac12,e^{-1})$, which lies below $1-x$), and $\sum_{m>N}\frac{1}{m^2}\leq\sum_{m>N}\frac{1}{m(m-1)}=\sum_{m>N}\left(\frac{1}{m-1}-\frac{1}{m}\right)=\frac1N$.
+For every event $A=A_{i,j,n}$,
+\begin{align*}
+    x_n\prod_{B\sim A}(1-x_B)
+    &\geq x_n\prod_{m>N}(1-x_m)^{4nm(2-\varepsilon)^m} \\
+    &\geq x_n\prod_{m>N}(\exp(\frac{1}{(2-\varepsilon)^mm^3}))^{4nm(2-\varepsilon)^m} \\
+    &\geq x_n\exp\Big(-8n\sum_{m>N}\frac{1}{m^2}\Big) \\
+    &\geq \frac{e^{-8n/N}}{(2-\varepsilon)^n n^3} \\
+    &=\left((2-\varepsilon)e^\frac{8}{N}\right)^{-n} 
+\end{align*}
+For a sufficiently large $N$ which depends only on $\varepsilon$, the term in the base is smaller than $2$, so in particular we have that the whole term is larger than $2^{-n}=\Pr(A)$.
+By the asymmetric Lov\'asz Local Lemma, with positive probability no $A_{i,j,n}$ occurs, so the required sequence exists.
+
 
 \begin{enumerate}[resume=q]
 \item Prove that the following is true for sufficiently large $k$:
