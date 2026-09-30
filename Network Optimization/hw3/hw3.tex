@@ -148,6 +148,19 @@ Pairing each $w \in W$ with the other endpoint of its path gives the required pa
 \end{enumerate}
 
 \solution
+Consider each connected component $T$ of $G$ separately. 
+$T$ must be a tree. 
+Since the sum of the degrees of all vertices in a connected component is even, $T$ must contain an even number of vertices of odd degree.
+Let $t$ be the number of odd vertices in $T$.
+By Question 3, we obtain $t/2$ edge-disjoint paths $P_1,\dots, P_{t/2}$ in $T$, where the $t$ distinct endpoints of the paths are exactly the $t$ vertices of odd degrees.
+
+Let $F = E(P_1) \cup E(P_2) \cup \ldots \cup E(P_{t/2})$
+Clearly $E(T) \supseteq F$.
+Suppose for contradiction that $H := E(T)\setminus F\neq \emptyset$. 
+Note that the vertices of $V(F)$ of odd degree are exactly the $t$ endpoints of the $t/2$ paths, which are exactly the vertices of odd degree in $T$.
+Hence, all vertices $H$ are of even degree. 
+Thus, $H$ is Eulerian and contains at least one cycle, which contradicts that $T$ is a tree.
+Thus, we have shown that $E(T) = F$.
 
 
 \begin{enumerate}[resume=q]
