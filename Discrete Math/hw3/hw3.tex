@@ -1,0 +1,202 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\title{21-701: Discrete Mathematics \\ Homework 3}
+\author{Poon Tze-Yang}
+\date{Due October 5, 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Instructor: Wesley Pegden
+
+\begin{enumerate}[series=q]
+\item Let $G$ be a finite graph on the vertex set $V$ and for each $v\in V$ let $L(v)\subseteq\mathbb{Z}$ be a finite list of colors. Prove that if there is a $d\geq 1$ such that each $L(v)$ has size at least $10d$ and such that for all $v$ and for all $c\in L(v)$, we have that
+\[
+|\{u\in V \mid u\sim v \text{ and } c\in L(u)\}| \leq d,
+\]
+then there is a proper coloring of $G$ (i.e., where adjacent vertices get distinct colors) where each vertex $v$ gets a color from its list $L(v)$.
+\end{enumerate}
+
+\solution
+
+For each vertex create a new list of colors $L'(v)$ comprising the first $10d$ colors of $L(v)$.
+Uniformly randomly assign each vertex one color from $L'(v)$.
+For each pair of vertices $u,v$ such that $u\sim v$ and color $c$ such that $c\in L'(u)\cap L'(v)$, let $A_{u,v,c}$ be the event that vertices $u$ and $v$ are both colored $c$.
+Then we have that
+\begin{align*}
+    \Pr(A_{u,v,c}) &= \frac{1}{|L'(u)|}\cdot \frac{1}{|L'(v)|} \\
+    &=\frac{1}{100d^2}.
+\end{align*}
+
+Let $\calA_{u,v}$ be the collection of events $A_{x,y,c}$ where $x,y\notin \{u,v\}$.
+$A_{u,v,c}$ is a function of the colors assigned to $u$ and $v$, and all events in $\calA_{u,v}$ are functions of the colors assigned to vertices other than $u$ and $v$.
+Since each vertex's color is independently assigned, $A_{u,v,c}$ is mutually independent from $\calA_{u,v}$.
+
+By the condition $|\{u\in V \mid u\sim v \text{ and } c\in L(u)\}| \leq d$, there are at most $|L'(v)|d = 10d^2$ ways to select a color $c\in L'(v)$ and an adjacent vertex $w$ where $c\in L'(w)$. 
+Similarly, there are at most $10d^2$ ways to do the same for $u$. 
+Each of the total $20d^2$ ways to get a monochromatic edge involving $u$ or $v$ above corresponds to one of the events adjacent to $A_{u,v,c}$ in the dependency graph.
+Hence, the degree of $A_{u,v,c}$ in the dependency graph is at most $20d^2$.
+
+Therefore, we have that 
+\begin{align*}
+    e \Pr(A_{u,v,c}) (\text{(degree of }A_{u,v,c}\text{ in the dependency graph)}+1) &\leq \frac{e (20 d^2+1)}{100 d^2} \leq 1
+\end{align*}
+for $d\geq 1$. Hence, by the symmetric Lovasz Local Lemma, there exists an assignment of colors from each $L'(v)$ to each $v$ such that there is no monochromatic edge.
+
+\begin{enumerate}[resume=q]
+\item Prove that for any $\varepsilon>0$, there is an $N_\varepsilon\in\mathbb{N}$ such that for every $T$, there is a binary sequence of length $T$ in which for all $n>N_\varepsilon$, any two identical blocks of length $n$ are separated by distance at least $(2-\varepsilon)^n$.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Prove that the following is true for sufficiently large $k$:
+
+For any subset $S$ of $\mathbb{N}$ of size $k$ and any natural number $N$, there is a $3$-coloring of the set $[N] = \{1,\dots,N\}$ so that every translate of $S$ that is a subset of $[N]$ contains a natural number of every color.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Let $\mathrm{R}(k,k)$ denote the least $n$ such that every $2$-coloring of the edges of $K_n$ contains a monochromatic $K_k$. Use the Local Lemma to prove that
+\[
+\mathrm{R}(k,k) \geq (1+o(1))\frac{\sqrt{2}}{e}\,k\,2^{k/2}.
+\]
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Define $\mathrm{R}^c(k_1,\dots,k_c)$ to be the smallest $n$ so that any $[c]$-coloring of the edges of $K_n$ has, for some $i$, a $K_{k_i}$ subgraph that is all color $i$. State and prove an upper bound on $\mathrm{R}^c(3,\dots,3)$.
+\end{enumerate}
+
+\solution
+
+
+The goal of the final problem is to see a combinatorial route to going beyond the probabilistic method to prove lower bounds for hypergraph Ramsey numbers. Specifically, we will be proving
+\[
+\mathrm{R}_3(k;4) \geq 2^{\mathrm{R}_2(k-1;2)-1}
+\]
+where $\mathrm{R}_r(k;c)$ is the minimum $n$ such that in any $c$-coloring of the hyperedges of the $r$-uniform hypergraph on $[n]$, there is a monochromatic complete subhypergraph on $k$ vertices. Note that $\mathrm{R}_2(k-1;2)$ is the familiar $2$-color graph Ramsey number $\mathrm{R}(k-1)$ and has a lower bound of order $2^{(k-1)/2}$, so we will be showing a lower bound that is a tower of height $2$. So in this example you are using the $2$-color graph Ramsey number to give a lower bound on the $4$-color $3$-uniform hypergraph Ramsey number. (Versions of the argument below also exist for higher uniformities without needing to increase the number of colors.)
+
+Let $n = \mathrm{R}_2(k-1;2)-1$ (note that for this $n$ there is a coloring of the edges of $K_n$ without a monochromatic $K_{k-1}$ subgraph).
+
+Now we let $V$ be the set of binary strings
+\[
+b_1b_2b_3\cdots b_n, \qquad b_i\in\{0,1\},
+\]
+so that $N = |V| = 2^n$. Our goal is to $4$-color all three-tuples of $V$ so that there is no complete monochromatic subhypergraph on $k$ vertices of $V$, assuming we are given a two-coloring $c:\binom{[n]}{2}\to\{\text{red},\text{blue}\}$ of the pairs in $[n]$ without a monochromatic $K_{k-1}$ subgraph.
+
+Let $<$ be the lexicographic order on the strings $\sigma\in V$ (i.e., we order the strings as they would be ordered if interpreted as binary representations of natural numbers).
+
+Now for a given triple $\sigma_1,\sigma_2,\sigma_3$, assume without loss of generality that $\sigma_1<\sigma_2<\sigma_3$, and let $i\in[n]$ be the first digit in which $\sigma_1$ and $\sigma_2$ differ, and let $j\in[n]$ be the first digit in which $\sigma_2$ and $\sigma_3$ differ.
+
+We give the triple $\{\sigma_1,\sigma_2,\sigma_3\}$ the color $1$, $2$, $3$, or $4$ according to which of the following cases holds:
+\begin{enumerate}[label=\arabic*.]
+\item If $i<j$ and in the given coloring $c$ of $\binom{[n]}{2}$, $\{i,j\}$ is red,
+\item If $i>j$ and in the given coloring $c$ of $\binom{[n]}{2}$, $\{i,j\}$ is red,
+\item If $i<j$ and in the given coloring $c$ of $\binom{[n]}{2}$, $\{i,j\}$ is blue,
+\item If $i>j$ and in the given coloring $c$ of $\binom{[n]}{2}$, $\{i,j\}$ is blue.
+\end{enumerate}
+
+\begin{enumerate}[resume=q]
+\item Prove that there is no monochromatic complete ($3$-uniform) subhypergraph on $k$ vertices, with this coloring.
+\end{enumerate}
+
+\solution
+
+
+\end{document}
