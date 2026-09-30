@@ -84,21 +84,64 @@ Students in the OR and ACO programs should answer all questions. For the others,
 \end{enumerate}
 
 \solution
-
+Let $M$ be any maximum matching. 
+Suppose there exists a vertex $v$ which is unmatched in $M$.
+All neighbors of $v$ must be matched, otherwise we could increase the size of $M$, which is a contradiction.
+Select any neighbor $u$ of $v$, matched to $w$ in $M$.
+Then $M\cup\{uv\}\setminus {uw}$ is a maximum matching which matches $v$.
+Hence, we can construct a maximum matching which matches any vertex $v\in V$.
 
 \begin{enumerate}[resume=q]
 \item Let $M_1$ and $M_2$ be two maximal matchings in $G$ (not necessarily bipartite). Prove that $|M_1| \leq 2|M_2|$. Infer that any maximal matching is at least half the size of a \emph{maximum} matching in $G$.
 \end{enumerate}
 
 \solution
+Suppose for contradiction that we have two maximal matchings $M_1, M_2$ such that $|M_1|> 2|M_2|$.
+Let $V_2$ be the set of vertices matched by $M_2$, so $|V_2| = 2|M_2| < |M_1|$.
+Since the edges of $M_1$ are pairwise disjoint, each vertex of $V_2$ is an endpoint of at most one edge of $M_1$, so at most $|V_2|$ edges of $M_1$ meet $V_2$.
+Hence some edge $uv \in M_1$ has $u, v \notin V_2$.
+But then $M_2 \cup \{uv\}$ is a matching, contradicting the maximality of $M_2$.
+Therefore $|M_1| \leq 2|M_2|$.
+
+A maximum matching $M^*$ is in particular maximal, so taking $M_1 = M^*$ gives $|M_2| \geq \frac{1}{2}|M^*|$ for every maximal matching $M_2$.
 
 
 \begin{enumerate}[resume=q]
-\item Prove the following pairing lemma: Given any even number of nodes of a connected undirected graph, there is a way to pair them up and construct paths between the pairs that are edge disjoint. Moreover such a pairing can be computed in polynomial time.
+\item Prove the following pairing lemma: Given any even number of nodes of a connected undirected graph, there is a way to pair them up and construct paths between the pairs that are edge disjoint. Moreover such a pairing can be computed in polynomial time. \footnote{$T$-joins}
 \end{enumerate}
 
 \solution
+Let the given even set of nodes be $W$ and define $k = |W|$.
+Call a family $\calP$ of $k/2$ simple paths \emph{feasible} if its $k$ endpoints (counted with multiplicity) are exactly the nodes of $W$, and let $\Phi(\calP) = \sum_{P \in \calP} |E(P)|$.
+Arbitrarily partition $W$ into pairs $\{u_i,v_i\}_{i\in[k/2]}$.
+Since $G$ is connected, BFS finds a $u_i$--$v_i$ path for each $i$, giving a feasible family $\calP_0$ with $\Phi(\calP_0) \leq \frac{k}{2}(n-1)$.
+For a path $P$ through nodes $a$ and $b$, write $P[a,b]$ for the subpath of $P$ between $a$ and $b$.
 
+\paragraph{Swap.}
+Let $A, B \in \calP$ be an $a_1$--$a_2$ path and a $b_1$--$b_2$ path that share an edge.
+Let $x$ and $y$ be the first and last nodes of $A$, traversed from $a_1$, that lie on $B$.
+Both ends of a shared edge lie on $A$ and on $B$, so $x \neq y$.
+Relabel $b_1, b_2$ so that $x$ precedes $y$ on $B$ traversed from $b_1$, and set
+\[
+    A' = A[a_1,x] \cdot B[x,b_1], \qquad B' = A[y,a_2] \cdot B[y,b_2].
+\]
+By the choice of $x$ and $y$, $A[a_1,x]$ meets $B$ only at $x$ and $A[y,a_2]$ meets $B$ only at $y$.
+Hence $A'$ is a simple $a_1$--$b_1$ path and $B'$ is a simple $a_2$--$b_2$ path, with $|E(A')| = |E(A[a_1,x])| + |E(B[b_1,x])|$ and $|E(B')| = |E(A[y,a_2])| + |E(B[y,b_2])|$.
+Since $A = A[a_1,x] \cdot A[x,y] \cdot A[y,a_2]$ and $B = B[b_1,x] \cdot B[x,y] \cdot B[y,b_2]$,
+\[
+    |E(A')| + |E(B')| = |E(A)| + |E(B)| - |E(A[x,y])| - |E(B[x,y])| \leq |E(A)| + |E(B)| - 2,
+\]
+where the inequality uses $x \neq y$.
+Replacing $A, B$ by $A', B'$ leaves the multiset of endpoints unchanged, so the resulting family $\calP'$ is feasible and $\Phi(\calP') \leq \Phi(\calP) - 2$.
+
+\paragraph{Algorithm.}
+Starting from $\calP_0$, while two paths of $\calP$ share an edge, swap them.
+Every iteration keeps $\calP$ feasible and decreases $\Phi$ by at least $2$, and $\Phi \geq 0$.
+Hence there are at most $k(n-1)/4$ iterations.
+Each iteration takes $O(m + kn)$ time: mark every edge with the paths using it to find a shared edge, then perform the swap.
+When the loop ends, $\calP$ is feasible and its paths are pairwise edge-disjoint.
+Pairing each $w \in W$ with the other endpoint of its path gives the required pairing in polynomial time.
+\qed
 
 \begin{enumerate}[resume=q]
 \item Show that if $G$ is a forest with exactly $2k$ vertices of odd degree, then there are $k$ edge-disjoint paths $P_1, P_2, \ldots, P_k$ in $G$ such that $E(G) = E(P_1) \cup E(P_2) \cup \ldots \cup E(P_k)$.
