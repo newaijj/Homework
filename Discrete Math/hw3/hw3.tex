@@ -177,6 +177,24 @@ For any subset $S$ of $\mathbb{N}$ of size $k$ and any natural number $N$, there
 
 \solution
 
+For the given $S$, let $S_i$ be the translation of $S$ by $i$, so every number $n$ in $S$ gets set to $(n-1+i)\% N +1$.
+Assign colors to each number independently, uniformly at random.
+Let $A_{i,c}$ for some color $c\in [3]$ be the event that $S_i$ does not contain the color $c$.
+Then for all $A_{i,c}$,
+\begin{align*}
+    \Pr(A_{i,c}) = \left(\frac{2}{3}\right)^k =: P.
+\end{align*}
+
+$A_{i,c}$ is determined by the colorings of the $k$ vertices in $S_i$, so it is mutually independent of all events which avoid the vertices of $S_i$.
+In the dependency graph, join two events $A_{i,c}$ and $A_{j,c'}$ if $S_i\cap S_j \neq \emptyset$.
+Each neighbor of $A_{i,c}$ overlaps at least one vertex of $S_i$ ($k$ ways), and that vertex takes some position in $S_j$ ($k$ ways), and $c'$ is some color in $[3]$ (3 ways).
+Hence, $A_{i,c}$ has at most $3k^2$ neighbors.
+
+We have that, 
+\begin{align*}
+    e \Pr(A_{i,c}) (3k^2+1) = e \left(\frac{2}{3}\right)^k (3k^2+1)<1.
+\end{align*}
+for sufficently large $k$, so by the Lovasz Local Lemma, there is at least one coloring that avoids all non-rainbow $S_i$'s.
 
 \begin{enumerate}[resume=q]
 \item Let $\mathrm{R}(k,k)$ denote the least $n$ such that every $2$-coloring of the edges of $K_n$ contains a monochromatic $K_k$. Use the Local Lemma to prove that
@@ -187,12 +205,51 @@ For any subset $S$ of $\mathbb{N}$ of size $k$ and any natural number $N$, there
 
 \solution
 
+Assign colors to edges of $K_n$ independently, uniformly at random. 
+For each subset of $k$ vertices $S$ and color $c\in[2]$, let $A_{S,c}$ be the event that $S$ is a $K_k$ clique of color $c$.
+We have that this event occurs exactly if all edges of $S$ are colored $c$, so
+\begin{align*}
+    \Pr(A_{S,c}) = \left(\frac{1}{2}\right)^{\binom{k}{2}} = \left(\frac{1}{2}\right)^{\frac{k(k-1)}{2}} .
+\end{align*}
+
+$A_{S,c}$ is determined by the colorings of the edges of the clique on $S$, so it is mutually independent of the events $A_{S',c'}$ where $|S\cap S'|\leq 1$, since such sets cannot share edges.
+For each $S$, there are $\binom{k}{\ell}\binom{n-\ell}{k-\ell}$ sets $S'$ of vertices of size $k$ which overlap with $S$ on $\ell$ vertices.
+There are $2$ colors for each such $S'$ which correspond to events $A_{S',c'}$.
+Hence, letting the degree of $A_{S',c}$ in the dependency graph be $D$,
+\begin{align*}
+    D &\leq 2 \sum_{\ell=2}^k \binom{k}{\ell}\binom{n-k}{k-\ell} \\
+    &\leq 2\sum_{\ell=2}^k \binom{k}{\ell}\frac{n^{k-\ell}}{(k-\ell)!}.
+\end{align*}
+For large $n$, the $\ell=2$ term dominates, so 
+\begin{align*}
+    D \leq 2\cdot \frac{k(k-1)}{2}\cdot \frac{n^{k-2}}{(k-2)!} + o(n^{k-2}) \leq k^2\left(\frac{en}{k-2}\right)^{k-2}
+\end{align*}
+For the Local Lemma to hold, we need
+\begin{align*}
+    eP(D+1)<1 \Rightarrow D< \frac{1}{e}\cdot 2^{\frac{k(k-1)}{2}}
+\end{align*}
+The following condition suffices:
+\begin{align*}
+    &k^2\left(\frac{en}{k-2}\right)^{k-2} \leq \frac{1}{e}\cdot 2^{\frac{k(k-1)}{2}} \\
+    \Rightarrow & \frac{en}{k-2}\leq \left(\frac{1}{ek^2}\right)^{\frac{1}{k-2}}\cdot 2^{\frac{k(k-1)}{2(k-2)}} \\
+    \Rightarrow &n\leq \left(\frac{1}{ek^2}\right)^{\frac{1}{k-2}}\cdot 2^{\frac{k(k-1)}{2(k-2)}}\cdot \frac{k-2}{e}.
+\end{align*}
+Note that when $k\to \infty$, the above term tends to 
+\begin{align*}
+    \frac{k}{2}2^\frac{k}{2}.
+\end{align*}
+Hence, when $n$ is smaller than this quantity, there exists a 2-coloring of the edges that gives a monochromatic $K_k$. 
+Thus $R(k,k)$ is lower bounded by this quantity.
+
 
 \begin{enumerate}[resume=q]
 \item Define $\mathrm{R}^c(k_1,\dots,k_c)$ to be the smallest $n$ so that any $[c]$-coloring of the edges of $K_n$ has, for some $i$, a $K_{k_i}$ subgraph that is all color $i$. State and prove an upper bound on $\mathrm{R}^c(3,\dots,3)$.
 \end{enumerate}
 
 \solution
+
+
+\qed
 
 
 The goal of the final problem is to see a combinatorial route to going beyond the probabilistic method to prove lower bounds for hypergraph Ramsey numbers. Specifically, we will be proving
