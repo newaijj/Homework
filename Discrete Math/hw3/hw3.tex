@@ -145,7 +145,7 @@ Any sequence in which no $A_{i,j,n}$ occurs has the required property.
 
 \paragraph{Probability.}
 Conditioned on $b_1,\dots,b_{j+t-1}$, the bit $b_{j+t}$ equals the earlier bit $b_{i+t}$ with probability $1/2$.
-Hence $\Pr(A_{i,j,n})=2^{-n}$, even when the two blocks overlap.
+Hence $\Pr(A_{i,j,n})\leq2^{-n}$.
 
 \paragraph{Dependency graph.}
 $A_{i,j,n}$ is determined by the at most $2n$ bits in $S=[i,i+n-1]\cup[j,j+n-1]$, so it is mutually independent of all events whose bits avoid $S$.

@@ -168,6 +168,41 @@ Thus, we have shown that $E(T) = F$.
 \end{enumerate}
 
 \solution
+Let the two copies of the original graph $G$ be $G^1$ and $G^2$, where the vertices $r^1$ and $s^1$ are already removed from $G^1$.
+Refer to the combined copies without $r^1$ and $s^1$ as $G'$.
+
+\begin{lemma}
+    There exists an odd-length $(r,s)$-path in $G$ if and only if there exists a perfect matching in $G'$.
+\end{lemma}
+\begin{proof}
+    If there exists an odd-length $(r,s)$-path $P$ in $G$, then we can construct a perfect matching in $G'$ as follows:
+    For each odd edge $uv\in P$, add the edge $u^2v^2$ to the matching. This matches all vertices in $G^2$ corresponding to $V(P)$.
+    For each even edge $uv\in P$, add the edge $u^1v^1$ to the matching. This matches all vertices in $G^1$ corresponding to $V(P)$, except for $r^1$ and $s^1$, which are already removed.
+    Finally, for each vertex $v\in V(G)\setminus V(P)$, add the edge $v^1v^2$ to the matching. This matches all remaining vertices in $G'$, giving a perfect matching.
+
+    If there exists a perfect matching in $G'$, then we can construct an odd-length $(r,s)$-path in $G$ as follows:
+    The vertex $r^2$ must be matched to some vertex $u^2$ in $G^2$, which corresponds to an edge $ru$ in $G$.
+    Thus, the edge $u^1u^2$ must not be in the matching, so $u^1$ must be matched to some vertex $v^1$ in $G^1$, which corresponds to an edge $uv$ in $G$.
+    Taking the corresponding edges in $G$ (e.g., $ru$, $uv$, etc.) gives a path $P$ starting from $r$.
+    At any time, all non-terminal vertices of this path have both of their copies matched, so the path never extends to an intermediate vertex (i.e., never loops back on itself).
+    Thus, $P$ must eventually reach $s$, since $s^2$is the only remaining vertex without a partner in the other graph.
+    Odd edges of $P$ correspond to edges in $G^2$, while even edges correspond to edges in $G^1$.
+    $P$ starts and ends in an edge in $G^2$, and thus is odd.
+\end{proof}
+
+Assign weights to the edges of $G'$ as follows:
+\begin{itemize}
+    \item For each edge $uv\in E(G)$, assign weight $c_{uv}$ to the edges $u^1v^1$ and $u^2v^2$ in $G'$.
+    \item For each vertex $v\in V(G)$, assign weight $0$ to the edge $v^1v^2$ in $G'$.
+\end{itemize}
+The weight of the minimium-weight odd-length path is equal to the weight of the perfect matching constructed in the proof of above lemma.
+Any minimum-weight perfect matching in $G'$ produce some odd-length path $P$ as per the construction in the above lemma, and matching all other vertices to their corresponding partners only decreases the weight of the matching, due to the non-negativity of the edge weights.
+Hence, the weight of a minimum-weight perfect matching in $G'$ is equal to the weight of a minimum-weight odd-length $(r,s)$-path in $G$.
+
+Our algorithm will run min-weight perfect matching on $G'$, and return the corresponding min-weight odd $(r,s)$-path in $G$.
+
+To modify the algorithm to find min-weight even paths, first add a new vertex $t$ to $G$, connected only to $s$. 
+All even length $(r,s)$-paths in $G$ correspond to odd-length $(r,t)$-paths in the modified graph by extending by the edge $st$, so we can run the same algorithm on the modified graph to find a min-weight even $(r,s)$-path in $G$.
 
 
 \begin{enumerate}[resume=q]
