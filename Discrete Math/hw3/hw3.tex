@@ -247,7 +247,36 @@ Thus $R(k,k)$ is lower bounded by this quantity.
 \end{enumerate}
 
 \solution
+Let $A^c:=\mathrm{R}^c(3,\dots,3)$ is the minimum $n$ such that any $[c]$-coloring of the edges of $K_n$ has a monochromatic triangle.
 
+\begin{lemma}
+For $c>2$, $R^c(3,\dots,3, 2) = R^{c-1}(3,\dots,3)$.
+\end{lemma}
+\begin{proof}
+    If a coloring on $c$ colors does not contain any edge of the color $c$, all edges are colored with the first $[c-1]$ colors.
+    Therefore, the minimum number vertices $n$ such that all $[c]$-colorings on $K_n$ either have an edge of color $c$ or contain a monochromatic triangle is simply the minimum number of vertices such that all $[c-1]$-colorings on $K_n$ contain a monochromatic triangle.
+\end{proof}
+
+We prove that $A^c\leq 3 \cdot c!$ by induction on $c$.
+When $c=2$, we know that $R^2(3,3) = 6 = 3\cdot 2!$.
+
+For $c>2$, let $n$ be the number of vertices in the largest graph for which there exists a $[c]$-coloring with no monochromatic triangles.
+Consider any vertex $v$ in $K_n$ with such a coloring. There are $n-1$ edges incident to $v$. 
+Partition the remaining vertices of $K_n$ into $c$ groups, according to the color of the edge connecting them to $v$.
+Let $c'$ be the color with the largest number of adjacent vertices.
+Let $H$ be the subgraph induced by these vertices.
+Let $H$ have $m$ vertices.
+
+If $H$ contains an edge $xy$ of color $c'$, then $\{v,x,y\}$ forms a monochromatic triangle, which is a contradiction.
+Otherwise, $H$ does not contain an edge with color $c'$. 
+Furthermore, $H$ contains fewer than $R^c(3,\dots,3,2)$ vertices, otherwise there must exist a monochromatic triangle in $H$. 
+By the above Lemma, we have $|V(H)|\leq R^{c-1}(3,\dots,3)-1$.
+
+Since $H$ contains the largest number of out of all partitions, we have that 
+\begin{align*}
+    n \leq cR^{c-1}(3,\dots,3)-c+1 \leq 3\cdot c!-1.
+\end{align*}
+Then $A^c = n+1\leq 3\cdot c!$, which completes the proof.
 
 \qed
 
@@ -284,5 +313,36 @@ We give the triple $\{\sigma_1,\sigma_2,\sigma_3\}$ the color $1$, $2$, $3$, or 
 
 \solution
 
+We are given a 2-coloring of the edges of $K_n$ such that there is no monochromatic $K_{k-1}$ subgraph.
+Each binary string $\sigma\in V$ corresponds to a subset of the vertices of $K_n$.
+Note that in each triple $\sigma_1,\sigma_2,\sigma_3$ such that $\sigma_1 < \sigma_2<\sigma_3$, we have that $\sigma_1[i]=0,\sigma_2[i]=1$ and $\sigma_2[j]=0,\sigma_3[j]=1$ due to the lexicographic order (where $\sigma[i]$ is the $i$th digit in $\sigma$).
 
+Suppose for contradiction that there exist $S\subseteq V$ such that $|S|=k$ and for any triple $t = \{\sigma_1,\sigma_2,\sigma_3\}\subseteq S$, $t$ is colored $1$.
+Sort the binary strings of $S$ in the order $\langle \sigma_1,\dots ,\sigma_k\rangle$.
+For consecutive $\sigma_{\ell}, \sigma_{\ell+1}$, let $i_\ell$ be the first digit in which they differ.
+
+\begin{lemma}
+    For any integers $1\leq \ell<h\leq k$, the first digit where $\sigma_\ell$ and $\sigma_h$ differ is $i_\ell$.
+\end{lemma}
+\begin{proof}
+    If $h=\ell+1$, this is true by definition.
+    Otherwise, consider the triple $\sigma_\ell,\sigma_{\ell+1},\sigma_{h}$.
+    Since this triple is colored red, the first digit $j$ where $\sigma_{\ell+1}$ and $\sigma_{h}$ is larger than $i_\ell$.
+    This means that the $i$-prefix of $\sigma_{\ell+1}$ and $\sigma_{h}$ are identical, so the first digit where $\sigma_\ell$ and $\sigma_h$ differ is $i_\ell$.
+\end{proof}
+
+Consider the set of digits $I=\{i_{\ell}\}_{\ell\in [k-1]}$. 
+This corresponds to a set of $k-1$ vertices of $K_n$.
+For each pair $\{i_\ell,i_h\}\in I$ such that $\ell<h$, consider the triple $\{\sigma_\ell,\sigma_h,\sigma_{h+1}\}$.
+We have that $\sigma_\ell<\sigma_h<\sigma_{h+1}$.
+By the above lemma, the first index on which $\sigma_\ell$ and $\sigma_h$ differ is $i_\ell$; and by definition of $i_h$, the first index on which $\sigma_h$ and $\sigma_{h+1}$ differ is $i_h$.
+Since $\{\sigma_\ell,\sigma_h,\sigma_{h+1}\}$ is colored 1, the edge $i_\ell i_h$ in $K_n$ must be colored red.
+Therefore, $I$ is a red $k$-clique in $K_n$, which is a contradiction with the definition of the coloring $c$.
+
+This proves that we cannot have a complete $1$-colored subhypergraph on $k$ vertices.
+The proof for color $2$ uses the following lemma, similar to the above:
+\begin{lemma}
+    For any integers $1\leq \ell<h\leq k$, the first digit where $\sigma_\ell$ and $\sigma_h$ differ is $i_{h-1}$.
+\end{lemma}
+The cases for colors 3 and 4 are exactly the same, but with the color red switched to blue.
 \end{document}
