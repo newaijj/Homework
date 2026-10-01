@@ -210,6 +210,68 @@ All even length $(r,s)$-paths in $G$ correspond to odd-length $(r,t)$-paths in t
 \end{enumerate}
 
 \solution
+Suppose there exist negative edge weights $c_e$, and let the set of negative-weight edges be $N$. 
+Every minimum-weight edge cover takes all edges in $N$:
+including an edge in $N$ only decreases the cost.
+Let the total cost of edges in $N$ be $c(N)$. 
+Since $N$ is in every minimum-weight edge cover, we can set the weights of all edges in $N$ to 0, then subtract $c(N)$ from the solution value, getting the weight of a minimum-weight edge cover.
+Hence, without loss of generality, we assume that all edges of $G$ are non-negative.
+
+Let $G$ be the graph with edge weights $c_{uv}$ and let $G'$ be the graph with edge weights $c'_{uv}$.
+Let a minimum-weight edge cover of $G$ be $C$, with weight $w$. 
+Let a maximum-weight matching in $G'$ be $M'$, with weight $w'$.
+Let $A=\sum_{v\in V(G)} c_v$.
+
+\begin{lemma}
+    $w = A - w'$.
+\end{lemma}
+\begin{proof}
+    Given the matching $M'$, we construct an edge cover in $G$ of weight at most $A-w'$.
+    Let $V'_{M'}$ be the vertices of $G'$ matched by $M'$.
+    Since each $V'_{M'}$ only appears in at most one edge of $M'$, we have
+    \begin{align*}
+        w' &= \sum_{e=uv\in M'} c'_{uv} \\
+        &= \sum_{e=uv\in M'} (c_{u}+ c_v - c_{uv}) \\
+        &=\sum_{v\in V'_{M'}} c_{v} - \sum_{e=uv\in M'} c_{uv}.
+    \end{align*}
+    Consider the edge set $E$ that takes every edge of $M$ and for every vertex $v$ not matched by $M'$, $E$ includes $\arg\min(c_e : e \in \delta(v))$. 
+    Then we have that every vertex is covered by an edge of $E$, i.e., $E$ is an edge cover.
+    Furthermore, let the weight of $E$ in $G$ be $w_E$. Then
+    \begin{align*}
+        w_E &\leq \sum_{v\notin V'_{M'}} c_{v} + \sum_{e=uv\in M'} c_{uv} \\
+        &= \sum_{v\in V(G))} c_{v} - \sum_{v\in V'_{M'}} c_{v} + \sum_{e=uv\in M'} c_{uv} \\
+        &= A - w',
+    \end{align*}
+    where the inequality is because some edges $e=\arg\min(c_e : e \in \delta(v))$ could be duplicates, and all edge weights in $G$ are non-negative.
+    Thus, $E$ is an edge cover of weight at most $A - w'$.
+
+    Next, given an edge cover $C$, we construct a matching in $G'$ of weight at least $A-w$.
+    Let $e_x=\arg\min(c_e : e \in \delta(x))$.
+    First, note that for all $e=uv\in C$, $c'_e\geq 0$, otherwise $C-uv + e_u+e_v$ is an edge cover of lower cost.
+
+    Let $Q\subset C$ be a maximal matching in $C$. 
+    Clearly $Q$ is a matching in $G'$.
+    Then since $C$ is an edge cover, for each vertex $v\in V(G)\setminus V(Q)$, $v$ is incident to at least one edge $e'_v\in C\backslash Q$.
+    Furthermore, since $Q$ is maximal, each edge $e\in C\setminus Q$ is incident to at most one $v\in V(G)\setminus V(Q)$.
+    Therefore, there is an injective map $m$ from vertices $v\in V(G)\setminus V(Q)$ to edges $e\in C\setminus Q$.
+    Thus, we get that
+    \begin{align*}
+        \sum_{v\in V(G)\setminus V(Q)}c_v - \sum_{e\in C\setminus Q}c_e & \leq \sum_{v\in V(G)\setminus V(Q)}(c_v - c_{m(v)}) &\text{(non-negativity of $c_e$'s)} \\
+        &\leq 0,
+    \end{align*}
+    where the final inequality is because $c_v - c_{m(v)}\leq 0$ for each $v\in V(G)$ from the definition of $c_v$ and the fact that $m(v)$ is incident to $v$.
+    Finally, letting $w'_Q$ be the weight of $Q$ in $G'$,
+    \begin{align*}
+        w'_Q &= \sum_{e=uv\in Q} (c_u+c_v-c_{uv})\\
+        &=\sum_{v\in V(Q)} c_v - \sum_{e\in Q} c_e  &\text{($Q$ is a matching)} \\
+        &=\sum_{v\in V(G)} c_v - \sum_{v\in V(G)\setminus V(Q)}c_v -\sum_{e\in C}c_e + \sum_{e\in C\setminus Q} c_e \\
+        &\geq A - w.
+    \end{align*}
+
+    With both inequalities above, we conclude that $w = A-w'$.
+\end{proof}
+
+Thus, our algorithm to set the weights of all edges of $N$ to 0, find a max-weight matching on the modified graph $G'$, and add $c_v$'s to cover all uncovered vertices $v$.
 
 
 \begin{enumerate}[resume=q]
@@ -221,17 +283,60 @@ All even length $(r,s)$-paths in $G$ correspond to odd-length $(r,t)$-paths in t
 \end{enumerate}
 
 \solution
+\ul{(a):} When $\rho=2$, the sets are edges on the graph with one vertex for each element in the ground set $E$. 
+This is equivalent to min-weight edge cover.
 
+\ul{(b):} The LP relaxation of weighted set cover, with a variable $x_T$ for each set $T\in S$, is
+\begin{align*}
+    \text{(P)}\qquad \min\quad & \sum_{T\in S} c_T x_T \\
+    \text{s.t.}\quad & \sum_{T\in S \,:\, e\in T} x_T \geq 1 && \forall\, e\in E \\
+    & x_T \geq 0 && \forall\, T\in S.
+\end{align*}
+Its dual, with a variable $y_e$ for each element $e\in E$, is
+\begin{align*}
+    \text{(D)}\qquad \max\quad & \sum_{e\in E} y_e \\
+    \text{s.t.}\quad & \sum_{e\in T} y_e \leq c_T && \forall\, T\in S \\
+    & y_e \geq 0 && \forall\, e\in E.
+\end{align*}
+
+We use the hint, selecting as our primal solution $x^*$ the collection of cheapest sets that cover each ground element $e$.
+For each $e\in E$, Let $T^*_e = \arg\min_{T\in S:e\in T}\{c_T\}$. Then the cost of this solution is:
+\begin{align*}
+    \sum_{T\in S} c_Tx_T&\leq \sum_{e\in E} c_{T^*_e} &(\text{non-negativity of $c_e$'s})\\
+    &= \sum_{e\in E}\min_{T\in S:e\in T}c_T.
+\end{align*}
+Next, we select a dual solution $y^*$, such that:
+\begin{align*}
+    y^*_e = \frac{1}{\rho}\min_{T\in S: e\in T} c_T.
+\end{align*}
+Clearly $y^*_e\geq 0$. 
+To show the feasibility of $y^*$, for each $T\in S$ we have that 
+\begin{align*}
+    \sum_{e\in T}y^*_e & =\frac{1}{\rho} \sum_{e\in T} \min_{T'\in S: e\in T'} c_{T'} \\
+    & \leq\frac{1}{\rho} \sum_{e\in T} c_T \\
+    & =\frac{1}{\rho} \cdot \rho c_T \\
+    & =c_T. \\
+\end{align*}
+The objective value of this dual solution is 
+\begin{align*}
+    \sum_{e\in E} y^*_e = \frac{1}{\rho}\sum_{e\in E}\min_{T\in S:e\in T}c_T.
+\end{align*}
+Hence, the primal solution $x^*$'s objective is no greater than a factor of $\rho$ larger than a feasible dual solution's objective value, so $x^*$ is a $\rho$-approximation.
 
 \begin{enumerate}[resume=q]
 \item[8.*] Provide a convex combination (``gluing'') proof for the arborescence polyhedron of Fulkerson describing the convex hull of rooted directed spanning trees of a connected directed graph $(V,A)$ with root $r$:
 \begin{align*}
     x(\delta^-(S)) &\geq 1 && \forall\, r \notin S \subset V \\
-    x_a &\geq 0 && \forall\, a \in A
+    1\geq x_a &\geq 0 && \forall\, a \in A
 \end{align*}
 \end{enumerate}
 
 \solution
+We want to show that each feasible point in the above polytope is a convex combination of feasible integer points.
+We will use induction on $|V|$. 
+When $|V|=1$, there are no arcs, so the empty arborescence is the only solution.
+
+When $|V|\geq 2$, 
 
 
 \begin{enumerate}[resume=q]
@@ -244,6 +349,26 @@ HINT: Use the pairing lemma on the odd nodes of one tree in the other.
 \end{enumerate}
 
 \solution
+\ul{(a)}:
+Let $T_1,T_2$ be the two spanning trees.
+Let the odd vertices of $T_1$ be $V_1$.
+There must be an even number of verties in $V_1$. 
+Recall: 
+
+Question 3: Given any even number of nodes of a connected undirected graph, there is a way to pair them up and construct paths between the pairs that are edge disjoint. Moreover such a pairing can be computed in polynomial time.
+
+Apply question 3 to $V_1$ on the graph $T_2$ to the graph $Q\subseteq T_2$ comprising edge-disjoint paths with endpoints comprising pairs of vertices in $V_1$.
+Then, $V_1$ are exactly the odd vertices of $Q$.
+Thus, $Q\cup T_1$ is a connected graph with only even-degree vertices, so it contains an Eulerian spanning subgraph.
+
+\ul{(b)}:
+Let $G':= G\setminus T_1$. 
+In particular, since $G'$ contains $T_2$, it is connected.
+Let $V_2$ be the odd vertices of $G'$.
+By a similar argument as above, we can construct a $Q'\subseteq T_1$ such that $Q'\cup G'$ is an even-degree subgraph.
+
+Thus, $Q\cup T_1$ and $Q'\cup G'$ are two even subgraphs that cover $G$.
+
 
 
 \begin{enumerate}[resume=q]
