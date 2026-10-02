@@ -327,12 +327,43 @@ Hence, the primal solution $x^*$'s objective is no greater than a factor of $\rh
 \item[8.*] Provide a convex combination (``gluing'') proof for the arborescence polyhedron of Fulkerson describing the convex hull of rooted directed spanning trees of a connected directed graph $(V,A)$ with root $r$:
 \begin{align*}
     x(\delta^-(S)) &\geq 1 && \forall\, r \notin S \subset V \\
-    1\geq x_a &\geq 0 && \forall\, a \in A
+    x_a &\geq 0 && \forall\, a \in A
 \end{align*}
 \end{enumerate}
 
 \solution
-We want to show that each feasible point in the above polytope is a convex combination of feasible integer points.
+
+(As written the above polytope is unbounded from above. Hence, feasible points are not necessarily convex combinations of $r$-arborescences.
+Instead, if only consider the convex hull of the vertices of the above system, we can show that the vertices of the above system are $r$-arborescences. 
+This is the only gluing proof I could think of.)
+
+
+We want to show that each vertex $x$ in the above polytope (with the added equality constraint) is a convex combination of $r$-arborescences.
+If $x$ contains a variable $x_a=0$, then we can remove the arc $a$ from the graph, since it will never be used in any arborescence in the convex combination.
+Similarly, if $x_a=1$, then we can contract the arc $a$ into a single node, since it will always be used in any arborescence in the convex combination.
+Thus, we can assume that $0<x_a<1$ for all arcs $a\in A$.
+
+If $|V|=1$, then the only arborescence is the empty arborescence, which is a convex combination of itself.
+
+Otherwise, suppose there is a tight constraint $x(\delta^-(S))=1$ for some $S\subset V$ with $r\notin S$ and $2\leq |S|\leq |V|-2$.
+Let $G_1:= G/S$ be the graph obtained by contracting $S$ into a single node $s$, and let $G_2:= G/\bar{S}$ be the graph obtained by contracting $\bar{S}$ into a new root $r'$.
+Note that each constraint for the contracted graphs $G_1$ and $G_2$ is also a constraint for the original graph $G$, so $x|_{G_1}$ and $x|_{G_2}$ are feasible for both contracted graphs.
+
+Each of $G_1$ and $G_2$ has fewer vertices than $G$, so by induction, $x|_{G_1}$ and $x|_{G_2}$ are convex combinations of arborescences in $G_1$ and $G_2$, respectively.
+
+\begin{lemma}
+    The edges of $x$ from a DAG.
+\end{lemma}
+\begin{proof}
+    First, we show that for all 
+    Suppose there exists a cycle $C$ in the support of $x$.
+
+\end{proof}
+
+There must exist some $S\subset V$ such that $r\notin S$ such that $x(\delta^-(S))=1$.
+
+
+
 We will use induction on $|V|$. 
 When $|V|=1$, there are no arcs, so the empty arborescence is the only solution.
 
