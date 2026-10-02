@@ -333,41 +333,67 @@ Hence, the primal solution $x^*$'s objective is no greater than a factor of $\rh
 
 \solution
 
-(As written the above polytope is unbounded from above. Hence, feasible points are not necessarily convex combinations of $r$-arborescences.
-Instead, if only consider the convex hull of the vertices of the above system, we can show that the vertices of the above system are $r$-arborescences. 
-This is the only gluing proof I could think of.)
+% (As written the above polytope is unbounded from above. Hence, feasible points are not necessarily convex combinations of $r$-arborescences.
+% Instead, if only consider the convex hull of the vertices of the above system, we can show that the vertices of the above system are convex combinations of $r$-arborescences. 
+% This is the only gluing proof I could think of.)
 
 
-We want to show that each vertex $x$ in the above polytope (with the added equality constraint) is a convex combination of $r$-arborescences.
-If $x$ contains a variable $x_a=0$, then we can remove the arc $a$ from the graph, since it will never be used in any arborescence in the convex combination.
-Similarly, if $x_a=1$, then we can contract the arc $a$ into a single node, since it will always be used in any arborescence in the convex combination.
-Thus, we can assume that $0<x_a<1$ for all arcs $a\in A$.
+% Let $P(G)$ denote the polyhedron above (with $S \neq \emptyset$) for a digraph $G = (V,A)$, possibly with parallel arcs, and write $\chi^T \in \{0,1\}^A$ for the incidence vector of $T \subseteq A$.
 
-If $|V|=1$, then the only arborescence is the empty arborescence, which is a convex combination of itself.
+% \begin{claim}
+%     Every $x \in P(G)$ satisfies $x \geq \sum_i \lambda_i \chi^{T_i}$ for some convex combination of $r$-arborescences $T_i$ of $G$.
+% \end{claim}
 
-Otherwise, suppose there is a tight constraint $x(\delta^-(S))=1$ for some $S\subset V$ with $r\notin S$ and $2\leq |S|\leq |V|-2$.
-Let $G_1:= G/S$ be the graph obtained by contracting $S$ into a single node $s$, and let $G_2:= G/\bar{S}$ be the graph obtained by contracting $\bar{S}$ into a new root $r'$.
-Note that each constraint for the contracted graphs $G_1$ and $G_2$ is also a constraint for the original graph $G$, so $x|_{G_1}$ and $x|_{G_2}$ are feasible for both contracted graphs.
+% Every $r$-arborescence has an arc entering each nonempty $S \subseteq V \setminus r$, so the claim gives
+% \[
+%     P(G) = \mathrm{conv}\{\chi^T : T \text{ an $r$-arborescence of } G\} + \reals^A_{\geq 0}.
+% \]
+% In particular, a vertex $x$ of $P(G)$ equals the combination $z$ it dominates, being the midpoint of $z, 2x - z \in P(G)$; hence $x = \chi^T$ for a single $r$-arborescence $T$.
 
-Each of $G_1$ and $G_2$ has fewer vertices than $G$, so by induction, $x|_{G_1}$ and $x|_{G_2}$ are convex combinations of arborescences in $G_1$ and $G_2$, respectively.
+% \begin{proof}
+%     We use induction on $|V| + |A|$.
+%     $P(G) \subseteq \reals^A_{\geq 0}$ is pointed with recession cone $\reals^A_{\geq 0}$, so each of its points is a convex combination of vertices plus a nonnegative vector.
+%     Hence it suffices to consider a vertex $x$.
+%     If $x_a = 0$ for some $a \in A$, then $x|_{G-a} \in P(G-a)$ and we are done by induction, since $r$-arborescences of $G - a$ are $r$-arborescences of $G$.
+%     So assume $x > 0$.
+%     Then every arc $a$ lies in a tight cut, as otherwise $x \pm \varepsilon e_a \in P(G)$ for small $\varepsilon > 0$; in particular $x_a \leq 1$.
 
-\begin{lemma}
-    The edges of $x$ from a DAG.
-\end{lemma}
-\begin{proof}
-    First, we show that for all 
-    Suppose there exists a cycle $C$ in the support of $x$.
+%     \paragraph{Gluing.}
+%     Suppose $x(\delta^-(S)) = 1$ for some $S \subseteq V \setminus r$ with $2 \leq |S| \leq |V| - 2$, and let $D := \delta^-(S)$.
+%     Let $G_1 := G/S$ be obtained by contracting $S$ into a single node $s$, and $G_2 := G/\bar{S}$ by contracting $\bar{S}$ into a new root $r'$ (deleting loops).
+%     Each cut constraint of $G_1$ or $G_2$ is a cut constraint of $G$, so $x|_{G_1} \in P(G_1)$ and $x|_{G_2} \in P(G_2)$.
+%     Both graphs have fewer nodes than $G$, so by induction
+%     \[
+%         x|_{G_1} \geq \sum_i \lambda_i \chi^{T_i}, \qquad x|_{G_2} \geq \sum_j \mu_j \chi^{U_j}
+%     \]
+%     for convex combinations of $r$-arborescences $T_i$ of $G_1$ and $r'$-arborescences $U_j$ of $G_2$.
+%     The arcs entering $s$ in $G_1$, and those leaving $r'$ in $G_2$, are exactly the arcs of $D$.
+%     So each $T_i$ contains exactly one arc of $D$ and each $U_j$ at least one, giving
+%     \[
+%         \sum_{a \in D} \sum_{i \,:\, a \in T_i} \lambda_i = 1 = x(D), \qquad 1 \leq \sum_{a \in D} \sum_{j \,:\, a \in U_j} \mu_j \leq x(D) = 1.
+%     \]
+%     Since $\sum_{i : a \in T_i} \lambda_i \leq x_a$ and $\sum_{j : a \in U_j} \mu_j \leq x_a$ for each $a$, both hold with equality for every $a \in D$, and each $U_j$ contains exactly one arc of $D$.
 
-\end{proof}
+%     If $T_i$ and $U_j$ contain the same arc $a \in D$, then $T_i \cup U_j$ is an $r$-arborescence of $G$: $r$ has no entering arc, every other node has exactly one (from $T_i$ if it lies in $\bar{S}$, from $U_j$ if it lies in $S$), and a directed cycle would either lie in $U_j$ or contract to a closed walk in $T_i$.
+%     Therefore
+%     \[
+%         z := \sum_{a \in D} \; \sum_{i \,:\, a \in T_i} \; \sum_{j \,:\, a \in U_j} \frac{\lambda_i \mu_j}{x_a} \, \chi^{T_i \cup U_j}
+%     \]
+%     is a convex combination of $r$-arborescences of $G$, its coefficients summing to $\sum_{a \in D} x_a = 1$.
+%     It agrees with $\sum_i \lambda_i \chi^{T_i}$ on the arcs of $G_1$ and with $\sum_j \mu_j \chi^{U_j}$ on the arcs inside $S$, so $z \leq x$.
 
-There must exist some $S\subset V$ such that $r\notin S$ such that $x(\delta^-(S))=1$.
+%     \paragraph{No such $S$.}
+%     Then every tight cut is $\delta^-(v)$ for some $v \neq r$, or $\delta^-(V \setminus r)$.
+%     Let $F := \{a \in A : x_a < 1\}$, and let $M$ be the matrix whose rows are the incidence vectors of the tight cuts.
+%     Since $x$ is a vertex and $x > 0$, $M$ has full column rank, so its submatrix $M_F$ on the columns of $F$ has rank $|F|$.
+%     A tight cut has total $x$-value $1$ and $x > 0$, so if it meets $F$ then it is contained in $F$ and has at least two arcs; that is, every nonzero row of $M_F$ has at least two ones.
+%     As the cuts $\delta^-(v)$ are pairwise disjoint, $M_F$ has at most $|F|/2 + 1$ nonzero rows, so $|F| \leq |F|/2 + 1$, i.e.\ $|F| \leq 2$.
+%     Then every nonzero row of $M_F$ is the all-ones vector, so $|F| = \mathrm{rank}(M_F) \leq 1$, which in turn forces $M_F = 0$ and $F = \emptyset$.
 
-
-
-We will use induction on $|V|$. 
-When $|V|=1$, there are no arcs, so the empty arborescence is the only solution.
-
-When $|V|\geq 2$, 
+%     Hence $x = \chi^A$.
+%     As $x \in P(G)$, some arc of $A$ enters every nonempty $S \subseteq V \setminus r$, so every node is reachable from $r$ and $A$ contains an $r$-arborescence $T$.
+%     Then $x \geq \chi^T$.
+% \end{proof}
 
 
 \begin{enumerate}[resume=q]
