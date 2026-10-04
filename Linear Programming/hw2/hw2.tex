@@ -470,29 +470,36 @@ Thus, these extreme points of $Y$ are not of the form $z=Px+p$ for any extreme p
 
 \solution
 \paragraph{(a)}
-Suppose for contradiction that $\mathrm{rank}(A)<n$. 
-Then there exists $0\neq d\in \reals^n$ such that $Ad=0$, so $d$ spans a line $\{x\in \reals^n: x=td, t\in \reals\}$ in $K$. 
-This contradicts that $K$ is a pointed cone, so we have that $\mathrm{rank}(A)=n$ and there are $n$ linearly independent vectors $a_i$ (which are rows of $A$).
-
-By question 1a, if $K = \{x \in \reals^n : a_i^\top x \geq 0, \ i = 1, \ldots, m\}$, then its dual cone $K^* = \mathrm{cone}(\{a_1, \ldots, a_m\})$.
-Select the $n$ linearly independent directions $\{a_1, \ldots, a_n\}$ from the vectors defining $K^*$ as defined above, and some positive real number $c$.
-Then the point $b = \sum_{i=1}^{n}= c a_i$ is a conic combination of $\{a_1, \ldots, a_n\}$, hence $b\in K^*$. 
-Furthermore, since the $n$ directions are linearly independent, all points in a sufficiently small $\epsilon$-neighborhood around $b$ can also be expressed as a conic combination of the same vectors, if we choose an $\epsilon<c$.
-Therefore, the interior of $K^*$ is non-empty.
+If $Ad=0$ for some $d\neq 0$, then $K$ contains the line $\{td:t\in\reals\}$, contradicting pointedness.
+So $\ker A=\{0\}$, and $A$ has $n$ linearly independent rows $a_{i_1}^\top,\dots,a_{i_n}^\top$; the matrix $M:=-[a_{i_1}\ \cdots\ a_{i_n}]\in\reals^{n\times n}$ is invertible.
+Since $K=\{x:(-a_i)^\top x\geq 0\ \forall i\}$, Question 1(a) gives $K^*=\cone(\{-a_1,\dots,-a_m\})\supseteq\{M\lambda:\lambda\geq 0\}$.
+Hence $K^*$ contains
+\[
+    U:=\{y\in\reals^n: M^{-1}y>0\},
+\]
+since each $y\in U$ equals $M\lambda$ with $\lambda:=M^{-1}y>0$.
+$U$ is open, as the preimage of the open orthant under the continuous map $y\mapsto M^{-1}y$, and nonempty, as it contains $M\mathbf{1}$.
+Therefore $\operatorname{int}K^*\supseteq U\neq\emptyset$.
 
 \paragraph{(b)}
-intersect every ray, scale
+$B_f$ is a base of $K$ iff it meets every ray $\{tx:t\geq 0\}$ with $0\neq x\in K$.
+As $tx\in K$ for all $t\geq 0$, this ray meets $B_f$ iff $t f^\top x=1$ for some $t\geq 0$, i.e.\ iff $f^\top x>0$ (and then only at $x/f^\top x$).
+Hence
+\[
+    B_f \text{ is a base of } K \iff f^\top x>0 \quad \forall x\in K\setminus\{0\}. \tag{$*$}
+\]
 
-\ul{Base $\Rightarrow$ interior}:
-We are given that $B_f := \{x \in K : f^\top x = 1\}$ is a base of $K$.
+\ul{Interior $\Rightarrow$ base:}
+Let $f\in\operatorname{int}K^*$, so there is $\varepsilon>0$ with $f-\varepsilon u\in K^*$ for all $\|u\|_2\leq 1$.
+For $0\neq x\in K$, taking $u=x/\|x\|_2$ gives $0\leq (f-\varepsilon x/\|x\|_2)^\top x=f^\top x-\varepsilon\|x\|_2$, so $f^\top x\geq\varepsilon\|x\|_2>0$.
+By $(*)$, $B_f$ is a base.
 
-So for all $0\neq x\in K$, there exists some $t\in \reals_{>0}$ such that $f^\top(tx)=1$.
-So for all $0\neq x\in K$, $f^\top x> 0$.
-
-Claim: all points $y$ on an exposed face of the dual cone has some point $x\in K$ such that $y^\top x = 0$.
-If $y$ on boundary of $K^*$, there exists a direction $e$ such that for all $\varepsilon>0$, $y+\varepsilon e\notin K^*$.
-Then there exists some $x\in K$ such that $(y+\epsilon e)^\top x<0$
-Then we must have equality $y^\top x$.
+\ul{Base $\Rightarrow$ interior:}
+By Minkowski--Weyl, the polyhedral cone $K$ is finitely generated: $K=\cone(\{r_1,\dots,r_p\})$, where we may assume every $r_j\neq 0$.
+Since every $x\in K$ is a conic combination of the $r_j$, we have $y\in K^*$ iff $y^\top r_j\geq 0$ for all $j$.
+Each $r_j$ lies in $K\setminus\{0\}$, so $(*)$ gives $f^\top r_j>0$ for all $j$.
+Thus $f$ lies in $V:=\{y\in\reals^n: y^\top r_j>0\ \forall j\}$, which is open (a finite intersection of open half-spaces) and contained in $K^*$.
+Hence $f\in\operatorname{int}K^*$.
 
 
 
