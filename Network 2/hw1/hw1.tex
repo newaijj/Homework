@@ -1,0 +1,157 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\dis}[1]{#1}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+
+\title{47-836: Network Optimization II \\ Homework 1}
+\author{Poon Tze-Yang}
+\date{October 2026}
+
+
+\begin{document}
+
+\maketitle
+
+Make your solutions concise and formal. Your goal is to convince me that you know the solutions. You should typeset your solutions in Latex. Please submit on Canvas.
+
+\begin{enumerate}[series=q]
+\item Given an undirected graph $G$ on $n$ nodes suppose that every $s$ to $t$ path contains more than $n/2$ edges. Prove that there is a vertex $v$ on every $s$ to $t$ path and give an algorithm to find the vertex. Here we assume $v$ different from $s$ and $t$.
+\end{enumerate}
+
+\solution
+
+Suppose for contradiction that there was no such vertex $v$ that is on every $s,t$ path, so the size of the smallest vertex separtor is 2.
+By Menger's theorem, the size of the smallest vertex separator of $s$ and $t$ is equal to the number of internally disjoint $s,t$-paths, so there are two internally disjoint $s,t$-paths.
+Each of these paths has more than $n/2$ edges, and so has at least $n/2$ internal vertices.
+Thus, the total number of vertices on both these paths is the sum of the number of internal vertices plus $s$ and $t$, which is $n+2$ vertices, a contradiction.
+
+For the algorithm, remove the vertices of $G$ one at a time and check whether $s$ and $t$ are still connected. Return any vertex $v$ where removing $v$ from $G$ disconnects $s$ and $t$.
+
+\begin{enumerate}[resume=q]
+\item Given a directed graph $G$ and two vertices $s$ and $t$, give an algorithm to determine if there is a unique maximum flow from $s$ to $t$.
+\end{enumerate}
+
+\solution
+
+Given the residual graph of a max flow, suppose there exists a directed cycle that uses at least one residual edge.
+Augmenting the flow along this cycle results in another valid flow of the same size.
+Hence, if such a cycle exists, the max flow is not unique.
+
+Suppose there exist two distinct max-flows $F_1,F_2$, so there exists an arc $a\in F_2\setminus F_1$. 
+$a$ is on some $s,t$-path $P_2\subseteq F_2$ and any $s,t$-path $P_1\in F_1$ does not use $a$.
+Reverse the edges of $P_1$ to obtain $P_1'$. 
+Then there must exist a simple cycle in $P_2\cup P_1'$ using a residual edge of $F_1$.
+
+This shows that a cycle in the residual graph of a given max flow exists if and only if the max flow is not unique.
+Given a residual graph of a max flow, the presence of such a cycle can be detected by Bellman-Ford, for example by assigning residual edges large negative weights and searching for negative cycles.
+
+
+\begin{enumerate}[resume=q]
+\item Given a graph $G$ and two vertices $s$ and $t$. Call $(S, T = V \setminus S)$ a $s,t$ cut if $s \in S$ and $t \in T$. It is a minimum cut if the sum of the edges with exactly one end point in each set is minimized. Show that the intersection and union of two min-cuts is a min-cut.
+\end{enumerate}
+
+\solution
+
+(Proof from Network 1)
+
+Let $(A, V\setminus A)$ and $(B, V\setminus B)$ be two minimum $s,t$-cuts, each of value $\lambda$.
+For $X \subseteq V$ write $d(X)$ for the number of edges with exactly one endpoint in $X$, and for disjoint $X,Y$ write $e(X,Y)$ for the number of edges with one endpoint in $X$ and the other in $Y$ (if the edges are weighted, count total weight instead; nothing below changes).
+Since $s \in A\cap B \subseteq A\cup B$ and $t \notin A\cup B$, both $(A\cap B, V\setminus(A\cap B))$ and $(A\cup B, V\setminus(A\cup B))$ are $s,t$-cuts, so $d(A\cap B) \geq \lambda$ and $d(A\cup B) \geq \lambda$.
+
+Partition $V$ into $P = A\cap B$, $Q = A\setminus B$, $R = B\setminus A$ and $U = V\setminus(A\cup B)$.
+Every edge crossing one of the four cuts joins two different parts, so
+\begin{align*}
+d(A) &= e(P,R) + e(P,U) + e(Q,R) + e(Q,U), \\
+d(B) &= e(P,Q) + e(P,U) + e(Q,R) + e(R,U), \\
+d(A\cap B) &= e(P,Q) + e(P,R) + e(P,U), \\
+d(A\cup B) &= e(P,U) + e(Q,U) + e(R,U).
+\end{align*}
+Adding the first two and comparing with the last two gives
+\[
+d(A) + d(B) = d(A\cap B) + d(A\cup B) + 2e(Q,R) \geq d(A\cap B) + d(A\cup B).
+\]
+Hence $2\lambda \geq d(A\cap B) + d(A\cup B) \geq 2\lambda$, so equality holds throughout and $d(A\cap B) = d(A\cup B) = \lambda$.
+That is, both the intersection and the union are minimum $s,t$-cuts.
+
+
+\begin{enumerate}[resume=q]
+\item You are hired by CMU to schedule undergraduate exams. There are $n$ classes. There are $r$ rooms to hold exams in and $t$ timeslots where exams can occur. You are given two arrays. The array $E$ is of size $n$ and $E[i]$ is the students enrolled in class $i$. The array $S$ is of size $r$ and $S[j]$ is the number of seats in room $j$. At most one exam can be held in a room during each time slot. Class $i$ can hold its exam in room $j$ if $E[i] \leq S[j]$. Design an algorithm to assign classes to rooms and timeslots for the exams or report there is no feasible solution. Prove the correctness of your algorithm.
+\end{enumerate}
+
+\solution
+Constuct a bipartite graph.
+Let there be $n$ vertices on one side, corresponding to the $n$ classes.
+Let there be $r\times t$ vertices in the other side, with one vertex for each choice of the room and the timeslot.
+Connect each class vertex to each room-time vertex if that class can hold its exam in a room of that size.
+
+If there exists a complete matching from the left vertices to the right vertices, each class can be held in the corresponding room of sufficiently large size, at a time where no other class uses it.
+If no complete matching exists, by Hall's theorem there is a set of classes with size $m$ that can only be examined in fewer than $m$ room-timeslots.
+Hence, finding a complete bipartite matching on classes is necessary and sufficient for a feasible assignment.
+
+
+\end{document}
