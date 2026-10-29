@@ -152,7 +152,7 @@ Then, using part (a), we have that $K^* = \cone(\{(e_1-e_2),(e_2-e_3),\dots,(e_{
 Using the definition of a cone:
 \begin{align*}
     K^* &= \{y\in\reals^n: \exists \lambda\geq 0,\ y=\sum_{i=1}^{n-1} \lambda_i(e_i - e_{i+1})\} \\
-    &= \{y\in\reals^n: \exists \lambda\geq 0,\sum_{i=1}^k y_i = \lambda_i, \ \forall k = 1, \ldots, n-1, \ \sum_{i=1}^n y_i = 0\} &&\text{(considering the sum of each prefix of }y) \\
+    &= \{y\in\reals^n: \exists \lambda\geq 0,\sum_{i=1}^k y_i = \lambda_k, \ \forall k = 1, \ldots, n-1, \ \sum_{i=1}^n y_i = 0\} &&\text{(considering the sum of each prefix of }y) \\
     &= \{y\in\reals^n: \sum_{i=1}^k y_i \geq 0, \ \forall k = 1, \ldots, n-1, \ \sum_{i=1}^n y_i = 0\}.
 \end{align*}
 This gives the desired claim.
