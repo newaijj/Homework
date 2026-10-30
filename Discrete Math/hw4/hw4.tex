@@ -109,12 +109,38 @@ Prove that $|A + A \cdot A| \geq cn^{3/2}$ for some constant $c > 0$.
 
 \solution
 
+Let $S=A+A\cdot A$, and let $d=|S|$. 
+Consider the $A\times S$ grid, which has $nd$ points.
+Let the set of such points be $P$
+For each $a,b\in A$, define the line $y = ax+b$.
+Let the set of such lines be $\calL$, so there are $n^2$ such lines.
+For each $c\in A$ and each line $ax+b$, the line is incident to the point $(c,ax+b)$ in the grid.
+Hence, the number of line-point incidences is $\geq n^3$.
+Szemer\'edi-Trotter upper bounds the number of line-point incidences, so
+\begin{align*}
+    n^3\leq k(|\calL|^\frac{2}{3}|P|^\frac{2}{3}+|\calL|+|P|)
+\end{align*}
+for sufficiently large constant $k$.
+This simplifies to:
+\begin{align*}
+    n^3\leq k(n^2d^\frac{2}{3} + nd + n^2),
+\end{align*}
+which implies $d\geq kn^\frac{3}{2}$ for sufficiently large $k>0$.
+
 
 \begin{enumerate}[resume=q]
 \item Prove that in a drawing of a graph $G$ with the smallest possible number of crossings, no two edges cross more than once.
 \end{enumerate}
 
 \solution
+
+Suppose we have a drawing of a graph where the edges $\gamma_1,\gamma_2: [0,1]\to \reals^2$ cross at points $p=\gamma_1(s_1) = \gamma_2(s_2)$ and $q=\gamma_1(t_1) = \gamma_2(t_2)$, for some $0<s_1<t_1<0$ and $0<s_2<t_2<0$.
+We replace the $(s_1,t_1)$ portion of $\gamma_1$ with the $(s_2,t_2)$ portion of $\gamma_2$, and vice versa, to obtain $\gamma_1'$ and $\gamma_2'$.
+Assume no three edges cross at a point, so for some small disc $D$ around $p$, the only edges in $D$ are $\gamma_1'$ and $\gamma_2'$.
+The two edges only intersect at the point $p$, so they can be redrawn within $D$ to not intersect.
+A similar change can be done at $q$.
+Then the total number of crossings has decreased by two, and no new crossings are created.
+Hence, this process can be repeated until there are no pairs of edges that cross more than once.
 
 
 \begin{enumerate}[resume=q]
@@ -124,7 +150,23 @@ Prove that $|A + A \cdot A| \geq cn^{3/2}$ for some constant $c > 0$.
 \end{enumerate}
 
 \solution
+We will instead upper bound the pairs of columns that form a matrix of determinant $\pm 1$, which suffices for the claim.
+Let each column be a point in $\reals^2$. 
+Let this set of $n$ points be $P$.
+For each column $(a b)^\top$, if column $(x y)^\top$ pairs with it to form a matrix of determinant $\pm 1$, then
+\begin{align*}
+    ay-bx = \pm 1 \Rightarrow y = \frac{b}{a}x \pm \frac{1}{a},
+\end{align*}
+so there are two such lines for each point in $P$.
+Let this set of lines be $L$, where $|L|=2n$.
 
+Every point-line incidence corresponds to a pair of columns whose determinant is $\pm1$.
+Let the number of incidences be $I(L,P)$.
+By Szemer\'edi-Trotter,
+\begin{align*}
+    I(L,P) &\leq k(|\calL|^\frac{2}{3}|P|^\frac{2}{3}+|\calL|+|P|)\\
+        &=O(n^\frac{4}{3}).
+\end{align*}
 
 \begin{enumerate}[resume=q]
 \item Let $\calF$ be a set of $n$ lines in $\mathbb{R}^3$, such that no four lines have a common point of intersection, and no three lines lie in a common plane. Show that there is a subset $\calF' \subset \calF$ of lines such that no three of them have a common point of intersection and with cardinality $|\calF'| \geq cn^{3/4}$ for some absolute constant $c > 0$.

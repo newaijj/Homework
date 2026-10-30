@@ -85,12 +85,14 @@ Make your solutions concise and formal. Your goal is to convince me that you kno
 
 \solution
 
-Suppose for contradiction that there was no such vertex $v$ that is on every $s,t$ path, so the size of the smallest vertex separtor is 2.
-By Menger's theorem, the size of the smallest vertex separator of $s$ and $t$ is equal to the number of internally disjoint $s,t$-paths, so there are two internally disjoint $s,t$-paths.
-Each of these paths has more than $n/2$ edges, and so has at least $n/2$ internal vertices.
-Thus, the total number of vertices on both these paths is the sum of the number of internal vertices plus $s$ and $t$, which is $n+2$ vertices, a contradiction.
+% Suppose for contradiction that there was no such vertex $v$ that is on every $s,t$ path, so the size of the smallest vertex separtor is 2.
+% By Menger's theorem, the size of the smallest vertex separator of $s$ and $t$ is equal to the number of internally disjoint $s,t$-paths, so there are two internally disjoint $s,t$-paths.
+% Each of these paths has more than $n/2$ edges, and so has at least $n/2$ internal vertices.
+% Thus, the total number of vertices on both these paths is the sum of the number of internal vertices plus $s$ and $t$, which is $n+2$ vertices, a contradiction.
 
-For the algorithm, remove the vertices of $G$ one at a time and check whether $s$ and $t$ are still connected. Return any vertex $v$ where removing $v$ from $G$ disconnects $s$ and $t$.
+The distance from $s$ to $t$ is more than $n/2$, if we partition the vertices of $G$ by their distance from $s$, by pigeonhole, there is at least one class with only one member.
+
+For the algorithm, BFS from $s$ and stop at the first distance class with only one vertex.
 
 \begin{enumerate}[resume=q]
 \item Given a directed graph $G$ and two vertices $s$ and $t$, give an algorithm to determine if there is a unique maximum flow from $s$ to $t$.
@@ -98,7 +100,7 @@ For the algorithm, remove the vertices of $G$ one at a time and check whether $s
 
 \solution
 
-Given the residual graph of a max flow, suppose there exists a directed cycle that uses at least one residual edge.
+Given the residual graph of a max flow, suppose there exists a directed cycle.
 Augmenting the flow along this cycle results in another valid flow of the same size.
 Hence, if such a cycle exists, the max flow is not unique.
 
