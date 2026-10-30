@@ -1,0 +1,163 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\title{21-701: Discrete Mathematics \\ Homework 4}
+\author{Poon Tze-Yang}
+\date{Due November 2, 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Instructor: Wesley Pegden
+
+\begin{enumerate}[series=q]
+\item Let $A$ be a set of $n$ real numbers, and write
+\[
+A + A \cdot A = \{a + bc \mid a, b, c \in A\}.
+\]
+Prove that $|A + A \cdot A| \geq cn^{3/2}$ for some constant $c > 0$.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Prove that in a drawing of a graph $G$ with the smallest possible number of crossings, no two edges cross more than once.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Let $M$ be a $(2 \times n)$-matrix with nonzero real entries such that any two columns of $M$ form a $(2 \times 2)$-matrix of nonzero determinant. Show that $M$ has at most $O(n^{4/3})$ pairs of columns that form a $(2 \times 2)$-matrix of determinant $1$.
+
+\emph{Hint:} Think of the columns as points in $\mathbb{R}^2$. Now transform this into an incidence problem.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Let $\calF$ be a set of $n$ lines in $\mathbb{R}^3$, such that no four lines have a common point of intersection, and no three lines lie in a common plane. Show that there is a subset $\calF' \subset \calF$ of lines such that no three of them have a common point of intersection and with cardinality $|\calF'| \geq cn^{3/4}$ for some absolute constant $c > 0$.
+
+\emph{Hint:} Consider a random subset of $\calF$.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item For this problem you show an \emph{upper} bound on the size of a smallest Kakeya set in $\mathbb{F}_q^n$. In particular, assuming $q$ is odd (although a similar construction can be made when $q$ is even), define
+\begin{gather*}
+I = \{(a_1,\dots,a_{n-1},0) \in \mathbb{F}_q^n\},\\
+J = \{(a_1,\dots,a_{n-1},b) \in \mathbb{F}_q^n \mid \forall i = 1,\dots,n-1,\ a_i + b^2 \text{ is a square in } \mathbb{F}_q\}
+\end{gather*}
+and let
+\[
+K = I \cup J.
+\]
+\begin{enumerate}[label=\arabic*.]
+\item Prove that for every direction $\mathbf{b} \in \mathbb{F}_q^n \setminus \mathbf{0}$, $K$ contains a line of the form $\{\mathbf{a} + \mathbf{b}t \mid t \in \mathbb{F}_q\}$ for some $\mathbf{a}$ ($K$ is a Kakeya set in $\mathbb{F}_q^n$). (Hints on last page.)
+\item Prove that $|K| = \frac{1}{2^{n-1}} q^n + O(q^{n-1})$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\newpage
+
+Hints for part 1 of Question 5: Note: for directions $\mathbf{b}$ whose last coordinate is $0$, you can just use the set $I$ to make your line. For other directions you will use $J$. $q$ is odd means the characteristic of the field is bigger than $2$. The \emph{characteristic} of the field is the minimum number $j$ such that adding $x \neq 0$ to itself $j$ times always gives $0$---this is the same for any element $x$ of the field. The characteristic of $\mathbb{F}_q$ for $q = p^k$ is $p$. In particular, when the characteristic of $\mathbb{F}_q$ is bigger than $2$, for any element $0 \neq c \in \mathbb{F}_q$ there is an element $0 \neq 2c = c + c \in \mathbb{F}_q$ (note that $2$ doesn't refer to an element of our field but to repeated addition).
+
+When choosing what $\mathbf{a}$ to start your line at, you might as well choose the last coordinate $a_n = 0$, and when choosing the others in such a way that all the points $\mathbf{a} + \mathbf{b}t$ lie in $J$, you can use division by the number $2b_n$, which may be useful given the definition of $J$.
+
+\end{document}
