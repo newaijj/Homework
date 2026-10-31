@@ -68,6 +68,33 @@
 \newcommand{\calY}{\mathcal{Y}}
 \newcommand{\calZ}{\mathcal{Z}}
 
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfg}{\mathbf{g}}
+\newcommand{\bfh}{\mathbf{h}}
+\newcommand{\bfi}{\mathbf{i}}
+\newcommand{\bfj}{\mathbf{j}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfl}{\mathbf{l}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfo}{\mathbf{o}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bfr}{\mathbf{r}}
+\newcommand{\bfs}{\mathbf{s}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
 \newcommand{\cost}{\mathrm{COST}}
 \newcommand{\ALG}{\mathrm{ALG}}
 \newcommand{\OPT}{\mathrm{OPT}}
@@ -176,6 +203,23 @@ By Szemer\'edi-Trotter,
 
 \solution
 
+For the set of joints $J$, by Guth–Katz joints theorem, $|J|\leq c_1n^\frac{3}{2}$ for some constant $c_1$.
+Let $T$ be the set of triplets of lines, where $|T| =\binom{n}{3}\geq c_2n^3$ for some constant $c_2$.
+
+Uniformly randomly select a set $M$ of $cn^\frac{3}{4}$ lines.
+Let $R$ be the set of triplets of lines in $M$, so $|R|\leq c^3n^\frac{9}{4}$.
+Let the probability that each triplet is in $R$ be $p$, so
+\[
+    p = |R|/|T| \leq c^3n^\frac{9}{4}/(c_2n^3)=c_3n^{-\frac{3}{4}}
+\]
+for $c_3=c^3/c_2$.
+Let $K$ be the set of joints in $M$, so by linearity of expectation
+\[
+    \EE[|K|] = p |J| = c_3n^{-\frac{3}{4}}\cdot c_1n^\frac{3}{2} = c_4 n^\frac{3}{4}.
+\]
+for $c_4=c_1c_3=c^3c_1/c_2$. Selecting $c<(c_2/c_1)^\frac{1}{2}$ is sufficiently small so that $c_4<c$.
+Thus, removing one line in $M$ for each joint removes all joints in $M$, leaving us with a set of lines of size $(c-c_4)n^\frac{3}{4}$ with no joints.
+This proves the claim.
 
 \begin{enumerate}[resume=q]
 \item For this problem you show an \emph{upper} bound on the size of a smallest Kakeya set in $\mathbb{F}_q^n$. In particular, assuming $q$ is odd (although a similar construction can be made when $q$ is even), define
@@ -194,6 +238,31 @@ K = I \cup J.
 \end{enumerate}
 
 \solution
+
+1.
+
+For a given $\bfb$, if $b_n=0$, selecting $\bfa = \mathbf{0}$ gives a line $\{\mathbf{b}t \mid t \in \mathbb{F}_q\}\subseteq I$.
+Otherwise, $b_n\neq 0$.
+
+Choose $\bfa$ such that $a_n=0$ and $a_i = (b_i/2b_n)^2$.
+Since $q$ is odd, following the hint, the characteristic of $\mathbb{F}_q$ is $\geq 2$, so $2b_n\in \mathbb{F}_q$.
+Then for each $t\in \mathbb{F}_q\setminus \{0\}$ and $i\in [n-1]$, we have 
+\begin{align*}
+    a_i + tb_i +t^2 b_n^2 = (b_i/2b_n + tb_n)^2,
+\end{align*}
+which is a perfect square, so $\bfa + t\bfb\in J$. Thus, $K$ is a Kekeya set.
+
+2.
+$|I| = q^{n-1}$, which is absorbed in the big-O term. 
+
+First, the number of squares in $\mathbb{F}_q$ is $(q+1)/2$ (the image of the map that squares each element maps $\pm x$ to the same square).
+We count the number of elements of $J$ for each value of $b$ separately, of which there are $q$.
+For each coordinate $i$, we need $a_i + b^2$ to be a square.
+The map $a_i\to a_i+b^2$ is a bijection, so the number of valid $a_i$'s is the number of squares.
+Each of the $n-1$ coordinates can be chosen independently, so in total there are $((q+1)/2)^{n-1}$ valid points in $J$ for each value of $b$.
+
+The leading term in $q$ is $\frac{1}{2^{n-1}} q^n$, and the remaining terms are absorbed by the $O(q^{n-1})$ term.
+Thus, $|K| = \frac{1}{2^{n-1}} q^n + O(q^{n-1})$.
 
 
 \newpage
