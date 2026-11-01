@@ -1,0 +1,189 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfg}{\mathbf{g}}
+\newcommand{\bfh}{\mathbf{h}}
+\newcommand{\bfi}{\mathbf{i}}
+\newcommand{\bfj}{\mathbf{j}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfl}{\mathbf{l}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfo}{\mathbf{o}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bfr}{\mathbf{r}}
+\newcommand{\bfs}{\mathbf{s}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\dis}[1]{#1}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\newcommand{\Var}{\mathrm{Var}}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+
+\title{47-836: Network Optimization II \\ Homework 2}
+\author{Poon Tze-Yang}
+\date{October 2026}
+
+
+\begin{document}
+
+\maketitle
+
+Make your solutions concise and formal. Your goal is to convince me that you know the solutions. You should typeset your solutions in Latex. Please submit on Canvas. \textbf{All of your algorithms should run in polynomial time and you should prove their correctness.}
+
+\begin{enumerate}[series=q]
+\item A new assistant professor, teaching maximum flows for the first time, suggests the following greedy modification to the generic Ford-Fulkerson augmenting path algorithm. Instead of maintaining a residual graph, just reduce the capacity of edges along the augmenting path! In particular, whenever we saturate an edge, just remove it from the graph. Who needs all that residual graph nonsense?
+
+\begin{center}
+\fbox{\begin{minipage}{0.6\textwidth}
+\begin{algorithmic}
+\Function{GreedyFlow}{$G, c, s, t$}
+    \For{every edge $e$ in $G$}
+        \State $f(e) \gets 0$
+    \EndFor
+    \While{there is a path from $s$ to $t$}
+        \State $\pi \gets$ an arbitrary path from $s$ to $t$
+        \State $F \gets$ minimum capacity of any edge in $\pi$
+        \For{every edge $e$ in $\pi$}
+            \State $f(e) \gets f(e) + F$
+            \If{$c(e) = F$}
+                \State remove $e$ from $G$
+            \Else
+                \State $c(e) \gets c(e) - F$
+            \EndIf
+        \EndFor
+    \EndWhile
+    \State \Return $f$
+\EndFunction
+\end{algorithmic}
+\end{minipage}}
+\end{center}
+
+\begin{enumerate}
+\item Show that \textsc{GreedyFlow} does not always compute a maximum flow.
+\item Show that \textsc{GreedyFlow} does not compute a $O(1)$ approximation to the maximum flow.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+We show both parts with the same example.
+Construct the following layered graph, starting in vertex $s$ and ending in $t$.
+Between $s$ and $t$, construct two layers $L$ and $R$ of $n$ vertices each. 
+Let all arcs have capacity 1.
+Connect $s$ to each vertex in $L$ with an arc, and each vertex of $R$ to $t$ with an arc.
+Index the vertices $\ell_i\in L$ and $r_i\in R$.
+Connect $\ell_i$ to $r_i$ for each $i\in [n]$, and $r_i$ to $\ell_{i+1}$ for each $i\in [n-1]$.
+
+The max flow is of size $n$, comprising $n$ flows of the form $s\rightarrow \ell_i\rightarrow r_i\rightarrow t$.
+A valid flow is $s\rightarrow \ell_1\rightarrow r_1\rightarrow \ell_2\rightarrow r_2\rightarrow\dots \rightarrow \ell_n\rightarrow r_n\rightarrow t$.
+\textsc{GreedyFlow} could augment along this path and remove all arcs from $L$ to $R$. 
+Thus, \textsc{GreedyFlow} does not compute a $O(1)$ approximation to the max flow.
+
+
+\begin{enumerate}[resume=q]
+\item Given a connected undirected graph with minimum degree $k$, show that there is a pair of nodes $u$ and $v$ such that the minimum $u,v$ cut has cardinality at least $k$.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item Suppose you are given a flow network $G$ where all capacities are one. Given an integer $k$, give an algorithm that deletes $k$ edges and this reduces the max $s,t$ flow as much as possible.
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item You work for a bank. At the start of the day you have $D$ dollars. Your goal is to convert them to Yen through a series of currency exchanges. You want to have the most Yen possible at the end of the day. You have a list of orders where client $i$ is willing to convert $u_i$ units of currency $a_i$ into $b_i$ at a rate of $r_i$. That is, they will give $r_i$ units of currency $b_i$ for each unit of currency $a_i$. Assume that any directed cycle $C$, $\prod_{i \in C} r_i < 1$. That is, there is no arbitrage.
+\begin{enumerate}
+\item Formulate this problem as an LP.
+\item Show that there is a way to carry out trades to achieve the objective of the LP (without ever borrowing currency).
+\item Show that there is a sequence of trades such that you obtain the optimal amount of Yen and the only other currency you have are dollars.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\end{document}
