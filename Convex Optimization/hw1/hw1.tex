@@ -1,0 +1,397 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{etoolbox}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+% The environments above share the `theorem` counter, and cleveref names a label
+% after its counter -- so without these aliases every \cref to a lemma, claim,
+% etc. comes out as "Theorem". \crefalias is local to the environment's group,
+% so each one is typed correctly while the shared numbering is left alone.
+\AtBeginEnvironment{corollary}{\crefalias{theorem}{corollary}}
+\AtBeginEnvironment{lemma}{\crefalias{theorem}{lemma}}
+\AtBeginEnvironment{claim}{\crefalias{theorem}{claim}}
+\AtBeginEnvironment{definition}{\crefalias{theorem}{definition}}
+\AtBeginEnvironment{remark}{\crefalias{theorem}{remark}}
+\AtBeginEnvironment{observation}{\crefalias{theorem}{observation}}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+\newcommand{\cone}{\mathrm{cone}}
+
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfg}{\mathbf{g}}
+\newcommand{\bfh}{\mathbf{h}}
+\newcommand{\bfi}{\mathbf{i}}
+\newcommand{\bfj}{\mathbf{j}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfl}{\mathbf{l}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfo}{\mathbf{o}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bfr}{\mathbf{r}}
+\newcommand{\bfs}{\mathbf{s}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Conv}{\mathrm{Conv}}
+\newcommand{\One}{\mathds{1}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\title{47-851: Modern Convex Optimization \\ Homework 1}
+\author{Poon Tze-Yang}
+\date{November 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Lecturer: Karan Singh
+
+\begin{enumerate}[series=q]
+\item \textbf{Inner Products and Dual Norms (10 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Prove that a norm on a real vector space $V$ is induced by an inner product if and only if it satisfies the parallelogram identity
+\[
+\|x + y\|^2 + \|x - y\|^2 = 2\|x\|^2 + 2\|y\|^2 \quad \forall x, y \in V.
+\]
+\item For a norm $\|\cdot\|$ on $\reals^n$, define its dual norm as
+\[
+\|x\|_* = \max_{\|y\| \leq 1} y^\top x.
+\]
+\begin{enumerate}[label=\arabic*.]
+\item Calculate the dual norms of $\|\cdot\|_2$ and $\|\cdot\|_\infty$, where $\|x\|_2 = \sqrt{x^\top x}$ and $\|x\|_\infty = \max_i |x_i|$.
+\item Show that
+\[
+\partial \|\cdot\|(x) = \{y : \|y\|_* \leq 1, \ y^\top x = \|x\|\}.
+\]
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\solution
+(A)
+
+$(\Rightarrow):$
+\begin{align*}
+ \left\| x+y\right\|^2 + \left\|x-y\right\| ^2 & = \left\langle x+y,x+y\right\rangle + \left\langle x-y,x-y\right\rangle \\
+ & = 2\left\langle x,x\right\rangle + 2\left\langle y,y\right\rangle + (\left\langle x,y\right\rangle + \left\langle y,x\right\rangle) - (\left\langle x,y\right\rangle + \left\langle y,x\right\rangle) \\
+ & = 2\left\|x\right\|^2 + 2\left\|y\right\|^2.
+\end{align*}
+
+$(\Leftarrow):$
+HARD, READ MORE
+
+Given a norm $\|\cdot\|$ that satisfies the parallelogram identity, we define $\langle\cdot,\cdot\rangle : V\times V \mapsto \reals$ by 
+\begin{align*}
+    \langle x,y\rangle = \frac{1}{2}\left(\|x+y\|^2 - \|x\|^2 - \|y\|^2\right).
+\end{align*}
+\begin{lemma}\label{lemma:sandwichNorm}
+
+\end{lemma}
+\begin{proof}
+    From the definition of a norm, we have that 
+    \begin{align*}
+        \|x+y\|\leq \|x\|+\|y\| \ \Rightarrow \|x+y\|^2 \leq \|x\|^2 + \|y\|^2 +2\|x\|\|y\|
+    \end{align*}
+    \begin{align*}
+        \|x\|\|y\| \leq \frac{1}{2}(\|x+y\|^2 - \|x\|^2 - \|y\|^2)
+    \end{align*}
+\end{proof}
+
+To show that this defines an inner product, we verify the definition of an inner product:
+\begin{enumerate} 
+    \item \ul{$\langle x,x\rangle\geq 0\ \forall x$ and $\langle x,x\rangle = 0 $ iff $x=\mathbf{0}$}: Plugging $\|x+x\|^2 = 4\|x\|^2$ into the defintion of the inner product gives $\langle x,x\rangle = \|x\|^2$ and the result follows from the definition of a norm. 
+    \item \ul{$\langle x,y\rangle = \langle y,x\rangle\ \forall x,y\in V$:} Follows since addition on $x+y$ is commutative.
+    \item \ul{$\langle x, y+z\rangle = \langle x,y\rangle + \langle x,z\rangle \ \forall x,y,z\in V$:}
+    \begin{align*}
+        \langle x,y+z\rangle &= \frac{1}{4}(\|x+y+z\|^2 - \|x-y-z\|^2)\\
+        &= \frac{1}{4}(-\|x+z-y\|^2 + 2\|x+z\|^2+2\|y\|^2 + \|x-y+z\|^2 - 2\|x-y\|^2-2\|z\|^2)\\
+        &=\frac{1}{4}(\|x+z\|^2-\|x-y\|^2) + \frac{1}{4}(\|x+z\|^2-2\|z\|^2 -\|x-y\|^2+2\|y\|^2) \\
+        &=\frac{1}{4}(\|x+z\|^2-\|x-y\|^2) + \frac{1}{4}(\|x+y\|^2-\|x-z\|^2 +2\|x\|^2-2\|x\|^2) \\
+        &=\frac{1}{4}(\|x+y\|^2-\|x-y\|^2) + \frac{1}{4}(\|x+z\|^2-\|x-z\|^2) \\
+        &=\langle x,y\rangle + \langle x,z\rangle.
+    \end{align*}
+    \item \ul{$\langle \alpha x,y\rangle = \alpha\langle x,y\rangle\ \forall \alpha\in \reals,\ \forall x,y\in V$:}
+    From the additivity property above, homogeneity holds for $\alpha \in \mathbb{Z}$. For any rational $\alpha = p/q$ for integers $p,q$, and letting $qz := x$ we have that
+    \[
+        \langle \frac{p}{q} x,y\rangle = \langle p z, y\rangle = p\langle z,y\rangle  = \frac{p}{q}\langle qz,y\rangle = \frac{p}{q}\langle x,y\rangle,
+    \]
+    so homogeneity holds over $\mathbb{Q}$.
+    \begin{lemma} [Cauchy-Schwarz holds]
+        $\langle x,y\rangle \leq \|x\|\|y\|$.
+    \end{lemma}
+    \begin{proof}
+        \[\langle x,y\rangle = \frac{1}{2}\left(\|x+y\|^2 - \|x\|^2 - \|y\|^2\right) \leq \frac{1}{2}\left(- \|x\|^2 - \|y\|^2\right) \leq \frac{1}{2}(2\|x\|\|y\|) = \|x\|\|y\|\]
+    \end{proof}
+    Finally, for $\lambda\in \reals$ and $r\in \mathbb{Q}$, since additivity holds for rationals, we have that 
+    \begin{align}
+        \langle \lambda x,y\rangle - \lambda\langle x,y\rangle &= \langle \lambda x,y\rangle - (\lambda-r)\langle x,y\rangle + r\langle x,y\rangle
+    \end{align}
+    Taking the absolute value on both sides and using Cauchy-Schwarz:
+    \begin{align*}
+        |\langle \lambda x,y\rangle - \lambda\langle x,y\rangle | &\leq |\langle \lambda x,y\rangle| + r|\langle x,y\rangle| + |\lambda-r||\langle x,y\rangle|\\
+        & \leq 2|\lambda-r| \|x\| \|y\|.
+    \end{align*}
+    Since we can choose $r$ arbitrarily close to $\lambda$, we have that $|\langle \lambda x,y\rangle - \lambda\langle x,y\rangle |=0$, so homogeneity holds over reals.
+\end{enumerate}
+
+(B):
+
+1.
+
+$\|\cdot\|_2$:
+By Cauchy-Schwarz, we can upper bound the value of the dual norm $y^\top x\leq \|x\|_2\|y\|_2\leq \|x\|_2$. 
+Select $\hat{y}=\frac{x}{\|x\|_2}$, so $\|\hat{y}\|_2 = \sqrt{\frac{x^\top x}{\|x\|^2}} = 1$ so $\hat{y}$ is feasible. 
+Furthermore, $\hat{y}^\top x = \|x\|_2$, which attains the upper bound and is therefore the value of the dual norm.
+Hence, the dual norm of $\|\cdot\|_2$ is itself.
+
+$\|\cdot\|_\infty$:
+By definition of $\|\cdot\|_\infty$, we have:
+\begin{align*}
+    \max_{\|y\|_\infty\leq 1} y^\top x  = \sum_{i=1}^n\max_{|y_i|\leq 1} y_i x_i = \sum_{i=1}^n x_i.
+\end{align*}
+Hence, the dual norm of $\|\cdot\|_\infty$ is $\|\cdot\|_1$.
+
+2.
+
+By definition of subgradient:
+\begin{align*}
+    \partial\|\cdot \|(x) &= \{y:\|x'\|\geq\|x\| + (x'-x)^\top y\ \forall x'\in \reals^n\} \\
+    &= \{y: y^\top x - \|x\|\geq y^\top x' - \| x'\|\ \forall x'\in \reals^n\}.
+\end{align*}
+For any $y\in \partial\|\cdot \|(x)$, note that $y^\top x - \|x\|$ is an upper bound on $y^\top x' - \| x'\|$. 
+Suppose for contradiction there exists $x''\in \reals^n$ such that $y^\top x'' - \| x''\| = c>0$. 
+Then $kx''$ gives $y^\top (kx'') - \| kx'\| = kc$ which exceeds $y^\top x - \|x\|$ as $k\to \infty$, which is a contradiction.
+Thus, we have $y^\top x' - \| x'\|\leq 0 \ \forall x'\in \reals^n$.
+In particular, $y^\top x - \| x\| \leq 0$. 
+Furthermore, plugging in $x' = \mathbf{0}$ gives $y^\top x - \| x\| \geq 0$ and thus $y^\top x - \| x\| = 0$.
+For every $\|x'\|\leq 1$, we have that $y^\top x'\leq \| x'\|\leq 1$, so $\left\|y\right\| = \max_{\left\|x'\right\|\leq 1}y^\top x'\leq 1$.
+This gives the forward inclusion.
+
+For the reverse inclusion, take any $y$ such that $\|y\|_* \leq 1, \ y^\top x = \|x\|$.
+For all $x'\in \reals^n$, we show that $y^\top x' \leq \left\|x'\right\|$.
+If $x'=\mathbf{0}$, this is true.
+Otherwise, letting $\hat{x} = \frac{x'}{\|x'\|}$, since $\|\hat{x}\|\leq 1$, the condition is equivalent to $y^\top \hat{x}\leq 1$, which is true because $\|y\|_* =\max_{\|\hat{x}\|\leq 1}y^\top\hat{x}\leq 1$.
+Since $y^\top x=\left\|x\right\|$ attains this bound, we obtain $y^\top x - \|x\|\geq y^\top x' - \| x'\|\ \forall x'\in \reals^n$, which gives the reverse inclusion.
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{Local Descent and Checking PSD (10 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Find a function $f : \reals^n \to \reals$ and a point $x \in \reals^n$ such that there is no (non-zero) descent direction at $x$, and yet $x$ is not a local minimizer.
+\item Given $x \in \reals^n$, form a $(n + 1) \times (n + 1)$-dimensional matrix
+\[
+X = \begin{bmatrix}
+1 & x_1 & x_2 & \cdots & x_n \\
+x_1 & x_1 & 0 & \cdots & 0 \\
+x_2 & 0 & x_2 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+x_n & 0 & 0 & \cdots & x_n
+\end{bmatrix}.
+\]
+Show that $X \succeq 0$ if and only if $x_i \geq 0, \forall i \in [n]$ and $\sum_{i=1}^n x_i \leq 1$.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+A.
+
+Select the function $f(x) = \sin\left(\frac{1}{\|x\|_2}\right)$, defined to be zero at $\mathbf{0}$.
+At $x=\mathbf{0}$, there is no descent direction $d\neq \mathbf{0}$: for any $\varepsilon>0$, select a sufficiently integer large $k$ such that $\alpha =\frac{1}{(2k\pi + \frac{\pi}{2})\left\|d\right\|_2} < \varepsilon$.
+This gives 
+\[
+f(\alpha d) = \sin\left(2k\pi + \frac{\pi}{2}\right) = 1>f(\mathbf{0}).
+\]
+Thus, a descent direction does not exist.
+
+Next, we show that $x$ is not a local minimizer: for any $\varepsilon>0$, select a sufficiently integer large $k$ such that $\alpha =\frac{1}{2k\pi} < \varepsilon$.
+Let $\hat{x}$ be any unit vector.
+Then we have that $\alpha\hat{x}\in B(\mathbf{0},\varepsilon)$, but also that $f(\alpha \hat{x}) = 0$. 
+Hence, $x=\mathbf{0}$ is not a local minimizer.
+
+B.
+
+($\Leftarrow$):
+Number the dimension $\{0..n\}$.
+Let $e_i$ be the one-hot vector with nonzero coordinate in dimension $i$.
+Consider the set of vertices $\{v_i\}_{i\in\{0..n\}}$ where $v_i = \sqrt{x_i} e_i$ and 
+\begin{align*}
+    v_{0,i} = \begin{cases}
+        \sqrt{x_i} &\text{for }i\in \{1..n\}, \\
+        \sqrt{1-\sum_{j=1}^n x_j} &\text{for }i=0.
+    \end{cases}
+\end{align*}
+Since $x_i \geq 0, \forall i \in [n]$ and $\sum_{i=1}^n x_i \leq 1$, all entries are real.
+Then straightforward calculations verify that $X_{ij} = v_i^\top v_j$, which is an equivalent definition for $X\succeq 0$.
+
+($\Rightarrow$):
+If $X\succeq 0$, then all its pricipal submatrices have nonnegative determinants.
+In particular, its diagonal entries must be nonnegative, so $x_i\geq 0$. 
+Consider the vector $v=e_0-\sum_{i=1}^n e_i$.
+Since $X\succeq 0$, we have that
+\begin{align*}
+    0\leq v^\top X v = 1 - 2 \sum_{i=1}^n x_n + \sum_{i=1}^n x_n.
+\end{align*}
+Therefore, $\sum_{i=1}^n x_n\leq 1$.
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{Quasiconvexity and Back (10 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Prove that $f(x) = \log\bigl(\sum_{i=1}^n a_i e^{x_i}\bigr)$ where $a_i > 0$ is convex.
+\item Call a function \emph{kinda-convex} if all its sublevel sets are convex.
+\begin{enumerate}[label=\arabic*.]
+\item Give a function that is kinda-convex but not convex.
+\item Prove that, for any convex $f : \reals \to \reals$ and nondecreasing $g : \reals \to \reals$, $f(g(x))$ is kinda-convex.
+\item Can such functions be made convex by stretching the $x$-axis? More precisely, given a kinda-convex $h : \reals \to \reals$, does there exist a differentiable, invertible $g : \reals \to \reals$ such that $h(g(x))$ is convex? Prove your claim.
+\end{enumerate}
+\end{enumerate}
+
+\textbf{Challenge (Zero Credits):} Try to generalize (A) to $f(X_1, \ldots, X_n) = \log \operatorname{tr}\bigl(\sum_{i=1}^n a_i e^{X_i}\bigr)$. Matrix exponential simply exponentiates the eigenvalues in the spectral decomposition.
+\end{enumerate}
+
+\solution
+
+A.
+
+\begin{lemma}[H\"older's inequality]\label{lemma:holder}
+    Let $\lambda\in(0,1)$ and $u_i,v_i\geq 0$ for $i\in[n]$. Then
+    \[
+        \sum_{i=1}^n u_i^{\lambda}v_i^{1-\lambda} \leq \left(\sum_{i=1}^n u_i\right)^{\lambda}\left(\sum_{i=1}^n v_i\right)^{1-\lambda}.
+    \]
+\end{lemma}
+\begin{proof}
+    H\"older's inequality states that $\sum_{i=1}^n |s_it_i| \leq \left(\sum_{i=1}^n |s_i|^p\right)^{1/p}\left(\sum_{i=1}^n |t_i|^q\right)^{1/q}$ for all $s,t\in\reals^n$ and all $p,q\in(1,\infty)$ with $\frac{1}{p}+\frac{1}{q}=1$.
+    Apply it with $p=\frac{1}{\lambda}$, $q=\frac{1}{1-\lambda}$, $s_i=u_i^{\lambda}$ and $t_i=v_i^{1-\lambda}$, noting that $|s_i|^p=u_i$ and $|t_i|^q=v_i$.
+\end{proof}
+
+Since $a_i>0$, we have $\sum_{i=1}^n a_ie^{x_i}>0$ for every $x\in\reals^n$, so $f$ is defined on all of $\reals^n$.
+Fix $x,x'\in\reals^n$ and $\lambda\in[0,1]$. If $\lambda\in\{0,1\}$ there is nothing to prove, so let $\lambda\in(0,1)$.
+Let $u_i = a_ie^{x_i}$ and $v_i = a_ie^{x_i'}$, which are positive since $a_i>0$. For each $i$,
+\[
+    a_ie^{\lambda x_i + (1-\lambda)x_i'} = a_i^{\lambda}a_i^{1-\lambda}e^{\lambda x_i}e^{(1-\lambda)x_i'} = u_i^{\lambda}v_i^{1-\lambda}.
+\]
+Hence, by \cref{lemma:holder} and since $\log$ is increasing,
+\begin{align*}
+    f(\lambda x + (1-\lambda)x') &= \log\left(\sum_{i=1}^n u_i^{\lambda}v_i^{1-\lambda}\right)\\
+    &\leq \log\left(\left(\sum_{i=1}^n u_i\right)^{\lambda}\left(\sum_{i=1}^n v_i\right)^{1-\lambda}\right)\\
+    &= \lambda\log\left(\sum_{i=1}^n a_ie^{x_i}\right) + (1-\lambda)\log\left(\sum_{i=1}^n a_ie^{x_i'}\right)\\
+    &= \lambda f(x) + (1-\lambda)f(x').
+\end{align*}
+Thus $f$ is convex.
+
+B.
+
+1. $\sqrt{|x|}$ has convex sublevel sets on $\reals$.
+
+2. If $f$ is convex, the epigraph of $f$ is convex. 
+For a fixed $\alpha\in \reals$, the set of points of the epigraph of $f$ below the $y=\alpha$ hyperplane is convex, so the sublevel sets of $f$ are convex, i.e., they are intervals in $\reals$.
+Since $g$ is non-decreasing, preimages of intervals are intervals, so $f(g(\cdot))$ is kinda-convex.
+
+3. Consider $h(x) = -e^x$, which is a kinda-convex function, which is also bounded.
+Since $g$ is invertible, its image is $\reals$, so $h(g(x))$ must also be bounded. 
+The only bounded convex functions are constants: suppose $f$ is convex and has $x,y\in \reals$ such that $f(x)<f(y)$. 
+Let $d=y-x$. Then for any $k>0$, by convexity, $f(x+kd)\geq f(x) + k(f(y)-f(x))$ which is unbounded as $k\to\infty$.
+
+Since $h$ is monotone decreasing, $g$ must be a constant function, but that is not invertible, which is a contradiction.
+
+
+\end{document}
