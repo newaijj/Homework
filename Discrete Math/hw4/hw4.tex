@@ -265,6 +265,34 @@ The leading term in $q$ is $\frac{1}{2^{n-1}} q^n$, and the remaining terms are 
 Thus, $|K| = \frac{1}{2^{n-1}} q^n + O(q^{n-1})$.
 
 
+\medskip
+\noindent Recall from class:
+
+\begin{theorem}[Combinatorial Nullstellensatz]\label{thm:nullstellensatz}
+Let $p \in \mathrm{poly}_d(\mathbb{F}^n)$ be a polynomial with nonzero coefficient for the monomial $x_1^{j_1} \cdots x_n^{j_n}$, $j_1 + \cdots + j_n = d$, and let $S_1, \dots, S_n \subseteq \mathbb{F}$ be subsets of sizes $|S_i| \geq j_i + 1$. Then there exists $(s_1, \dots, s_n) \in S_1 \times \cdots \times S_n$ such that $p(s_1, \dots, s_n) \neq 0$.
+\end{theorem}
+
+\begin{enumerate}[resume=q]
+\item Use the Combinatorial Nullstellensatz to prove that the list chromatic number of $K_{3,3}$ is at most $3$. In other words, for any assignment of lists of size $3$ to $K_{3,3}$, there is a proper coloring from the lists.
+\end{enumerate}
+
+\solution
+
+For each vertex $v_i$ of $K_{3,3}$, let the list of colors be $S_i = \{c_{i,1},c_{i,2},c_{i,3}\}$ such that $|S_i| = 3$.
+We define the following polynomial:
+\begin{align*}
+    p(x_1,\dots,x_6) &= \prod_{(i,j)\in E(K_{3,3})} (x_i - x_j) \\
+\end{align*}
+where $E(K_{3,3})$ is the set of edges of $K_{3,3}$.
+Since there are 9 edges of $K_{3,3}$, the degree of $p$ is 9.
+This polynomial is nonzero if and only if all edges have endpoints of different colors, which is equivalent to there being a proper coloring of $K_{3,3}$.
+
+Let the left vertices of $K_{3,3}$ be $v_1,v_2,v_3$ and the right vertices be $v_4,v_5,v_6$.
+We we will show that the coefficient of the monomial $x_1^2x_2^2x_3^2x_4^1x_5^1x_6^1$ is nonzero, which suffices to prove that there exists a proper coloring using the Combinatorial Nullstellensatz since $j_i =2\leq |S_i|-1$ for each $i$.
+Expanding the product, the only way to obtain the monomial $x_1^2x_2^2x_3^2x_4^1x_5^1x_6^1$ is to select $-x_j$ one time for each $j\in \{4,5,6\}$, so the coefficient of each such term in the expansion is $(-1)^3 = -1$ and the coefficient of the monomial is negative since there is at least one such term (selecting $-x_j$ for $j\in \{4,5,6\}$ in the terms $(x_{j-3}-x_j)$ leaves an Eulerian graph, from which we can select two terms for each vertex on the left).
+This shows that the coefficient of the monomial is nonzero, so by the Combinatorial Nullstellensatz, there exists a proper coloring of $K_{3,3}$ from any assignment of lists of size 3.
+
+
 \newpage
 
 Hints for part 1 of Question 5: Note: for directions $\mathbf{b}$ whose last coordinate is $0$, you can just use the set $I$ to make your line. For other directions you will use $J$. $q$ is odd means the characteristic of the field is bigger than $2$. The \emph{characteristic} of the field is the minimum number $j$ such that adding $x \neq 0$ to itself $j$ times always gives $0$---this is the same for any element $x$ of the field. The characteristic of $\mathbb{F}_q$ for $q = p^k$ is $p$. In particular, when the characteristic of $\mathbb{F}_q$ is bigger than $2$, for any element $0 \neq c \in \mathbb{F}_q$ there is an element $0 \neq 2c = c + c \in \mathbb{F}_q$ (note that $2$ doesn't refer to an element of our field but to repeated addition).
