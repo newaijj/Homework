@@ -257,7 +257,20 @@ Next, we replace each non-terminal vertex $v$ with the following gadget: we add 
 Thus, any path that uses the vertex $v$ must now use the arc $v_{in}\to v_{out}$, so only one unit of flow can use this vertex.
 Then, the maximum flow from $u$ to $v$ in this directed graph is equal to $\kappa'(u,v)$, since a max flow corresponds to an element-disjoint flow in the original graph, and vice versa.
 
-(b): 
+(b): Using the directed graph $G'$ constructed above, $\kappa'(u,w)$ is the size of some maximum edge-disjoint flow $F_{uw}$ from $u$ to $w$ in $G'$.
+Similarly, we have an element-disjoint flow of size $\kappa'(v,w)$ from $v$ to $w$ in the original graph. This is equal to a $w$ to $v$ element-disjoint flow in the original graph, which corresponds to a $w$ to $v$ flow $F_{wv}$ in $G'$.
+
+
+Suppose $\kappa'(u,v) = \min\{\kappa'(u,w),\kappa'(v,w)\}$ (the other case is symmetric), so we can define a flow $F'_{wv}$ of size $\kappa'(u,v)$ by removing some flow from $F_{wv}$.
+Combining $F = F_{uw}\cup F'_{wv}$ gives a flow from $u$ to $v$ of value $\kappa'(u,v)$, where some arcs are reused.
+We deal with reused edges by shortcutting:
+suppose there exists an arc $e=xy$ used by both $u,w$-path $P_{uw}\in F_{uw}$ and $w,v$-path $P_{wv}\in F'_{wv}$.
+Then we have a directed cycle in $F$ starting from $e$, following $P_{uw}$ to $w$, then $P_{wv}$ back to $x$.
+Removing this cycle from $F$ preserves the flow value and eliminates the reused arc.
+Repeating this process until no arcs are reused gives an edge-disjoint flow from $u$ to $v$ of value $\kappa'(u,w)$, so we can lower bound the max flow from $u$ to $v$ by $\kappa'(u,v)\geq\kappa'(u,w)$.
+Each edge-disjoint flow in $G'$ defines an element-disjoint flow in $G$ of the same size, so this lower bounds the size of the max element-disjoint flow in $G$ from $u$ to $v$ by the same bound.
+
+
 
 
 \end{document}

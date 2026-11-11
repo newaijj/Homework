@@ -387,11 +387,12 @@ For a fixed $\alpha\in \reals$, the set of points of the epigraph of $f$ below t
 Since $g$ is non-decreasing, preimages of intervals are intervals, so $f(g(\cdot))$ is kinda-convex.
 
 3. Consider $h(x) = -e^x$, which is a kinda-convex function, which is also bounded.
-Since $g$ is invertible, its image is $\reals$, so $h(g(x))$ must also be bounded. 
+Let $f(x) = h(g(x))$. Then $f$ is bounded.
 The only bounded convex functions are constants: suppose $f$ is convex and has $x,y\in \reals$ such that $f(x)<f(y)$. 
 Let $d=y-x$. Then for any $k>0$, by convexity, $f(x+kd)\geq f(x) + k(f(y)-f(x))$ which is unbounded as $k\to\infty$.
+Hence, $f$ is constant. 
+Since $h$ is injective, $g$ must be constant, and therefore not invertible.
 
-Since $h$ is monotone decreasing, $g$ must be a constant function, but that is not invertible, which is a contradiction.
-
+This is a contradiction, so no such $g$ can exist.
 
 \end{document}

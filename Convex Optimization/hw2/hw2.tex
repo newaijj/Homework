@@ -1,0 +1,229 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{etoolbox}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+% The environments above share the `theorem` counter, and cleveref names a label
+% after its counter -- so without these aliases every \cref to a lemma, claim,
+% etc. comes out as "Theorem". \crefalias is local to the environment's group,
+% so each one is typed correctly while the shared numbering is left alone.
+\AtBeginEnvironment{corollary}{\crefalias{theorem}{corollary}}
+\AtBeginEnvironment{lemma}{\crefalias{theorem}{lemma}}
+\AtBeginEnvironment{claim}{\crefalias{theorem}{claim}}
+\AtBeginEnvironment{definition}{\crefalias{theorem}{definition}}
+\AtBeginEnvironment{remark}{\crefalias{theorem}{remark}}
+\AtBeginEnvironment{observation}{\crefalias{theorem}{observation}}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+\newcommand{\cone}{\mathrm{cone}}
+
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfg}{\mathbf{g}}
+\newcommand{\bfh}{\mathbf{h}}
+\newcommand{\bfi}{\mathbf{i}}
+\newcommand{\bfj}{\mathbf{j}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfl}{\mathbf{l}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfo}{\mathbf{o}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bfr}{\mathbf{r}}
+\newcommand{\bfs}{\mathbf{s}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Conv}{\mathrm{Conv}}
+\newcommand{\One}{\mathds{1}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\title{47-851: Modern Convex Optimization \\ Homework 2}
+\author{Poon Tze-Yang}
+\date{November 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Lecturer: Karan Singh
+
+\begin{enumerate}[series=q, start=4]
+\item \textbf{Eigenvalues and SDPs (15 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Let $a_i \sim \calN(\mu_i, \Sigma_i)$ be multivariate normal random vectors. Recast the following problem as an SDP assuming $1/2 \leq \eta < 1$:
+\[
+\max_x c^T x \quad \text{subject to} \quad \Pr(a_i^T x \leq b_i) \geq \eta \quad (i = 1, \ldots, m).
+\]
+\item Recast the following problem as an SDP with strict inequality constraints allowed:
+\[
+\min_X \frac{\lambda_{\max}(X)}{\lambda_{\min}(X)} \quad \text{subject to} \quad \langle A_i, X \rangle = b_i \quad (i = 1, \ldots, m), \quad X \succ 0.
+\]
+\item Recast the following problem as an SDP:
+\[
+\min_{X \in \mathbb{S}^{n \times n}} \sum_{j=1}^k \lambda_j(X) \quad \text{subject to} \quad \langle A_i, X \rangle = b_i \quad (i = 1, \ldots, m),
+\]
+where $\lambda_1(X) \geq \ldots \geq \lambda_n(X)$ are the eigenvalues.
+
+\emph{Hint:} Recast $\max_{U \in \reals^{n \times k}, U^\top U = I} \operatorname{tr}(U^\top X U) = \sum_{i=1}^k \lambda_i(X)$ as an SDP and consider the dual.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+A.
+The random variable $a_i^\top x$ is the projection of a multivariate normal vector onto $x$, so it is normally distributed.
+We have that $\EE[a_i^\top x] = \mu_i^\top x$ and $\Var(a^\top_i x) = \EE[(a^\top_i x - \mu_i^\top x)^2]=\EE[x^\top (a^\top_i - \mu^\top_i)(a^\top_i-\mu^\top_i)^\top x] = x^\top \Sigma_i x$ by linearity of expectation and the fact that $\Sigma_i = \EE[(a^\top_i - \mu_i)(a^\top_i - \mu_i)^\top]$.
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{Lov\'asz's bound on Shannon capacity (15 points)}
+
+Let $\alpha(G)$ be the maximum size of an independent set. Recall
+\[
+\Theta(G) = \lim_{k \to \infty} \sqrt[k]{\alpha(G^k)} = \sup_{k \geq 1} \sqrt[k]{\alpha(G^k)}.
+\]
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Let $J$ be the all-ones matrix and define
+\[
+\nu(G) = \max_X \bigl\{\operatorname{tr}(JX) : \operatorname{tr}(X) = 1,\ X \succeq 0,\ X_{ij} = 0 \text{ if } \{i, j\} \in E\bigr\}.
+\]
+Show that $\nu(G) \geq \alpha(G)$.
+\item Show that $\alpha(G_A \boxtimes G_B) \geq \alpha(G_A)\alpha(G_B)$. The strong product has vertex set $V_A \times V_B$. Distinct vertices $(i, k), (j, \ell)$ are adjacent exactly when
+\[
+(\{i, j\} \in E_A \text{ or } i = j) \quad \text{and} \quad (\{k, \ell\} \in E_B \text{ or } k = \ell).
+\]
+\item Show that $X, Y \succeq 0$ implies $X \otimes Y \succeq 0$. For $A \in \reals^{m \times n}$ and $B \in \reals^{p \times q}$, the Kronecker product $A \otimes B$ is defined as
+\[
+A \otimes B = \begin{bmatrix}
+A_{11}B & A_{12}B & \cdots & A_{1n}B \\
+\vdots & \vdots & \ddots & \vdots \\
+A_{m1}B & A_{m2}B & \cdots & A_{mn}B
+\end{bmatrix}.
+\]
+\item Show that $\nu(G_A \boxtimes G_B) \leq \nu(G_A)\nu(G_B)$.
+
+\emph{Hint:} Use the dual SDP and try to \emph{Kronecker} two feasible solutions using part C.
+\item Show that $\nu(G) \geq \Theta(G)$ and use this to show $\nu(C_5) = \Theta(C_5) = \sqrt{5}$.
+
+\emph{Hint:} Numerically solving the SDP to see if it is close enough to $\sqrt{5}$ is an acceptable proof.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{Grads and Dists (10 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Consider a function $f : \reals^d \to \reals$ that is $\mu$-strongly convex and $L$-smooth. Let $x^* \in \argmin_x f(x)$. Prove for all $x \in \reals^d$ that
+\[
+\frac{1}{2L}\|\nabla f(x)\|^2 \leq f(x) - f(x^*) \leq \frac{1}{2\mu}\|\nabla f(x)\|^2.
+\]
+\item Prove that $f$ is $\mu$-strongly convex if and only if for all $x, y \in \reals^d$, we have
+\[
+(\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
+\]
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+\end{document}

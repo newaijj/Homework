@@ -165,6 +165,8 @@ Thus, \textsc{GreedyFlow} does not compute a $O(1)$ approximation to the max flo
 \end{enumerate}
 
 \solution
+By Stoer-Wagner algorithm, there is an ordering of the vertices of $V$ such that $\{v_n\}$ is a min-$(v_{n-1},v_n)$-cut in $G$.
+By the assumption, $|\delta(\{v_n\})|\geq \deg(v_n)\geq k$, so this min-cut has cardinality at least $k$.
 
 
 \begin{enumerate}[resume=q]
@@ -172,6 +174,10 @@ Thus, \textsc{GreedyFlow} does not compute a $O(1)$ approximation to the max flo
 \end{enumerate}
 
 \solution
+Use any algorithm to find a min-$(s,t)$-cut $C$ of $G$, and let $a = |C|$. By max-flow-min-cut, all max flows use all $a$ edges of $C$.
+Remove any $k$ edges of $C$. Then $C$ is now a min-cut of size $a-k$, so the max flow in $G$ is correspondingly reduced to $a-k$.
+
+No set of any $k$ other deletions can do better, since for any max flow in $G$, deleting $k$ edges can only remove up to $k$ edge-disjoin $s,t$-paths, so this would reduce the max flow by at most $k$.
 
 
 \begin{enumerate}[resume=q]
@@ -184,6 +190,33 @@ Thus, \textsc{GreedyFlow} does not compute a $O(1)$ approximation to the max flo
 \end{enumerate}
 
 \solution
+
+a)
+
+Consider the directed multi-graph $G(V,E)$ on the vertex set of the currencies $C$.
+Let vertices $s,t$ be the dollar and yen vertices, respectively.
+For each client $i$, add the arc $(a_i,b_i)$ with capacity $u_i$ and ``rate'' $r_i$.
+This problem is similar to a flow problem, where we are pushing at most $D$ units of flow out of $s$ and into $t$, but each time we pass flow through an edge, the amount of flow gets multiplied by $r$.
+
+We are maximizing the amount of flow goin into $t$, subject to the constraints that (1) there are at most $D$ units of flow going out of $s$ and the total amount of flow entering every vertex other than $s$ and $t$ is not less than the amount of flow leaving it; 
+(2) the flows are non-negative and obey the capacities. This gives the following LP, where $x_i$ is the amount of currency $a_i$ converted to $b_i$ at rate $r_i$:
+
+\begin{align*}
+    &\max_x \sum_{i|b_i=t} r_i x_i\\
+    \mathrm{s.t.} & \sum_{i|a_a = c} x_i \leq D \\
+    &\sum_{i|b_i = c} r_ix_i \geq \sum_{i|a_i=c} x_i &\forall c\in C\setminus\{s,t\}\\
+    &0\leq x_i\leq u_i &\forall i\in E
+\end{align*}
+
+b)
+
+Clearly, any feasible solution to the above LP maximizes the amount of yen obtained.
+
+c)
+
+For any optimal solution to the above LP, if the inequality for some $c\in C\setminus\{s,t\}$ is not tight, then we can reverse the set of trades corresponding to the paths from $s$ to $c$ which pushed the remaining flow to $c$.
+This removes remaining flow from all vertices in $C\setminus\{s,t\}$, so we are only left with flow at $s$ and $t$. 
+This does not change the value of the solution since we did not remove any flow from $t$.
 
 
 \end{document}
