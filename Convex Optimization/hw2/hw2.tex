@@ -171,6 +171,61 @@ A.
 The random variable $a_i^\top x$ is the projection of a multivariate normal vector onto $x$, so it is normally distributed.
 We have that $\EE[a_i^\top x] = \mu_i^\top x$ and $\Var(a^\top_i x) = \EE[(a^\top_i x - \mu_i^\top x)^2]=\EE[x^\top (a^\top_i - \mu^\top_i)(a^\top_i-\mu^\top_i)^\top x] = x^\top \Sigma_i x$ by linearity of expectation and the fact that $\Sigma_i = \EE[(a^\top_i - \mu_i)(a^\top_i - \mu_i)^\top]$.
 
+The covariance matrix $\Sigma_i$ is PSD: for any $x$, we have $x^\top \Sigma_i x = \EE[x^\top (a^\top_i - \mu^\top_i)(a^\top_i-\mu^\top_i)^\top x] = \EE[(x^\top (a^\top_i - \mu^\top_i))^2] \geq 0$.
+Thus, we can write $\Sigma_i = L_i L_i^\top$ for some $L_i$ by the Cholesky decomposition.
+
+Let $\Phi$ be the CDF of the standard normal distribution. Then, we have
+\[
+\Pr(a^\top_i x\leq b) = \Pr(\calN(\mu_i^\top x, x^\top \Sigma_i x) \leq b) = \Phi\left(\frac{b - \mu_i^\top x}{\sqrt{x^\top \Sigma_i x}}\right) = \Phi\left(\frac{b - \mu_i^\top x}{\left\|L_i^\top x\right\|}\right).
+\]
+
+Assume $\left\|L_i^\top x\right\| > 0$, letting $\kappa = \Phi^{-1}(\eta_i)$, we have that 
+\[
+    b-\mu_i^\top x \geq \left\|L_i^\top x\right\|_2 \kappa.
+\]
+Note that if $\left\|L_i^\top x\right\| = 0$, then $\Pr(a^\top_i x\leq b) = \Pr(\mu^\top_i x\leq b)$, which is 1 when $\mu^\top_i x \leq b$ and 0 otherwise. 
+Thus, the above constraint is still valid.
+
+Thus, we can rewrite the problem as 
+\[
+\max_x c^T x \quad \text{subject to} \quad \frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x \geq \left\|L_i^\top x\right\|_2 \quad (i = 1, \ldots, m),
+\]
+which is a second-order code program. Using material from the course, we can write this as an SDP.
+We give the method explicitly here:
+
+Each constraint can be rewritten as
+\[
+ \left(\frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x\right)^2  - x^\top L_i L_i^\top x \geq 0 \quad \Rightarrow \quad \frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x - \frac{x^\top L_i L_i^\top x}{\frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x} \geq 0
+ \]
+If $\frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x \neq 0$, by Schur complement lemma, this is equivalent to
+\[
+\begin{bmatrix}
+\frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x & x^\top L_i \\
+L_i^\top x & \frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x
+\end{bmatrix} \succeq 0.
+\]
+Note that if $\frac{b}{\kappa} -\frac{1}{\kappa}\mu_i^\top x = 0$, then the diagonals of the above matrix are zero.
+By using the fact that PSD matrices can be written as $S_{ij} = v_i^\top v_j$ for some vectors $v_i$, we have that the above matrix is PSD if and only if each $v_i = 0$, which is equivalent to $\left\|L_i^\top x\right\|_2 = 0$, which also satisfies the constraint.
+
+Since the above matrix is linear in $x$, we have that the problem can be written as an SDP using the dual SDP formulation.
+
+\bigskip
+
+B.
+First, note that scaling $X$ by any positive constant scales all of its eigenvalues by that constant, so the ratio between the largest and smallest values does not change.
+We introduce a new variable $\alpha >0$, and require that $\alpha X\succeq 0$.
+This requires us to rewrite the equality constraints as $\langle A_i, \alpha X \rangle = \alpha b_i$.
+
+If we require $\alpha X-I \succeq 0$, then the minimum eigenvalue of $\alpha X$ is constrained to be at least 1.
+Similarly, for a new variable $t$, if we require $t I - \alpha X \succeq 0$, then the maximum eigenvalue of $\alpha X$ is at most $t$.
+
+Thus, we can rewrite the problem as
+\[
+\min_{X, \alpha, t} t \quad \text{subject to} \quad \langle A_i, \alpha X \rangle = \alpha b_i \quad (i = 1, \ldots, m), \quad \alpha X - I \succeq 0, \quad t I - \alpha X \succeq 0, \quad \alpha > 0.
+\]
+
+This satisfies $X\succ 0$, since the minimum eigenvalue of $\alpha X$ is at least 1 and $\alpha > 0$.
+The objective is minimized when the maximum eigenvalue of $\alpha X$ is minimized, which is equivalent to minimizing the ratio between the maximum and minimum eigenvalues of $\alpha X$, which is equal to the ratio of $X$.
 
 \begin{enumerate}[resume=q]
 \item \textbf{Lov\'asz's bound on Shannon capacity (15 points)}
