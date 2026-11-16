@@ -248,15 +248,25 @@ Next, we encode that $P$ has exactly $k$ eigenvalues of value 1 and $n-k$ eigenv
 Note that these conditions need not restrict $P$ to have rank at most $k$. However, in order to maximize the objective $\sum_{i=1}^k \lambda_i(X)$, a maximizing value is achieved when $P$ projects onto the largest $k$ eigenvectors of $X$. 
 
 This gives us the following SDP:
-
 \[
 \max_{P} \operatorname{tr}(X P) \quad \text{subject to} \quad P \succeq 0, \quad I-P \succeq 0, \quad \operatorname{tr}(P) = k.
 \]
-
-Its SDP dual is 
-
+The Lagrangian is 
+\begin{align*}
+  L(P;W,Z,y) &= \tr(XP) + \tr(WP) + \tr(Z(I-P)) + y(k-\tr(P)) \\
+  &= \tr((X+W-Z+yI)P) + \tr(Z) + yk,
+\end{align*}
+where $W,Z\succeq 0$.
+The $\sup$ over $P$ is finite only if $X+W-Z-yI = 0$, in which case the $\sup$ is equal to $\tr(Z) - yk$. Hence, the dual SDP is
 \[
-\min_{y} ky 
+\min_{y,Z}  ky + \tr(Z) \quad \text{subject to} \quad Z\succeq 0, \quad X-Z-yI \succeq 0.
+\]
+To show that strong duality holds, it suffices to find a $P$ that is strictly feasible for the primal SDP.
+The matrix $P = \frac{k}{n}I$ is strictly feasible, since it has eigenvalues $\frac{k}{n}\in(0,1)$ and $\tr(P) = k$. Hence, strong duality holds.
+
+Finally, we can write the original problem as
+\[
+\min_{y,Z,X}  ky + \tr(Z) \quad \text{subject to} \quad Z\succeq 0, \quad X-Z-yI \succeq 0, \quad \langle A_i, X \rangle = b_i \quad (i = 1, \ldots, m).  
 \]
 
 \begin{enumerate}[resume=q]
@@ -295,6 +305,34 @@ A_{m1}B & A_{m2}B & \cdots & A_{mn}B
 
 \solution
 
+A.
+Let $S\subseteq V$ be a maximum independent set of size $\alpha(G)$.
+We define the matrix $X$ as follows:
+\begin{align*}
+    X_{ij} = \begin{cases}
+        \frac{1}{\alpha(G)} &\text{if }v_i\in S \text{ and }v_j\in S,\\
+        0 &\text{otherwise.}
+    \end{cases}
+\end{align*}
+Along the diagonal, there are $\alpha(G)$ non-zero entries, so $\tr(X)=1$.
+In total, there are $|S|^2$ non-zero entries, so $\tr(JX) = \alpha(G)$.
+Hence, the maximizing $X$ achieves $\nu(G)\geq \alpha(G)$.
+
+B.
+Given maximum independent sets $S_A$ and $S_B$, define the set 
+\[
+S = \{(i,k)\in V_A\times V_B: i\in S_A\text{ and }k\in S_B\}.
+\]
+Immediately, $|S| = \alpha(G_A)\alpha(G_B)$.
+Suppose for contradiction $(i,k)\neq(j,\ell)\in S$ and $(i,k)\sim (j,\ell)$.
+Since these two vertices are distinct, either $i\neq j$ or $k\neq \ell$.
+Suppose $i\neq j$, the other case is symmetric.
+Then $k\sim\ell$ in $G_B$, but this is a contradiction with $k,\ell\in S_B$.
+Thus, $S$ is independent in $G_A\boxtimes G_B$, so $\alpha(G_A \boxtimes G_B) \geq \alpha(G_A)\alpha(G_B)$.
+
+C.
+
+
 
 \begin{enumerate}[resume=q]
 \item \textbf{Grads and Dists (10 points)}
@@ -311,6 +349,55 @@ A_{m1}B & A_{m2}B & \cdots & A_{mn}B
 \end{enumerate}
 
 \solution
+A.
+By definition, $f$ is $\mu$-strongly convex iff
+\[
+f(y) \geq f(x) + \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
+\]
+Rearranging:
+\[
+f(y) -f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
+\]
+Taking the minimum of both sides w.r.t. $y$:
+\[
+\min_y\{f(y) -f(x)\} \geq \min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\}.
+\]
+The left hand side is equal to $f(x^*)-f(x)$.
+The right hand side is minimized when the derivative with respect to $y$ is equal to 0:
+\begin{align*}
+    \nabla f(x) + \frac{\mu}{2}(2y-2x) = 0\quad\Rightarrow\quad y -x = -\frac{1}{\mu}\nabla f(x).
+\end{align*}
+Substituting back in:
+\[
+\min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\} = -\frac{1}{2\mu}\|\nabla f(x)\| ^2.
+\]
+Combining both sides:
+\[
+f(x^*) - f(x) \geq -\frac{1}{2\mu}\|\nabla f(x)\| ^2 \quad\Rightarrow\quad f(x) - f(x^*)  \leq \frac{1}{2\mu}\|\nabla f(x)\| ^2.
+\]
+
+A function $f$ is $L$-smooth if
+\[
+f(y)\leq f(x) + \nabla f(x)^\top(y-x) + \frac{L}{2}\left\|(y-x)\right\|^2
+\]
+Essentially the same argument as above gives 
+\[
+f(x)-f(x^*) \geq \frac{1}{2L}\|\nabla f(x)\|^2.
+\]
+\medskip
+B.
+For the forward direction, use $\mu$-strong convexity at $x,y$:
+\begin{align*}
+    f(y) - f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2. \\
+    f(x) - f(y) \geq \nabla f(y)^\top (x-y) + \frac{\mu}{2}\|y-x\|^2.
+\end{align*}
+Combining the two inequalities:
+\begin{align*}
+    \nabla f(y)^\top (y-x) - \frac{\mu}{2}\|y-x\|^2 \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2 \\
+    \Rightarrow (\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
+\end{align*}
+
+For the reverse direction:
 
 
 \end{document}
