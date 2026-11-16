@@ -151,6 +151,40 @@ This is a contradiction, which suffices to prove the claim.
 \end{enumerate}
 
 \solution
+This is submodular maximization with cardinality constraint. We adapt a proof along those lines.
+
+We analyze the approximation ratio achieved by the greedy algorithm that, at each iteration, adds a vertex that gives the largest increase in the size of $N(S)$.
+Let $S_0:=\emptyset$.
+For $i\in [k]$, let $s_i$ be the vertex chosen by the greedy algorithm in the $i$'th iteration.
+Let $S_i:= S_{i-1} + s_i$.
+Let $\OPT$ be the optimal subset of $X$ of size $k$.
+
+Let $A_i := S_i \cup \OPT$.
+By the definition (and submodularity) of neighborhoods, the increase in size of adding all elements of $\OPT$ to $S_i$ is no larger than the sum of the increase in neighborhood sizes from adding each element of $\OPT$ to $S_i$ individually, i.e.,:
+\[
+\sum_{o\in \OPT} |N(S_i+o)| - |N(S_i)| \geq |N(S_i\cup\OPT)| - |N(S_i)|.
+\]
+Furthermore, due to the greedy algorithm, adding $s_{i}$ to $S_{i-1}$ increases the size of the neighborhood at least as much as any element of $\OPT$. This gives the first line of:
+\begin{align*}
+    k(|N(S_{i})| - |N(S_{i-1})|) & \geq \sum_{o\in \OPT} |N(S_{i-1} + o)| - |N(S_{i-1})| \\
+    & \geq |N(S_i\cup\OPT)| - |N(S_{i-1})| \\
+    & \geq |N(\OPT)| - |N(S_{i-1})|,
+\end{align*}
+where the final inequality is due to $|N(\cdot)|$ increases monotonically.
+Rewriting and repeatedly substituting the above:
+\begin{align*}
+    |N(S_k)| - |N(\OPT)| &\geq \left(1-\frac{1}{k}\right)(|N(\OPT)| - |N(S_{i-1})|) \\
+    & \geq \left(1-\frac{1}{k}\right)^k (|N(S_0)| - |N(\OPT)|) \\
+    &\geq -e^{-1} |N(\OPT)|,
+\end{align*}
+where we use that $(1-1/k)^k \leq e^{-1}$ and $N(S_0) = \emptyset$.
+Rearranging gives 
+\[
+|N(S_k)| \geq (1-1/e)|N(\OPT)|,\]
+so greedy is $(1-1/e)$-competitive.
+
+
+
 
 
 
@@ -159,6 +193,15 @@ This is a contradiction, which suffices to prove the claim.
 \end{enumerate}
 
 \solution
+Let the optimal solution be $\OPT$ and the solution produced by this greedy be $S$. 
+Let $S' = S\setminus \OPT$ and $\OPT' = \OPT\setminus S$.
+Note that for each element $o\in \OPT'$, $o$ must intersect some element of $S'$ ($o$ was not picked by greedy so it must intersect some element of $S$, and it cannot intersect any other element of $\OPT$).
+For each $s'\in S'$, note that $s'$ can only intersect at most two distinct elements of $\OPT'$ (if $s'$ intersects three distinct elements of $\OPT'$, there exists some $o'\in \OPT'$ which is strictly contained in the interval of $s'$, which contradicts that $s'$ is chosen by greedy but $o'$ is not).
+Hence, $|S'|\leq 2|\OPT'|$, and therefore 
+\[
+|S| \leq |S\cap\OPT| + 2|\OPT'| \leq 2|\OPT|,
+\]
+so this greedy algorithm is a $1/2$-approximation.
 
 
 
@@ -166,7 +209,7 @@ This is a contradiction, which suffices to prove the claim.
 % sic: the sheet writes c(vq) in the triangle inequality; presumably c(vw) is meant.
 \item Consider the Metric-TSP, we are given an undirected graph $G = (V, E)$ where for each $e \in E$ there is a cost $c(e) \geq 0$. The metric property ensures that $c(uw) \leq c(uv) + c(vq)$ for any $u, v, w \in V$ and that the graph is a complete graph. The goal is to find a Hamiltonian cycle of minimum length in $G$.
 
-Consider the following algorithm which greedily builds a Hamiltonian Cycle. Let $u_i$ be the $i$th vertex the cycle visits and set $u_1$ to be any arbitrary vertex. In the $i$th iteration of the algorithm, the next vertex chosen to visit is the closest vertex to $u_i$ that is not in $\cup_{j \leq i} u_j$. That is, the closest unvisited vertex. The algorithm completes when all vertices are visited. Prove that this algorithm gives a $O(\log n)$-approximation for the Metric-TSP problem where $n = |V|$. (Hint: Break up the nodes based on their cost. Say nodes who cost between $2^i$ and $2^{i+1}$. Let his set be $X_i$. Can you lower bound this groups cost by the optimal solution?)
+Consider the following algorithm which greedily builds a Hamiltonian Cycle. Let $u_i$ be the $i$th vertex the cycle visits and set $u_1$ to be any arbitrary vertex. In the $i$th iteration of the algorithm, the next vertex chosen to visit is the closest vertex to $u_i$ that is not in $\cup_{j \leq i} u_j$. That is, the closest unvisited vertex. The algorithm completes when all vertices are visited. Prove that this algorithm gives a $O(\log n)$-approximation for the Metric-TSP problem where $n = |V|$. (Hint: Break up the nodes based on their cost. Say nodes who cost between $2^i$ and $2^{i+1}$. Let this set be $X_i$. Can you lower bound this groups cost by the optimal solution?)
 \end{enumerate}
 
 \solution
