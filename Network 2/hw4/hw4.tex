@@ -214,6 +214,30 @@ Consider the following algorithm which greedily builds a Hamiltonian Cycle. Let 
 
 \solution
 
+Let the greedy algorithm visit the vertices in the order $\langle u_0, u_1, \dots , u_{n-1}, u_n = u_0\rangle$.
+Let $h_i:= u_iu_{i+1}$, and let $H$ be the set of edges used by the greedy algorithm.
+Let $q$ be the cost of the optimal solution, and normalize all edges so that the optimal solution has cost $1$, i.e., set the costs of the edges $c(e)\gets c(e)/q$. 
+To reduce notation, we assume the costs of the graph are already normalized as such.
+
+Let $F_j:=\{h\in H: 2^{-(j+1)}<c(h)\leq 2^{-j}\}$. For instance, $F_0$ is the set of edges with costs in $(1/2, 1]$.
+Note that since the optimal tour has cost $1$, no edge used by the greedy algorithm has cost greater than 1, so all edges of $H$ are in some $F_j$ for $j\geq 0$.
+
+Let $j_{\max} := \lceil\log_2 n\rceil$. For simplicity, we round up the cost of each $h_i$ in the greedy solution to its nearest multiple of 2. 
+This only increases the cost of the greedy solution. 
+If any edge $h_i$ has $c(h_i)\leq 2^{-(j_{\max}+1)}$, we further round its cost up to $2^{-j_{\max}}$.
+
+We will show that for each $j\in \{0,\dots, j_{\max}\}$, we have that the cost of the edges at level $j$ are at most $2$, i.e., $c(F_j)\leq 2$. 
+There are $O(\log n)$ levels, so this suffices to show that the total cost of the greedy solution is $O(\log n)$.
+
+For each $j$, reindex the edges of $F_j := \{h_1 = u_1v_1,\dots, h_k = u_kv_k\}$, where $k:=|F_j|$ and the $h_i$'s are indexed in the order they appear in the greedy tour.
+We claim that $k\leq 2^{j+1}$. This suffices to show that $c(F_j) = \sum_{i=1}^k c(h_i)\leq k 2^{-j}\leq 2$, i.e., the total cost of edges at level $j$ is at most 2.
+To prove this claim, note that for each $u_i$, since greedy chose $v_i$ as the next vertex, we have for $i'>i$, the distance $c(u_iu_{i'})\geq c(u_iv_i)$.
+This implies that for all $u_i, u_{i'}$ for $i\in [k]$, we have that $c(u_iu_{i'})\geq 2^{-(j+1)}$.
+Any optimal tour must pass through all such $u_i$'s, so by the metric inequality, the length between successive $u_i$'s is at least $2^{-(j+1)}$.
+Since the optimal tour has length 1, there are at most $2^{j+1}$ $u_i$'s.
+This proves the claim that $k\leq 2^{j+1}$, which completes the proof.
+
+
 
 
 \end{document}
