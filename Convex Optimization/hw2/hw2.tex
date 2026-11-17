@@ -304,7 +304,6 @@ A_{m1}B & A_{m2}B & \cdots & A_{mn}B
 \end{enumerate}
 
 \solution
-
 A.
 Let $S\subseteq V$ be a maximum independent set of size $\alpha(G)$.
 We define the matrix $X$ as follows:
@@ -331,73 +330,180 @@ Then $k\sim\ell$ in $G_B$, but this is a contradiction with $k,\ell\in S_B$.
 Thus, $S$ is independent in $G_A\boxtimes G_B$, so $\alpha(G_A \boxtimes G_B) \geq \alpha(G_A)\alpha(G_B)$.
 
 C.
-
-
-
-\begin{enumerate}[resume=q]
-\item \textbf{Grads and Dists (10 points)}
-\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
-\item Consider a function $f : \reals^d \to \reals$ that is $\mu$-strongly convex and $L$-smooth. Let $x^* \in \argmin_x f(x)$. Prove for all $x \in \reals^d$ that
-\[
-\frac{1}{2L}\|\nabla f(x)\|^2 \leq f(x) - f(x^*) \leq \frac{1}{2\mu}\|\nabla f(x)\|^2.
-\]
-\item Prove that $f$ is $\mu$-strongly convex if and only if for all $x, y \in \reals^d$, we have
-\[
-(\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
-\]
-\end{enumerate}
-\end{enumerate}
-
-\solution
-A.
-By definition, $f$ is $\mu$-strongly convex iff
-\[
-f(y) \geq f(x) + \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
-\]
-Rearranging:
-\[
-f(y) -f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
-\]
-Taking the minimum of both sides w.r.t. $y$:
-\[
-\min_y\{f(y) -f(x)\} \geq \min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\}.
-\]
-The left hand side is equal to $f(x^*)-f(x)$.
-The right hand side is minimized when the derivative with respect to $y$ is equal to 0:
-\begin{align*}
-    \nabla f(x) + \frac{\mu}{2}(2y-2x) = 0\quad\Rightarrow\quad y -x = -\frac{1}{\mu}\nabla f(x).
+Let $x,y$ be any eigenvectors of $A,B$ with eigenvalues $\lambda,\mu$, respectively. 
+Then 
+\begin{align*}(A\otimes B) (x\otimes y) &= \begin{bmatrix}
+A_{11}x_1(By) & A_{12}x_2(By) & \cdots & A_{1n}x_n(By) \\
+\vdots & \vdots & \ddots & \vdots \\
+A_{m1}x_1(By) & A_{m2}x_2(By) & \cdots & A_{mn}x_n(By)
+\end{bmatrix} \\
+&= (Ax)\otimes (\mu y) \\
+&= \lambda\mu (x\otimes y).
 \end{align*}
-Substituting back in:
+So since all eigenvalues of $A,B$ are nonnegative, all eigenvalues of $A\otimes B$ are nonnegative as well, which shows $A\otimes B\succeq 0$.
+
+D.
+For the primal problem
 \[
-\min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\} = -\frac{1}{2\mu}\|\nabla f(x)\| ^2.
+\nu(G) = \max_X \bigl\{\operatorname{tr}(JX) : \operatorname{tr}(X) = 1,\ X \succeq 0,\ X_{ij} = 0 \text{ if } \{i, j\} \in E\bigr\}.
 \]
-Combining both sides:
+we write the dual problem 
 \[
-f(x^*) - f(x) \geq -\frac{1}{2\mu}\|\nabla f(x)\| ^2 \quad\Rightarrow\quad f(x) - f(x^*)  \leq \frac{1}{2\mu}\|\nabla f(x)\| ^2.
+\min_{t,Y} \{t: tI+Y-J\succeq 0, Y \text{ symmetric and } Y_{ij}=0 \text{ for }(i,j)\notin E\}.
+\]
+Note that $X=I/n\succ0$ is strictly feasible for the primal, so strong duality holds and the optimal dual value is $\nu(G)$.
+The primal feasible set is nonempty and compact (it lies in $\{X\succeq 0 : \tr(X) = 1\}$), so the primal optimum is finite, and Slater's condition also guarantees that the dual optimum is attained.
+
+Since $Y_{ii} = 0$ (a pair $(i,i)$ is never an edge), substituting $W = tI + Y$ is a bijection between dual feasible pairs $(t,Y)$ and symmetric $W$ with constant diagonal $t$ and zeros on non-edges. The dual becomes
+\[
+\nu(G) = \min_{t,W}\bigl\{t : W \succeq J,\ W_{ii} = t \text{ for all } i,\ W_{ij} = 0 \text{ for distinct non-adjacent } i,j\bigr\},
+\]
+with the entries of $W$ on edges unconstrained.
+This form is suited to Kronecker products, which preserve zero entries and the all-ones matrix, whereas $tI+Y-J$ has entries $-1$ on non-edges.
+Weak duality in this form is a one-line check: if $X$ is primal feasible and $(t,W)$ is dual feasible, then
+\[
+\tr(JX) \leq \tr(WX) = \sum_i W_{ii}X_{ii} + \sum_{i\neq j} W_{ij}X_{ij} = t\tr(X) = t.
+\]
+The inequality holds because $\tr((W-J)X) = \tr(X^{1/2}(W-J)X^{1/2}) \geq 0$. Every off-diagonal term vanishes, because either $\{i,j\}\in E$, so $X_{ij} = 0$, or $\{i,j\}\notin E$, so $W_{ij} = 0$.
+
+Now let $(t_A, W_A)$ and $(t_B, W_B)$ be dual optimal for $G_A$ and $G_B$, so $t_A = \nu(G_A)$ and $t_B = \nu(G_B)$.
+Let $W = W_A\otimes W_B$, with rows and columns indexed by $V_A\times V_B$, so that
+\[
+W_{(i,k),(j,\ell)} = (W_A)_{ij}(W_B)_{k\ell}.
+\]
+$W$ is symmetric since $(W_A\otimes W_B)^\top = W_A^\top\otimes W_B^\top$. We check that $(t_At_B, W)$ is dual feasible for $G_A\boxtimes G_B$.
+\begin{itemize}
+\item \emph{Diagonal.} $W_{(i,k),(i,k)} = (W_A)_{ii}(W_B)_{kk} = t_At_B$.
+\item \emph{Non-edges.} Let $(i,k)\neq(j,\ell)$ be non-adjacent in $G_A\boxtimes G_B$. Negating the adjacency condition from Part B, either $i\neq j$ and $\{i,j\}\notin E_A$, or $k\neq\ell$ and $\{k,\ell\}\notin E_B$. In the first case $(W_A)_{ij} = 0$, and in the second $(W_B)_{k\ell} = 0$. Either way $W_{(i,k),(j,\ell)} = 0$.
+\item \emph{$W\succeq J$.} The all-ones matrix on $V_A\times V_B$ is $J = J_A\otimes J_B$, so by bilinearity of $\otimes$,
+\[
+W - J = W_A\otimes W_B - J_A\otimes J_B = (W_A - J_A)\otimes W_B + J_A\otimes(W_B - J_B).
+\]
+By feasibility $W_A - J_A\succeq 0$ and $W_B - J_B\succeq 0$. Also $J_A = \One\One^\top\succeq 0$, and so $W_B = (W_B - J_B) + J_B\succeq 0$. By Part C both terms are PSD, hence so is their sum.
+\end{itemize}
+Therefore $(t_At_B, W)$ is dual feasible for $G_A\boxtimes G_B$, and weak duality gives
+\[
+\nu(G_A\boxtimes G_B) \leq t_At_B = \nu(G_A)\nu(G_B).
 \]
 
-A function $f$ is $L$-smooth if
+E.
+Identify $V^k$ with $V^{k-1}\times V$. Then $G^k = G^{k-1}\boxtimes G$, since in both graphs distinct tuples are adjacent exactly when every coordinate is equal or adjacent.
+By Part D and induction on $k$, $\nu(G^k)\leq\nu(G^{k-1})\nu(G)\leq\nu(G)^k$.
+Combining this with Part A applied to $G^k$,
 \[
-f(y)\leq f(x) + \nabla f(x)^\top(y-x) + \frac{L}{2}\left\|(y-x)\right\|^2
+\sqrt[k]{\alpha(G^k)} \leq \sqrt[k]{\nu(G^k)} \leq \nu(G) \qquad\text{for every } k\geq 1,
 \]
-Essentially the same argument as above gives 
-\[
-f(x)-f(x^*) \geq \frac{1}{2L}\|\nabla f(x)\|^2.
-\]
-\medskip
-B.
-For the forward direction, use $\mu$-strong convexity at $x,y$:
-\begin{align*}
-    f(y) - f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2. \\
-    f(x) - f(y) \geq \nabla f(y)^\top (x-y) + \frac{\mu}{2}\|y-x\|^2.
-\end{align*}
-Combining the two inequalities:
-\begin{align*}
-    \nabla f(y)^\top (y-x) - \frac{\mu}{2}\|y-x\|^2 \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2 \\
-    \Rightarrow (\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
-\end{align*}
+and taking the supremum over $k$ gives $\Theta(G)\leq\nu(G)$.
 
-For the reverse direction:
+Now let $G = C_5$, with vertices $0,\dots,4$ and $i\sim i\pm 1 \pmod 5$.
+
+\emph{Lower bound.} The five vertices $(i, 2i \bmod 5)$, $i = 0,\dots,4$, form an independent set in $C_5^2$.
+To see this, take two of them with $i\neq j$ and let $d = j - i \bmod 5\in\{1,2,3,4\}$.
+If $d\in\{2,3\}$, the first coordinates are distinct and non-adjacent.
+If $d\in\{1,4\}$, the second coordinates differ by $2d\equiv 2$ or $3\pmod 5$, so they are distinct and non-adjacent.
+Either way the two vertices are not adjacent in $C_5^2$. So $\alpha(C_5^2)\geq 5$, and
+\[
+\sqrt5 \leq \sqrt{\alpha(C_5^2)} \leq \Theta(C_5) \leq \nu(C_5).
+\]
+
+\emph{Upper bound.} By weak duality it suffices to exhibit one dual feasible $(t,W)$ with $t = \sqrt5$.
+The rotation $i\mapsto i+1$ is an automorphism of $C_5$. Conjugating a dual feasible $W$ by its permutation matrix therefore keeps it feasible with the same $t$, and averaging over the five rotations (the feasible set is convex) gives a feasible circulant.
+So we look for $W = tI + yA$, where $A$ is the adjacency matrix of $C_5$.
+This $W$ has diagonal $t$ and is zero on non-adjacent pairs, so it remains to choose $t,y$ with $W - J\succeq 0$.
+
+Let $\omega = e^{2\pi\mathrm{i}/5}$ and $v_m = (\omega^{jm})_{j=0}^{4}$ for $m = 0,\dots,4$. These vectors form a basis of $\mathbb{C}^5$ and are eigenvectors of $I$, $A$ and $J$ simultaneously:
+\[
+(Av_m)_j = \omega^{(j+1)m} + \omega^{(j-1)m} = (\omega^m + \omega^{-m})(v_m)_j = 2\cos(2\pi m/5)\,(v_m)_j,
+\]
+and $Jv_m = \bigl(\sum_{j}\omega^{jm}\bigr)\One$, which is $5v_0$ for $m = 0$ and $0$ otherwise.
+To evaluate the cosines, let $u = 2\cos(2\pi/5) = \omega + \omega^{-1}$. Then $\omega^2 + \omega^{-2} = u^2 - 2$, and $1 + \omega + \omega^2 + \omega^3 + \omega^4 = 0$ gives $u + (u^2 - 2) = -1$, i.e.\ $u^2 + u - 1 = 0$. Since $u > 0$, we get
+\[
+2\cos(2\pi/5) = u = \tfrac{\sqrt5 - 1}{2}, \qquad 2\cos(4\pi/5) = u^2 - 2 = -1 - u = -\tfrac{\sqrt5 + 1}{2}.
+\]
+Hence the eigenvalues of $W - J$ are
+\[
+t + 2y - 5 \ \ (m = 0), \qquad t + \tfrac{\sqrt5 - 1}{2}\,y \ \ (m = 1,4), \qquad t - \tfrac{\sqrt5 + 1}{2}\,y \ \ (m = 2,3).
+\]
+Minimizing $t$ subject to these three being nonnegative is a two-variable LP, whose optimum makes the $m = 0$ and $m = 2,3$ constraints tight.
+This gives $t = \sqrt5$, $y = \frac{5 - \sqrt5}{2}$. We now verify that this point is feasible:
+\begin{align*}
+t + 2y - 5 &= \sqrt5 + (5 - \sqrt5) - 5 = 0,\\
+t + \tfrac{\sqrt5 - 1}{2}\,y &= \sqrt5 + \tfrac{(5 - \sqrt5)(\sqrt5 - 1)}{4} = \sqrt5 + \tfrac{6\sqrt5 - 10}{4} = \tfrac{5\sqrt5 - 5}{2} > 0,\\
+t - \tfrac{\sqrt5 + 1}{2}\,y &= \sqrt5 - \tfrac{(5 - \sqrt5)(\sqrt5 + 1)}{4} = \sqrt5 - \tfrac{4\sqrt5}{4} = 0.
+\end{align*}
+So $W = \sqrt5\, I + \frac{5 - \sqrt5}{2}A$ satisfies $W\succeq J$, and $(\sqrt5, W)$ is dual feasible for $C_5$. Thus $\nu(C_5)\leq\sqrt5$, and together with the lower bound,
+\[
+\nu(C_5) = \Theta(C_5) = \sqrt5.
+\]
+
+
+
+
+
+% \begin{enumerate}[resume=q]
+% \item \textbf{Grads and Dists (10 points)}
+% \begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+% \item Consider a function $f : \reals^d \to \reals$ that is $\mu$-strongly convex and $L$-smooth. Let $x^* \in \argmin_x f(x)$. Prove for all $x \in \reals^d$ that
+% \[
+% \frac{1}{2L}\|\nabla f(x)\|^2 \leq f(x) - f(x^*) \leq \frac{1}{2\mu}\|\nabla f(x)\|^2.
+% \]
+% \item Prove that $f$ is $\mu$-strongly convex if and only if for all $x, y \in \reals^d$, we have
+% \[
+% (\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
+% \]
+% \end{enumerate}
+% \end{enumerate}
+
+% \solution
+% A.
+% By definition, $f$ is $\mu$-strongly convex iff
+% \[
+% f(y) \geq f(x) + \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
+% \]
+% Rearranging:
+% \[
+% f(y) -f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
+% \]
+% Taking the minimum of both sides w.r.t. $y$:
+% \[
+% \min_y\{f(y) -f(x)\} \geq \min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\}.
+% \]
+% The left hand side is equal to $f(x^*)-f(x)$.
+% The right hand side is minimized when the derivative with respect to $y$ is equal to 0:
+% \begin{align*}
+%     \nabla f(x) + \frac{\mu}{2}(2y-2x) = 0\quad\Rightarrow\quad y -x = -\frac{1}{\mu}\nabla f(x).
+% \end{align*}
+% Substituting back in:
+% \[
+% \min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\} = -\frac{1}{2\mu}\|\nabla f(x)\| ^2.
+% \]
+% Combining both sides:
+% \[
+% f(x^*) - f(x) \geq -\frac{1}{2\mu}\|\nabla f(x)\| ^2 \quad\Rightarrow\quad f(x) - f(x^*)  \leq \frac{1}{2\mu}\|\nabla f(x)\| ^2.
+% \]
+
+% A function $f$ is $L$-smooth if
+% \[
+% f(y)\leq f(x) + \nabla f(x)^\top(y-x) + \frac{L}{2}\left\|(y-x)\right\|^2
+% \]
+% Essentially the same argument as above gives 
+% \[
+% f(x)-f(x^*) \geq \frac{1}{2L}\|\nabla f(x)\|^2.
+% \]
+% \medskip
+% B.
+% For the forward direction, use $\mu$-strong convexity at $x,y$:
+% \begin{align*}
+%     f(y) - f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2. \\
+%     f(x) - f(y) \geq \nabla f(y)^\top (x-y) + \frac{\mu}{2}\|y-x\|^2.
+% \end{align*}
+% Combining the two inequalities:
+% \begin{align*}
+%     \nabla f(y)^\top (y-x) - \frac{\mu}{2}\|y-x\|^2 \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2 \\
+%     \Rightarrow (\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
+% \end{align*}
+
+% For the reverse direction:
 
 
 \end{document}
