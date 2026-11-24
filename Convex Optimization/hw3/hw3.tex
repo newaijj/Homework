@@ -1,0 +1,285 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{enumitem}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{etoolbox}
+
+% Theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{observation}{Observation}{Observations}
+\Crefname{observation}{Observation}{Observations}
+
+% The environments above share the `theorem` counter, and cleveref names a label
+% after its counter -- so without these aliases every \cref to a lemma, claim,
+% etc. comes out as "Theorem". \crefalias is local to the environment's group,
+% so each one is typed correctly while the shared numbering is left alone.
+\AtBeginEnvironment{corollary}{\crefalias{theorem}{corollary}}
+\AtBeginEnvironment{lemma}{\crefalias{theorem}{lemma}}
+\AtBeginEnvironment{claim}{\crefalias{theorem}{claim}}
+\AtBeginEnvironment{definition}{\crefalias{theorem}{definition}}
+\AtBeginEnvironment{remark}{\crefalias{theorem}{remark}}
+\AtBeginEnvironment{observation}{\crefalias{theorem}{observation}}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\coreq}{\mathrm{coreq}}
+\newcommand{\cone}{\mathrm{cone}}
+
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+\newcommand{\tr}{\operatorname{tr}}
+
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bfd}{\mathbf{d}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfg}{\mathbf{g}}
+\newcommand{\bfh}{\mathbf{h}}
+\newcommand{\bfi}{\mathbf{i}}
+\newcommand{\bfj}{\mathbf{j}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfl}{\mathbf{l}}
+\newcommand{\bfm}{\mathbf{m}}
+\newcommand{\bfn}{\mathbf{n}}
+\newcommand{\bfo}{\mathbf{o}}
+\newcommand{\bfp}{\mathbf{p}}
+\newcommand{\bfq}{\mathbf{q}}
+\newcommand{\bfr}{\mathbf{r}}
+\newcommand{\bfs}{\mathbf{s}}
+\newcommand{\bft}{\mathbf{t}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
+\newcommand{\cost}{\mathrm{COST}}
+\newcommand{\ALG}{\mathrm{ALG}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Flow}{\textsc{Flow}}
+\newcommand{\ouralg}{\textsc{LineTracker}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Conv}{\mathrm{Conv}}
+\newcommand{\One}{\mathds{1}}
+
+\newcommand{\interval}[1]{\lfloor #1 \rceil}
+\newcommand{\dis}[1]{#1}
+\newcommand{\off}{\mathrm{off}}
+\newcommand{\on}{\mathrm{on}}
+\newcommand{\org}{\mathrm{org}}
+\newcommand{\rel}{\mathrm{rel}}
+\newcommand{\new}{\mathrm{new}}
+
+\newcommand{\solution}{\medskip\noindent\textbf{Solution.}\par\medskip}
+
+\title{47-851: Modern Convex Optimization \\ Homework 3}
+\author{Poon Tze-Yang}
+\date{November 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\noindent Lecturer: Karan Singh
+
+\begin{enumerate}[series=q]
+\item \textbf{Grads and Dists (10 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Consider a function $f : \reals^d \to \reals$ that is $\mu$-strongly convex and $L$-smooth. Let $x^* \in \argmin_x f(x)$. Prove for all $x \in \reals^d$ that
+\[
+\frac{1}{2L}\|\nabla f(x)\|^2 \leq f(x) - f(x^*) \leq \frac{1}{2\mu}\|\nabla f(x)\|^2.
+\]
+\item Prove that $f$ is $\mu$-strongly convex if and only if for all $x, y \in \reals^d$, we have
+\[
+(\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
+\]
+\end{enumerate}
+\end{enumerate}
+
+\solution
+A.
+By definition, $f$ is $\mu$-strongly convex iff
+\[
+f(y) \geq f(x) + \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
+\]
+Rearranging:
+\[
+f(y) -f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2.
+\]
+Taking the minimum of both sides w.r.t. $y$:
+\[
+\min_y\{f(y) -f(x)\} \geq \min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\}.
+\]
+The left hand side is equal to $f(x^*)-f(x)$.
+The right hand side is minimized when the derivative with respect to $y$ is equal to 0:
+\begin{align*}
+    \nabla f(x) + \frac{\mu}{2}(2y-2x) = 0\quad\Rightarrow\quad y -x = -\frac{1}{\mu}\nabla f(x).
+\end{align*}
+Substituting back in:
+\[
+\min_y\{\nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2\} = -\frac{1}{2\mu}\|\nabla f(x)\| ^2.
+\]
+Combining both sides:
+\[
+f(x^*) - f(x) \geq -\frac{1}{2\mu}\|\nabla f(x)\| ^2 \quad\Rightarrow\quad f(x) - f(x^*)  \leq \frac{1}{2\mu}\|\nabla f(x)\| ^2.
+\]
+
+A function $f$ is $L$-smooth if
+\[
+f(y)\leq f(x) + \nabla f(x)^\top(y-x) + \frac{L}{2}\left\|(y-x)\right\|^2
+\]
+Essentially the same argument as above gives 
+\[
+f(x)-f(x^*) \geq \frac{1}{2L}\|\nabla f(x)\|^2.
+\]
+\medskip
+B.
+For the forward direction, use $\mu$-strong convexity at $x,y$:
+\begin{align*}
+    f(y) - f(x) \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2. \\
+    f(x) - f(y) \geq \nabla f(y)^\top (x-y) + \frac{\mu}{2}\|y-x\|^2.
+\end{align*}
+Combining the two inequalities:
+\begin{align*}
+    \nabla f(y)^\top (y-x) - \frac{\mu}{2}\|y-x\|^2 \geq \nabla f(x)^\top (y-x) + \frac{\mu}{2}\|y-x\|^2 \\
+    \Rightarrow (\nabla f(x) - \nabla f(y))^\top (x - y) \geq \mu\|x - y\|^2.
+\end{align*}
+
+For the reverse direction:
+
+We integrate the directional derivative from $y$ to $x$:
+\begin{align*}
+    f(x) - f(y) &= \int_{0}^{\|x-y\|}\nabla f(y+\frac{t}{\|x-y\|}(x-y))^\top(\frac{1}{\|x-y\|}(x-y))dt \\
+    &= \int_{0}^{\|x-y\|}\frac{1}{t}\left(\nabla f(y+\frac{t}{\|x-y\|}(x-y))^\top(\frac{t}{\|x-y\|}(x-y)) \right)dt
+\end{align*}
+Rearranging the hypothesis with $x\gets y+(t/\|x-y\|) (x-y), y\gets y$, we get:
+\begin{align*}
+    \nabla f(y+\frac{t}{\|x-y\|}(x-y))^\top(\frac{t}{\|x-y\|}(x-y)) \geq \nabla f(y)^\top(\frac{t}{\|x-y\|}(x-y)) + \mu\left\|\frac{t}{\|x-y\|}(x-y)\right\|^2.
+\end{align*}
+Hence, 
+\begin{align*}
+    f(x) - f(y) &\geq \int_{0}^{\|x-y\|} \nabla f(y)^\top(\frac{t}{\|x-y\|}(x-y)) + \mu\left\|\frac{t}{\|x-y\|}(x-y)\right\|^2 dt \\
+    & = \int_{0}^{\|x-y\|} \frac{1}{t}\left(\nabla f(y)^\top(\frac{t}{\|x-y\|}(x-y)) + \mu\left\|\frac{t}{\|x-y\|}(x-y)\right\|^2 \right)dt \\
+    & = \int_{0}^{\|x-y\|} \nabla f(y)^\top(\frac{1}{\|x-y\|}(x-y)) + \mu t \ dt \\
+    & = \nabla f(y)^\top(x-y) + \frac{\mu}{2} \|x-y\|^2 .\\
+\end{align*}
+This is the definition for strong convexity.
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{Just Enough Convexity (10 points)}
+
+Consider a $L$-smooth function $f : \reals^d \to \reals$ that satisfies for all $x$ that
+\[
+f(x) - \min_{x^*} f(x^*) \leq \frac{1}{2\mu}\|\nabla f(x)\|^2.
+\]
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Prove that such a function may not even be convex (much less strongly convex).
+\item Nevertheless, prove that gradient descent on such a function, with an appropriate step size, produces iterates so that
+\[
+f(x_t) - \min_{x^*} f(x^*) \leq O\bigl(e^{-\mu \frac{t}{L}}\bigr).
+\]
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+For a univariate function $f$, from Taylor's theorem, $f(y) = f(x) + f'(x)(x-y) + \frac{1}{2}f''(\xi)(x-y)^2$ for some $\xi\in [x,y]$.
+If we can bound the absolute value of $f''(\xi)$ for $\xi\in \reals$, we have shown that $f$ is $L$-smooth for appropriate $L$.
+
+Consider the function $f(x) = x^2 + 3\sin^2x$. We have that $f'(x) = 2x + 3\sin 2x$ and $f''(x) = 2 + 6 \cos 2x $.
+Since $f''(x)\in [-4,8]$, $f$ is $L$-smooth for appropriate $L$.
+
+
+
+\begin{enumerate}[resume=q]
+\item \textbf{Small Grad Bounds (10 points)}
+\begin{enumerate}[label=\textbf{Part \Alph*.}, leftmargin=*]
+\item Fix a convex set $K \subset \reals^d$ of diameter $D$. Recall that online gradient guarantees the following regret bound against a sequence of adversarially chosen convex $G$-Lipschitz functions $f_t$.
+\[
+\mathrm{Regret} = \sum_{t=1}^T f_t(x_t) - \min_{x^* \in K} \sum_{t=1}^T f_t(x^*) \leq O\bigl(GD\sqrt{T}\bigr),
+\]
+With suitable dynamically chosen step sizes, show that one can guarantee that
+\[
+\mathrm{Regret} \leq O\left(D\sqrt{\sum_{t=1}^T \|\nabla f_t(x_t)\|^2}\right).
+\]
+
+\emph{Hint:} Set $\eta_t \propto \frac{1}{\sqrt{\sum_{s=1}^t \|\nabla f_s(x_s)\|^2}}$.
+\item Assume that all loss functions $f_t : \reals^d \to \reals_{\geq 0}$ are in addition non-negative, well-defined and $L$-smooth over all of $\reals^d$. Our online algorithm must still play points in $K$ and the regret is still defined with respect to the best point in $K$. Prove that the same algorithm guarantees
+\[
+\mathrm{Regret} \leq O\left(\sqrt{LD^2\left(\min_{x^* \in K} \sum_{t=1}^T f_t(x^*)\right)} + LD^2\right).
+\]
+This means whenever there is a point with zero net loss, we get constant regret, independent of $T$.
+
+\emph{Hint:} Use part A from the first question.
+\end{enumerate}
+\end{enumerate}
+
+\solution
+
+
+
+\end{document}
